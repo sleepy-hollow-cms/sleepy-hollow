@@ -2,6 +2,6 @@ package domain
 
 type SpaceID string
 
-type SpaceModel struct {
+type Space struct {
 	ID SpaceID
 }
