@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"content-management-api/gateway"
+	"content-management-api/usecase"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -27,8 +29,26 @@ func NewServer() Server {
 
 	// Routes
 	e.GET("/v1/systems/ping", pong)
+	routing(e)
 
 	return &instance{
 		server: e,
 	}
+}
+
+func routing(e *echo.Echo) *echo.Echo {
+	contentModelResource := NewContentModelResource(
+		usecase.NewContentModel(gateway.NewContentModel()),
+	)
+
+	v1Routing(e, contentModelResource)
+
+	return e
+}
+
+func v1Routing(e *echo.Echo, resource *ContentModelResource) *echo.Echo {
+	g := e.Group("/v1")
+	g.GET("/spaceId/:spaceId/contentModels/:contentModelId", resource.GetByID)
+	g.GET("/spaceId/:spaceId/contentModels", resource.GetBySpaceID)
+	return e
 }

@@ -3,18 +3,23 @@ package usecase
 import (
 	"content-management-api/domain"
 	"content-management-api/port"
-	"content-management-api/support"
 	"context"
 	"fmt"
 )
 
-type ContentModelUseCase struct {
+type ContentModel struct {
 	ContentModelPort port.ContentModel
-	SpacePort        port.Space
 }
 
-func (c *ContentModelUseCase) CreateContentModel(contentModel domain.ContentModel) (domain.ContentModel, error) {
+func NewContentModel(
+	contentModelPort port.ContentModel,
+) *ContentModel {
+	return &ContentModel{
+		ContentModelPort: contentModelPort,
+	}
+}
 
+func (c *ContentModel) CreateContentModel(contentModel domain.ContentModel) (domain.ContentModel, error) {
 	err := c.ContentModelPort.Save(context.TODO(), contentModel)
 
 	if err != nil {
@@ -24,7 +29,7 @@ func (c *ContentModelUseCase) CreateContentModel(contentModel domain.ContentMode
 	return contentModel, nil
 }
 
-func (c *ContentModelUseCase) FindContentModelByID(id domain.ContentModelID) (domain.ContentModel, error) {
+func (c *ContentModel) FindContentModelByID(id domain.ContentModelID) (domain.ContentModel, error) {
 	result, err := c.ContentModelPort.FindByID(context.TODO(), id)
 
 	if err != nil {
@@ -34,6 +39,6 @@ func (c *ContentModelUseCase) FindContentModelByID(id domain.ContentModelID) (do
 	return result, nil
 }
 
-func (c ContentModelUseCase) FindContentModelBySpaceID(id domain.SpaceID) (*domain.ContentModels, error) {
-	return nil, support.TODO("")
+func (c *ContentModel) FindContentModelBySpaceID(spaceID domain.SpaceID) (domain.ContentModels, error) {
+	return c.ContentModelPort.FindBySpaceID(context.TODO(), spaceID)
 }

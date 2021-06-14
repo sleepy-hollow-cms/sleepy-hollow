@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"content-management-api/domain"
-	"content-management-api/support"
 	"content-management-api/usecase"
 	"context"
 	"errors"
@@ -13,7 +12,7 @@ import (
 
 func TestContentModel(t *testing.T) {
 
-	var target = usecase.ContentModelUseCase{}
+	var target = usecase.ContentModel{}
 
 	t.Run("ContentModelをIDを使って取得することができる", func(t *testing.T) {
 		id := domain.ContentModelID("id")
@@ -98,7 +97,55 @@ func TestContentModel(t *testing.T) {
 	})
 
 	t.Run("Spaceに紐づくContentModelを全て取得することができる", func(t *testing.T) {
-		t.Fatalf(support.TODO("Test code needs to be implemented.").Error())
+		spaceID := domain.SpaceID("spaceID")
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		contentModels := domain.NewContentModels([]domain.ContentModel{
+			{ID: domain.ContentModelID("id")},
+		})
+		mockContentModelPort.On("FindBySpaceID", spaceID).Return(contentModels, nil)
+		target.ContentModelPort = mockContentModelPort
+
+		expected := domain.NewContentModels([]domain.ContentModel{
+			{ID: domain.ContentModelID("id")},
+		})
+
+		actual, err := target.FindContentModelBySpaceID(spaceID)
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("Spaceに紐づくContentModelの取得に失敗した場合はErrorを返す", func(t *testing.T) {
+		spaceID := domain.SpaceID("spaceID")
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		contentModels := domain.NewContentModels([]domain.ContentModel{
+			{ID: domain.ContentModelID("id")},
+		})
+		mockContentModelPort.On("FindBySpaceID", spaceID).Return(contentModels, errors.New("error"))
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.FindContentModelBySpaceID(spaceID)
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.NotNil(t, err)
+	})
+
+	t.Run("Spaceに紐づくContentModelsが一件もない場合はサイズが0のコレクションを返す", func(t *testing.T) {
+		spaceID := domain.SpaceID("spaceID")
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		contentModels := domain.NewContentModels([]domain.ContentModel{})
+		mockContentModelPort.On("FindBySpaceID", spaceID).Return(contentModels, nil)
+		target.ContentModelPort = mockContentModelPort
+
+		actual, err := target.FindContentModelBySpaceID(spaceID)
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.True(t, len(actual) == 0)
 	})
 }
 
