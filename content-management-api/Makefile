@@ -10,3 +10,6 @@ fmt:
 
 test: fmt
 	go test -v ./... | $(COLORIZE_PASS) | $(COLORIZE_FAIL)
+
+install:
+	go mod download && go mod tidy

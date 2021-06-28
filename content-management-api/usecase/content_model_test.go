@@ -47,7 +47,7 @@ func TestContentModel(t *testing.T) {
 			ID: id,
 		}
 
-		contentModelNotFoundError := usecase.ContentModelNotFoundError{Reason: "test"}
+		contentModelNotFoundError := usecase.NewContentModelNotFoundError("test")
 
 		mockContentModelPort.On("FindByID", modelID).Return(model, &contentModelNotFoundError)
 		target.ContentModelPort = mockContentModelPort

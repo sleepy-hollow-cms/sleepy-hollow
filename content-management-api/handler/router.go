@@ -48,7 +48,7 @@ func routing(e *echo.Echo) *echo.Echo {
 
 func v1Routing(e *echo.Echo, resource *ContentModelResource) *echo.Echo {
 	g := e.Group("/v1")
-	g.GET("/spaceId/:spaceId/contentModels/:contentModelId", resource.GetByID)
-	g.GET("/spaceId/:spaceId/contentModels", resource.GetBySpaceID)
+	g.GET("/spaces/:spaceId/contentModels/:contentModelId", resource.GetByID)
+	g.GET("/spaces/:spaceId/contentModels", resource.GetBySpaceID)
 	return e
 }

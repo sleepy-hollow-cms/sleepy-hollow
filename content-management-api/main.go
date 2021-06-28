@@ -6,6 +6,5 @@ import (
 
 func main() {
 	server := handler.NewServer()
-
 	server.Start()
 }

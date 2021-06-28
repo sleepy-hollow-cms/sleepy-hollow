@@ -49,7 +49,7 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 	rest := make([]ContentModel, len(contentModels))
 	for i, contentModel := range contentModels {
 		rest[i] = ContentModel{
-			ID:          contentModel.ID.String(),
+			ID: contentModel.ID.String(),
 		}
 	}
 
