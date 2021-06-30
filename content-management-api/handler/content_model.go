@@ -23,6 +23,12 @@ func NewContentModelResource(useCase *usecase.ContentModel) *ContentModelResourc
 	}
 }
 
+func (r *ContentModelResource) Routing(e *echo.Echo) {
+	g := e.Group("/v1")
+	g.GET("/spaces/:spaceId/contentModels/:contentModelId", r.GetByID)
+	g.GET("/spaces/:spaceId/contentModels", r.GetBySpaceID)
+}
+
 func (r *ContentModelResource) GetByID(c echo.Context) error {
 	contentModelId := c.Param("contentModelId")
 

@@ -3,6 +3,7 @@ package usecase
 import (
 	"content-management-api/domain"
 	"content-management-api/port"
+	"context"
 )
 
 type Space struct {
@@ -17,7 +18,7 @@ func NewSpace(spacePort port.Space) *Space {
 
 func (s *Space) FindByID(id domain.SpaceID) (domain.Space, error) {
 
-	space, err := s.SpacePort.FindByID(id)
+	space, err := s.SpacePort.FindByID(context.TODO(), id)
 
 	if err != nil {
 		return domain.Space{}, NewSpaceNotFoundError("")

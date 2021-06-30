@@ -1,7 +1,10 @@
 package port
 
-import "content-management-api/domain"
+import (
+	"content-management-api/domain"
+	"context"
+)
 
 type Space interface {
-	FindByID(id domain.SpaceID) (domain.Space, error)
+	FindByID(ctx context.Context, id domain.SpaceID) (domain.Space, error)
 }
