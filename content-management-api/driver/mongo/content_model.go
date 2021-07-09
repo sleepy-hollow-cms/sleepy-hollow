@@ -30,7 +30,12 @@ func NewContentModelDriver(client *Client) *ContentModelDriver {
 }
 
 func (c ContentModelDriver) Create(fields []string) (*ContentModel, error) {
-	collections := c.Client.Get().Database("models").Collection("content_model")
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("models").Collection("content_model")
 
 	fieldsModel := make([]Field, len(fields))
 	for i, field := range fields {

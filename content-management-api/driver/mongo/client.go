@@ -3,6 +3,7 @@ package mongo
 import (
 	"content-management-api/env"
 	"context"
+	"errors"
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,31 +16,22 @@ type Client struct {
 	maxConnectionPool uint64
 	timeOut           time.Duration
 
-	// cache mechanism. I made it loosely.
-	mu          sync.Mutex
-	client      *mongo.Client
-	clientCache map[string]*mongo.Client
-	cacheKey    string
+	cache    sync.Map
+	cacheKey string
 }
 
 func NewClient() *Client {
 	config := env.GetMongoConfig()
-
 	return &Client{
 		uri:               fmt.Sprintf("mongodb://%s:%s@%s:%v", config.User, config.Password, config.Host, config.Port),
 		maxConnectionPool: 100,
 		timeOut:           30 * time.Second,
-		clientCache:       make(map[string]*mongo.Client),
 		cacheKey:          "mongo-client",
 	}
 }
 
 func (d *Client) Connect() (*Client, error) {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-
 	option := options.Client().ApplyURI(d.uri)
-
 	option.SetMaxPoolSize(d.maxConnectionPool)
 
 	client, err := mongo.NewClient(option)
@@ -58,23 +50,35 @@ func (d *Client) Connect() (*Client, error) {
 		return nil, err
 	}
 
-	d.clientCache[d.cacheKey] = client
+	d.cache.Store(d.cacheKey, client)
 
 	return d, nil
 }
 
-func (d *Client) Close() *Client {
-	d.mu.Lock()
-	defer d.mu.Unlock()
+func (d *Client) Close() error {
+	client, err := d.load()
 
-	if d.client != nil {
-		d.client.Disconnect(context.Background())
-		delete(d.clientCache, d.cacheKey)
-		d.client = nil
+	if err != nil {
+		return err
 	}
-	return d
+
+	client.Disconnect(context.Background())
+	d.cache.Delete(d.cacheKey)
+	return nil
 }
 
-func (d *Client) Get() *mongo.Client {
-	return d.clientCache[d.cacheKey]
+func (d *Client) load() (*mongo.Client, error) {
+	load, ok := d.cache.Load(d.cacheKey)
+	if !ok {
+		return nil, errors.New("could not load client by cache")
+	}
+	return load.(*mongo.Client), nil
+}
+
+func (d *Client) Get() (*mongo.Client, error) {
+	client, err := d.load()
+	if err != nil {
+		return nil, fmt.Errorf("connection error: %w", err)
+	}
+	return client, nil
 }
