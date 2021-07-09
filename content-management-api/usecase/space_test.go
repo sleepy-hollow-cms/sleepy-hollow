@@ -3,6 +3,7 @@ package usecase_test
 import (
 	"content-management-api/domain"
 	"content-management-api/usecase"
+	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -60,7 +61,7 @@ type MockSpacePort struct {
 	mock.Mock
 }
 
-func (_m *MockSpacePort) FindByID(id domain.SpaceID) (domain.Space, error) {
+func (_m *MockSpacePort) FindByID(ctx context.Context, id domain.SpaceID) (domain.Space, error) {
 	ret := _m.Called(id)
 	return ret.Get(0).(domain.Space), ret.Error(1)
 }

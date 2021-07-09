@@ -25,14 +25,15 @@ test:
 
 clean:
 	$(GOCLEAN)
-	rm -f $(BINARY_NAME)
+	rm -f $(DISTDIR)/$(BINARY_NAME)*
 
+run: export APP_PORT=3000
+run: export MONGO_USER=root
+run: export MONGO_PASSWORD=password
+run: export MONGO_HOST=localhost
+run: export MONGO_PORT=27017
 run:
 	$(GORUN) main.go
-
-binary-run:
-	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	./$(BINARY_NAME)
 
 install:
 	go mod download && go mod tidy

@@ -9,7 +9,7 @@ type (
 	ContentModelNotFoundError struct {
 		NotFoundError
 	}
-	ContentModelSaveFailError struct {
+	ContentModelCreateFailedError struct {
 		Reason string
 	}
 )
@@ -18,8 +18,8 @@ type NotFoundError struct {
 	Reason string
 }
 
-func (c ContentModelSaveFailError) Error() string {
-	return fmt.Sprintf("Save Failed. %s", c.Reason)
+func (c ContentModelCreateFailedError) Error() string {
+	return fmt.Sprintf("Create Failed. %s", c.Reason)
 }
 
 func (n NotFoundError) Error() string {
@@ -42,8 +42,8 @@ func NewContentModelNotFoundError(reason string) ContentModelNotFoundError {
 	}
 }
 
-func NewContentModelSaveFailError(reason string) ContentModelSaveFailError {
-	return ContentModelSaveFailError{
+func NewContentModelCreateFailedError(reason string) ContentModelCreateFailedError {
+	return ContentModelCreateFailedError{
 		Reason: reason,
 	}
 }

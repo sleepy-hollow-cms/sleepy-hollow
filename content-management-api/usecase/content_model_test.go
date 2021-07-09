@@ -2,7 +2,9 @@ package usecase_test
 
 import (
 	"content-management-api/domain"
+	"content-management-api/domain/field"
 	"content-management-api/usecase"
+	"content-management-api/usecase/write"
 	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
@@ -59,43 +61,6 @@ func TestContentModel(t *testing.T) {
 		assert.True(t, errors.As(err, &contentModelNotFoundError))
 	})
 
-	t.Run("ContentModelを登録することができる", func(t *testing.T) {
-		// Mock setting
-		mockContentModelPort := new(MockContentModelPort)
-		contentModel := domain.ContentModel{
-			ID: domain.ContentModelID("id"),
-		}
-		mockContentModelPort.On("Save", contentModel).Return(contentModel, nil)
-		target.ContentModelPort = mockContentModelPort
-
-		expected := domain.ContentModel{
-			ID: domain.ContentModelID("id"),
-		}
-
-		actual, err := target.CreateContentModel(contentModel)
-
-		mockContentModelPort.AssertExpectations(t)
-		assert.Nil(t, err)
-		assert.Equal(t, expected, actual)
-	})
-
-	t.Run("ContentModelを登録できない場合はContentModelSaveFailedErrorを返す", func(t *testing.T) {
-		// Mock setting
-		mockContentModelPort := new(MockContentModelPort)
-		contentModel := domain.ContentModel{
-			ID: domain.ContentModelID("id"),
-		}
-
-		saveFailError := usecase.ContentModelSaveFailError{Reason: "test"}
-		mockContentModelPort.On("Save", contentModel).Return(domain.ContentModel{}, &saveFailError)
-		target.ContentModelPort = mockContentModelPort
-
-		_, err := target.CreateContentModel(contentModel)
-
-		mockContentModelPort.AssertExpectations(t)
-		assert.True(t, errors.As(err, &saveFailError))
-	})
-
 	t.Run("Spaceに紐づくContentModelを全て取得することができる", func(t *testing.T) {
 		spaceID := domain.SpaceID("spaceID")
 		// Mock setting
@@ -147,6 +112,62 @@ func TestContentModel(t *testing.T) {
 		assert.Nil(t, err)
 		assert.True(t, len(actual) == 0)
 	})
+
+	t.Run("ContentModelを登録することができる", func(t *testing.T) {
+		contentModel := write.ContentModel{
+			Fields: []field.Field{
+				{Type: field.Text},
+			},
+		}
+
+		retContentModel := domain.ContentModel{
+			ID:     domain.ContentModelID("id"),
+			Fields: nil,
+		}
+
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		mockContentModelPort.On("Create", contentModel).Return(retContentModel, nil)
+		target.ContentModelPort = mockContentModelPort
+
+		actual, err := target.Create(contentModel)
+
+		expected := domain.ContentModel{
+			ID:     domain.ContentModelID("id"),
+			Fields: nil,
+		}
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("ContentModelを登録時に失敗した場合はContentModelCreateFailedErrorを返す", func(t *testing.T) {
+		contentModel := write.ContentModel{
+			Fields: []field.Field{
+				{Type: field.Text},
+			},
+		}
+
+		retContentModel := domain.ContentModel{
+			ID:     domain.ContentModelID("id"),
+			Fields: nil,
+		}
+
+		contentModelCreateFailedError := usecase.NewContentModelCreateFailedError("test")
+
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		mockContentModelPort.On("Create", contentModel).Return(retContentModel, &contentModelCreateFailedError)
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.Create(contentModel)
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &contentModelCreateFailedError))
+	})
+
 }
 
 type MockContentModelPort struct {
@@ -166,4 +187,9 @@ func (_m *MockContentModelPort) FindBySpaceID(ctx context.Context, id domain.Spa
 func (_m *MockContentModelPort) Save(ctx context.Context, contentModel domain.ContentModel) error {
 	ret := _m.Called(contentModel)
 	return ret.Error(1)
+}
+
+func (_m *MockContentModelPort) Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error) {
+	ret := _m.Called(contentModel)
+	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }

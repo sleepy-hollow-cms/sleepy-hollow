@@ -3,6 +3,7 @@ package usecase
 import (
 	"content-management-api/domain"
 	"content-management-api/port"
+	"content-management-api/usecase/write"
 	"context"
 	"fmt"
 )
@@ -19,16 +20,6 @@ func NewContentModel(
 	}
 }
 
-func (c *ContentModel) CreateContentModel(contentModel domain.ContentModel) (domain.ContentModel, error) {
-	err := c.ContentModelPort.Save(context.TODO(), contentModel)
-
-	if err != nil {
-		return domain.ContentModel{}, NewContentModelSaveFailError(fmt.Sprintf("content model: %+v", contentModel))
-	}
-
-	return contentModel, nil
-}
-
 func (c *ContentModel) FindContentModelByID(id domain.ContentModelID) (domain.ContentModel, error) {
 	result, err := c.ContentModelPort.FindByID(context.TODO(), id)
 
@@ -41,4 +32,14 @@ func (c *ContentModel) FindContentModelByID(id domain.ContentModelID) (domain.Co
 
 func (c *ContentModel) FindContentModelBySpaceID(spaceID domain.SpaceID) (domain.ContentModels, error) {
 	return c.ContentModelPort.FindBySpaceID(context.TODO(), spaceID)
+}
+
+func (c *ContentModel) Create(contentModel write.ContentModel) (domain.ContentModel, error) {
+	result, err := c.ContentModelPort.Create(context.TODO(), contentModel)
+
+	if err != nil {
+		return domain.ContentModel{}, NewContentModelCreateFailedError(err.Error())
+	}
+
+	return result, err
 }

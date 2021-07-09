@@ -1,5 +1,9 @@
 package domain
 
+import (
+	"content-management-api/domain/field"
+)
+
 type ContentModelID string
 
 func (c ContentModelID) String() string {
@@ -7,7 +11,8 @@ func (c ContentModelID) String() string {
 }
 
 type ContentModel struct {
-	ID ContentModelID
+	ID     ContentModelID
+	Fields field.Fields
 }
 
 type ContentModels []ContentModel
