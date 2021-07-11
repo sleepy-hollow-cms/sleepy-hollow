@@ -27,15 +27,15 @@ jobs:
     - run: gauge install java --version 0.7.15
     - run: make test
       working-directory: ./e2e
-    - run: |
-        curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
-        "https://slack.com/api/chat.postMessage"  \
-        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2EB67D\", \"text\":\"E2E Test Passed!!!\"} ] }"
+    - uses: ./.github/actions/slack-notify-action
+      with:
+        channel-id: 'C0254UUPR0E'
+        attachmments: '[ {\"color\": \"#2eb67d\", \"text\":\"E2E Test Passed!!! GOOD JOB!!!\"} ]'
       if: ${{ success() }}
-    - run: |
-        curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
-        "https://slack.com/api/chat.postMessage"  \
-        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#E01E5A\", \"text\":\"E2E Test Faliled!!!\"} ] }"
+    - uses: ./.github/actions/slack-notify-action
+      with:
+        channel-id: 'C0254UUPR0E'
+        attachmments: '[  {\"color\": \"#E01E5A\", \"text\":\"E2E Test Faliled!!! FIX IT NOW!!!\"} ]'
       if: ${{ failure() }}
   content-management-api-unit-test:
     runs-on: ubuntu-20.04
@@ -49,7 +49,7 @@ jobs:
     - run: |
         curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
         "https://slack.com/api/chat.postMessage"  \
-        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2EB67D\", \"text\":\"Content Management API Unit Test Passed!!!\"} ] }"
+        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2eb67d\", \"text\":\"Content Management Api Unit test passed!!!\"} ] }"
       if: ${{ success() }}
     - run: |
         curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
@@ -72,6 +72,6 @@ jobs:
       uses: slackapi/slack-github-action@v1.14.0
       with:
         channel-id: 'C0254UUPR0E'
-        slack-message: 'All test passed!!! Merged ${{ github.head_ref }} to ${{ github.base_ref }}!!!'
+        slack-message: 'All test passed!!! Merged ${{ github.head_ref }} to ${{ github.base_ref }}!!! GREAT JOB!!!'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
