@@ -13,3 +13,12 @@ jobs:
     - run: gauge install java --version 0.7.15
     - run: mvn test
       working-directory: ./e2e
+    - name: Post to a Slack channel
+      id: slack
+      uses: slackapi/slack-github-action@v1.14.0
+      with:
+      channel-id: 'C0254UUPR0E'
+      slack-message: 'Hello, there!! I am SLEEPY HOLLOW!!'
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
