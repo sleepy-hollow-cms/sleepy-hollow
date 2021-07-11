@@ -1,0 +1,27 @@
+name: 'Slack Nodify'
+description: 'Notify to Slack'
+inputs:
+  channel-id:
+    description: 'Channel Id'
+    required: true
+    default: 'C0254UUPR0E'
+  attachmments:  
+    description: 'Slack Json Attachments'
+    required: true
+    default: '[  {\"text\":\"Hello, there!!! I am SLEEPY HOLLOW!!!\"} ]'
+  secrets-token:
+    description: 'Slack Secret Token'
+    required: true
+    default: 'token'
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        curl -XPOST -H "Authorization: Bearer ${{ env.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
+        "https://slack.com/api/chat.postMessage"  \
+        -d "{\"channel\": \"${{ inputs.channel-id }}\", "attachments": ${{ inputs.channel-id }} }"
+      shell: bash
