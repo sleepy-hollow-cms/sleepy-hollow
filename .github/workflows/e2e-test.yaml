@@ -17,8 +17,8 @@ jobs:
       id: slack
       uses: slackapi/slack-github-action@v1.14.0
       with:
-      channel-id: 'C0254UUPR0E'
-      slack-message: 'Hello, there!! I am SLEEPY HOLLOW!!'
+        channel-id: 'C0254UUPR0E'
+        slack-message: 'Hello, there!! I am SLEEPY HOLLOW!!'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
