@@ -25,7 +25,7 @@ jobs:
         java-version: '11'
     - run: curl -SsL https://downloads.gauge.org/stable | sh -s -- --location-[custom path]
     - run: gauge install java --version 0.7.15
-    - run: mvn test
+    - run: make test
       working-directory: ./e2e
   content-management-api-unit-test:
     runs-on: ubuntu-20.04
