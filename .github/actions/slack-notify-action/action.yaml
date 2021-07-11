@@ -20,7 +20,8 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - run: echo
     - run: |
-        curl -XPOST -H "Authorization: Bearer ${{ input.secrets-token }}" -H "Content-Type: application/json" \
+        curl -XPOST -H "Authorization: Bearer ${{ env.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
         "https://slack.com/api/chat.postMessage"  \
         -d "{\"channel\": \"${{ inputs.channel-id }}\", "attachments": ${{ inputs.channel-id }} }"
