@@ -27,6 +27,16 @@ jobs:
     - run: gauge install java --version 0.7.15
     - run: make test
       working-directory: ./e2e
+    - run: |
+        curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
+        "https://slack.com/api/chat.postMessage"  \
+        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2EB67D\", \"text\":\"E2E Test Passed!!!\"} ] }"
+      if: ${{ success() }}
+    - run: |
+        curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
+        "https://slack.com/api/chat.postMessage"  \
+        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#E01E5A\", \"text\":\"E2E Test Faliled!!!\"} ] }"
+      if: ${{ failure() }}
   content-management-api-unit-test:
     runs-on: ubuntu-20.04
     steps:
@@ -36,6 +46,16 @@ jobs:
         go-version: '^1.16.5'
     - run: make test
       working-directory: ./content-management-api
+    - run: |
+        curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
+        "https://slack.com/api/chat.postMessage"  \
+        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2EB67D\", \"text\":\"Content Management API Unit Test Passed!!!\"} ] }"
+      if: ${{ success() }}
+    - run: |
+        curl -XPOST -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
+        "https://slack.com/api/chat.postMessage"  \
+        -d "{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#E01E5A\", \"text\":\"Content Management API Unit Test Faliled!!!\"} ] }"
+      if: ${{ failure() }}
   merge-branch-dev-to-main:
     needs: [e2e-test, content-management-api-unit-test]
     runs-on: ubuntu-20.04
