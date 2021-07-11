@@ -30,11 +30,13 @@ jobs:
     - uses: ./.github/actions/slack-notify-action
       with:
         channel-id: 'C0254UUPR0E'
+        secrets-token: ${{ secrets.SLACK_BOT_TOKEN }}
         attachmments: '[ {\"color\": \"#2eb67d\", \"text\":\"E2E Test Passed!!! GOOD JOB!!!\"} ]'
       if: ${{ success() }}
     - uses: ./.github/actions/slack-notify-action
       with:
         channel-id: 'C0254UUPR0E'
+        secrets-token: ${{ secrets.SLACK_BOT_TOKEN }}
         attachmments: '[  {\"color\": \"#E01E5A\", \"text\":\"E2E Test Faliled!!! FIX IT NOW!!!\"} ]'
       if: ${{ failure() }}
   content-management-api-unit-test:
