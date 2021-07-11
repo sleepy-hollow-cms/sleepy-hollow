@@ -1,7 +1,18 @@
 name: gauge-test
 on: [push]
 jobs:
-  gauge-test:
+  post-actions-triged-message:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Post to a Slack channel
+      id: slack
+      uses: slackapi/slack-github-action@v1.14.0
+      with:
+        channel-id: 'C0254UUPR0E'
+        slack-message: 'The action is executed!!!'
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  e2e-test:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -13,12 +24,12 @@ jobs:
     - run: gauge install java --version 0.7.15
     - run: mvn test
       working-directory: ./e2e
-    - name: Post to a Slack channel
-      id: slack
-      uses: slackapi/slack-github-action@v1.14.0
+  content-management-api-unit-test:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
       with:
-        channel-id: 'C0254UUPR0E'
-        slack-message: 'Hello, there!! I am SLEEPY HOLLOW!!'
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
+        go-version: '^1.16.5'
+    - run: make test
+      working-directory: ./content-management-api
