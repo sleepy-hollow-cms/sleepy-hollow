@@ -7,12 +7,12 @@ jobs:
   post-actions-triged-message:
     runs-on: ubuntu-20.04
     steps:
-    - name: Post to a Slack channel
+    - name: Post actions trigerd message
       id: slack
       uses: slackapi/slack-github-action@v1.14.0
       with:
         channel-id: 'C0254UUPR0E'
-        slack-message: 'The action is executed!!!'
+        slack-message: 'The actions are executed by ${{ github.actor }}’s PR!!!'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   e2e-test:
@@ -47,3 +47,11 @@ jobs:
         type: now
         target_branch: ${{ github.base_ref }}
         github_token: ${{ github.token }}
+    - name: Post Merge message 
+      id: slack
+      uses: slackapi/slack-github-action@v1.14.0
+      with:
+        channel-id: 'C0254UUPR0E'
+        slack-message: 'All Test Passed!!!! Merged ${{ github.head_ref }} to ${{ github.base_ref }}!!!!!'
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
