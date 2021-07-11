@@ -1,0 +1,15 @@
+name: gauge-test
+on: [push]
+jobs:
+  gauge-test:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '11'
+    - run: curl -SsL https://downloads.gauge.org/stable | sh -s -- --location-[custom path]
+    - run: gauge install java --version 0.7.15
+    - run: cd e2e
+    - run: mvn test
