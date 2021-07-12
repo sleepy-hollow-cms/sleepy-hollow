@@ -29,15 +29,13 @@ jobs:
       working-directory: ./e2e
     - uses: ./.github/actions/slack-notify-action
       with:
-        channel-id: 'C0254UUPR0E'
-        attachmments: '[ {\"color\": \"#2eb67d\", \"text\":\"E2E Test Passed!!! GOOD JOB!!!\"} ]'
+        json-payload: '{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2EB67D\", \"text\":\"E2E Test Passed!!! GOOD JOB!!!\"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       if: ${{ success() }}
     - uses: ./.github/actions/slack-notify-action
       with:
-        channel-id: 'C0254UUPR0E'
-        attachmments: '[  {\"color\": \"#E01E5A\", \"text\":\"E2E Test Faliled!!! FIX IT NOW!!!\"} ]'
+        json-payload: '{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#E01E5A\", \"text\":\"E2E Test Faliled!!! FIX IT NOW!!!\"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       if: ${{ failure() }}
@@ -53,33 +51,14 @@ jobs:
     - uses: ./.github/actions/slack-notify-action
       with:
         channel-id: 'C0254UUPR0E'
-        attachmments: '[ {\"color\": \"#2eb67d\", \"text\":\"Content Management Api Unit test passed!!! GOOD JOB!!!\"} ]'
+        json-payload: '{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#2EB67D\", \"text\":\"Content Management API Unit Test Passed!!! GOOD JOB!!!\"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       if: ${{ success() }}
     - uses: ./.github/actions/slack-notify-action
       with:
         channel-id: 'C0254UUPR0E'
-        attachmments: '[  {\"color\": \"#E01E5A\", \"text\":\"Content Management API Unit Test Faliled!!! FIX IT NOW!!!\"} ]'
+        json-payload: '{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#E01E5A\", \"text\":\"Content Management API Unit Test Faliled!!! FIX IT NOW!!!\"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       if: ${{ failure() }}
-  # merge-branch-dev-to-main:
-  #   needs: [e2e-test, content-management-api-unit-test]
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #   - uses: actions/checkout@master
-  #   - name: Merge development -> main
-  #     uses: devmasx/merge-branch@v1.3.1
-  #     with:
-  #       type: now
-  #       target_branch: ${{ github.base_ref }}
-  #       github_token: ${{ github.token }}
-  #   - name: Post Merge message 
-  #     id: slack
-  #     uses: slackapi/slack-github-action@v1.14.0
-  #     with:
-  #       channel-id: 'C0254UUPR0E'
-  #       slack-message: 'All test passed!!! Merged ${{ github.head_ref }} to ${{ github.base_ref }}!!! GREAT JOB!!!'
-  #     env:
-  #       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
