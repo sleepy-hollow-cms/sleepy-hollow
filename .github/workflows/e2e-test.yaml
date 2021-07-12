@@ -57,7 +57,6 @@ jobs:
       if: ${{ success() }}
     - uses: ./.github/actions/slack-notify-action
       with:
-        channel-id: 'C0254UUPR0E'
         json-payload: '{\"channel\": \"C0254UUPR0E\", "attachments": [  {\"color\": \"#E01E5A\", \"text\":\"Content Management API Unit Test Faliled!!! FIX IT NOW!!!\"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
