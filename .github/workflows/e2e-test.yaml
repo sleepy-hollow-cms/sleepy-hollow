@@ -64,22 +64,22 @@ jobs:
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       if: ${{ failure() }}
-  merge-branch-dev-to-main:
-    needs: [e2e-test, content-management-api-unit-test]
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@master
-    - name: Merge development -> main
-      uses: devmasx/merge-branch@v1.3.1
-      with:
-        type: now
-        target_branch: ${{ github.base_ref }}
-        github_token: ${{ github.token }}
-    - name: Post Merge message 
-      id: slack
-      uses: slackapi/slack-github-action@v1.14.0
-      with:
-        channel-id: 'C0254UUPR0E'
-        slack-message: 'All test passed!!! Merged ${{ github.head_ref }} to ${{ github.base_ref }}!!! GREAT JOB!!!'
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  # merge-branch-dev-to-main:
+  #   needs: [e2e-test, content-management-api-unit-test]
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - name: Merge development -> main
+  #     uses: devmasx/merge-branch@v1.3.1
+  #     with:
+  #       type: now
+  #       target_branch: ${{ github.base_ref }}
+  #       github_token: ${{ github.token }}
+  #   - name: Post Merge message 
+  #     id: slack
+  #     uses: slackapi/slack-github-action@v1.14.0
+  #     with:
+  #       channel-id: 'C0254UUPR0E'
+  #       slack-message: 'All test passed!!! Merged ${{ github.head_ref }} to ${{ github.base_ref }}!!! GREAT JOB!!!'
+  #     env:
+  #       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
