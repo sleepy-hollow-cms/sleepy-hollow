@@ -13,6 +13,7 @@ runs:
   using: "composite"
   steps:
     - run: echo ${{ inputs.json-payload }}
+      shell: bash
     - run: |
         curl -XPOST -H "Authorization: Bearer ${{ env.SLACK_BOT_TOKEN }}" -H "Content-Type: application/json" \
         "https://slack.com/api/chat.postMessage"  \
