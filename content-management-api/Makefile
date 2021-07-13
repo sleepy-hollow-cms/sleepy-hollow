@@ -63,3 +63,11 @@ check-docker:
 .PHONY: docker-build
 docker-build: check-docker
 	@docker build -t content-management-api -f $(DOCKER_DIR)/Dockerfile .
+
+.PHONY: compose-up
+compose-up: docker-build
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml up -d
+
+.PHONY: compose-down
+compose-down:
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml down

@@ -11,6 +11,10 @@
         <java.version>11</java.version>
         <kotlin.version>1.5.20</kotlin.version>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
+        <ktor.version>1.4.1</ktor.version>
+        <konfig.version>1.6.10.0</konfig.version>
+        <http4k.version>4.9.10.0</http4k.version>
+        <kluent.version>1.68</kluent.version>
     </properties>
 
     <dependencies>
@@ -37,8 +41,34 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>com.natpryce</groupId>
+            <artifactId>konfig</artifactId>
+            <version>${konfig.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.http4k</groupId>
+            <artifactId>http4k-core</artifactId>
+            <version>${http4k.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.http4k</groupId>
+            <artifactId>http4k-client-apache</artifactId>
+            <version>${http4k.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.amshove.kluent</groupId>
+            <artifactId>kluent</artifactId>
+            <version>${kluent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.amshove.kluent</groupId>
+            <artifactId>kluent</artifactId>
+            <version>${kluent.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -49,7 +79,7 @@
                     <args>
                         <arg>-Xjsr305=strict</arg>
                     </args>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>11</jvmTarget>
                 </configuration>
                 <executions>
                     <execution>
