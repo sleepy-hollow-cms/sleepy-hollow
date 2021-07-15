@@ -68,6 +68,10 @@ docker-build: check-docker
 compose-up: docker-build
 	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml up -d
 
+.PHONY: compose-up-mongo
+compose-up-mongo:
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml up -d mongo
+
 .PHONY: compose-down
 compose-down:
 	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml down
