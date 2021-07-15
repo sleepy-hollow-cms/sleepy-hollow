@@ -3,12 +3,11 @@ package gateway
 import (
 	"content-management-api/domain"
 	"content-management-api/domain/field"
-	"content-management-api/driver/mongo"
+	"content-management-api/driver/model"
 	"content-management-api/usecase/write"
 	"context"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"testing"
 )
 
@@ -19,10 +18,9 @@ func TestContentModel(t *testing.T) {
 	t.Run("テキスト文字列のフィールドを含んだContentModelを登録できる", func(t *testing.T) {
 		// Mock setting
 		mockContentModelDriver := new(MockContentModelDriver)
-		id := primitive.NewObjectID()
-		contentModel := mongo.ContentModel{
-			ID: id,
-			Fields: []mongo.Field{
+		contentModel := model.ContentModel{
+			ID: "id",
+			Fields: []model.Field{
 				{Type: "text"},
 			},
 		}
@@ -39,7 +37,7 @@ func TestContentModel(t *testing.T) {
 		actual, err := target.Create(context.TODO(), model)
 
 		expected := domain.ContentModel{
-			ID: domain.ContentModelID(id.Hex()),
+			ID: domain.ContentModelID("id"),
 			Fields: field.Fields{
 				{Type: field.Text},
 			},
@@ -54,7 +52,7 @@ type MockContentModelDriver struct {
 	mock.Mock
 }
 
-func (_m *MockContentModelDriver) Create(strings []string) (*mongo.ContentModel, error) {
+func (_m *MockContentModelDriver) Create(strings []string) (*model.ContentModel, error) {
 	ret := _m.Called(strings)
-	return ret.Get(0).(*mongo.ContentModel), ret.Error(1)
+	return ret.Get(0).(*model.ContentModel), ret.Error(1)
 }

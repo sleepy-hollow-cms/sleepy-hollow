@@ -1,6 +1,8 @@
 package mongo
 
 import (
+	"content-management-api/driver"
+	"content-management-api/driver/model"
 	"context"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -14,22 +16,18 @@ type Field struct {
 	Type string `bson:"field_type"`
 }
 
-type ContentModelDriverInterface interface {
-	Create([]string) (*ContentModel, error)
-}
-
 //ContentModelDriver ContentModel Collection on MongoDB
 type ContentModelDriver struct {
 	Client *Client
 }
 
-func NewContentModelDriver(client *Client) *ContentModelDriver {
+func NewContentModelDriver(client *Client) driver.ContentModel {
 	return &ContentModelDriver{
 		Client: client,
 	}
 }
 
-func (c ContentModelDriver) Create(fields []string) (*ContentModel, error) {
+func (c ContentModelDriver) Create(fields []string) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -44,23 +42,30 @@ func (c ContentModelDriver) Create(fields []string) (*ContentModel, error) {
 		}
 	}
 
-	model := ContentModel{
+	insert := ContentModel{
 		Fields: fieldsModel,
 	}
 
-	result, err := collections.InsertOne(context.Background(), model)
+	result, err := collections.InsertOne(context.Background(), insert)
 
-	return &ContentModel{
-		ID:     result.InsertedID.(primitive.ObjectID),
-		Fields: model.Fields,
+	resultFields := make([]model.Field, len(insert.Fields))
+	for i, field := range insert.Fields {
+		resultFields[i] = model.Field{
+			Type: field.Type,
+		}
+	}
+
+	return &model.ContentModel{
+		ID:     result.InsertedID.(primitive.ObjectID).Hex(),
+		Fields: resultFields,
 	}, err
 }
 
-func (c ContentModelDriver) Read() (ContentModel, error) {
+func (c ContentModelDriver) Select() (*model.ContentModel, error) {
 	panic("implement me")
 }
 
-func (c ContentModelDriver) Update() (ContentModel, error) {
+func (c ContentModelDriver) Update() (*model.ContentModel, error) {
 	panic("implement me")
 }
 
