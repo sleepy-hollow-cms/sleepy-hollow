@@ -33,7 +33,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		fields[i] = field.Type.String()
 	}
 
-	created, err := c.Driver.Create(fields)
+	created, err := c.Driver.Create(contentModel.Name.String(), fields)
 
 	if err != nil {
 		return domain.ContentModel{}, err
@@ -48,6 +48,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 
 	return domain.ContentModel{
 		ID:     domain.ContentModelID(created.ID),
+		Name:   domain.Name(created.Name),
 		Fields: createdFields,
 	}, nil
 }

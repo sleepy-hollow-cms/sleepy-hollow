@@ -5,8 +5,9 @@ import (
 	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -79,6 +80,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	}
 
 	contentModel, err := r.ContentModelUseCase.Create(write.ContentModel{
+		Name:   domain.Name(m.Name),
 		Fields: fields,
 	})
 

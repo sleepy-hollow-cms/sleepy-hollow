@@ -4,12 +4,14 @@ import (
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"context"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ContentModel struct {
 	ID     primitive.ObjectID `bson:"_id,omitempty"`
 	Fields []Field            `bson:"fields"`
+	Name   string             `bson:"name"`
 }
 
 type Field struct {
@@ -27,7 +29,7 @@ func NewContentModelDriver(client *Client) driver.ContentModel {
 	}
 }
 
-func (c ContentModelDriver) Create(fields []string) (*model.ContentModel, error) {
+func (c ContentModelDriver) Create(name string, fields []string) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -43,6 +45,7 @@ func (c ContentModelDriver) Create(fields []string) (*model.ContentModel, error)
 	}
 
 	insert := ContentModel{
+		Name:   name,
 		Fields: fieldsModel,
 	}
 
