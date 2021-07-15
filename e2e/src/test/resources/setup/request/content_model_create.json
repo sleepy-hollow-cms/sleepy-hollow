@@ -1,0 +1,11 @@
+{
+  "name": "name",
+  "fields": [
+    {
+      "type": "type1"
+    },
+    {
+      "type": "type2"
+    }
+  ]
+}
