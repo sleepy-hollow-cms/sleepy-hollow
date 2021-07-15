@@ -3,9 +3,37 @@ services:
     image: content-management-api:latest
     ports:
       - 3000:3000
+    depends_on:
+      - mongo
+      - mongo-express
     environment:
       APP_PORT: 3000
       MONGO_USER: root
       MONGO_PASSWORD: password
       MONGO_HOST: mongo
       MONGO_PORT: 27017
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 8081:8081
+    volumes:
+      - ~/.sleepy-hollow/content-management-api/data/mongo/db:/data/db
+      - ~/.sleepy-hollow/content-management-api/data/mongo/configdb:/data/configdb
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+
+ 
