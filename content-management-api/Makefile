@@ -75,3 +75,7 @@ compose-up-mongo:
 .PHONY: compose-down
 compose-down:
 	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml down
+
+.PHONY: compose-ps
+compose-ps:
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml ps

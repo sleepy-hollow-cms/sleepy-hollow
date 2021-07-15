@@ -10,6 +10,10 @@ object Configuration {
     operator fun <T> get(key: Key<T>): T = entries[key]
 }
 
-object contnt_managemant_api : PropertyGroup() {
+object content_management_api : PropertyGroup() {
     val endpoint by stringType
+
+    object mongo: PropertyGroup() {
+        val endpoint by stringType
+    }
 }

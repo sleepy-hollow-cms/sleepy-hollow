@@ -15,6 +15,8 @@
         <konfig.version>1.6.10.0</konfig.version>
         <http4k.version>4.9.10.0</http4k.version>
         <kluent.version>1.68</kluent.version>
+        <kmongo.version>4.2.8</kmongo.version>
+        <jsonpath.version>2.6.0</jsonpath.version>
     </properties>
 
     <dependencies>
@@ -67,6 +69,16 @@
             <groupId>org.amshove.kluent</groupId>
             <artifactId>kluent</artifactId>
             <version>${kluent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.litote.kmongo</groupId>
+            <artifactId>kmongo</artifactId>
+            <version>${kmongo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${jsonpath.version}</version>
         </dependency>
     </dependencies>
     <build>
