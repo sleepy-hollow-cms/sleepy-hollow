@@ -5,6 +5,11 @@ import (
 )
 
 type ContentModelID string
+type Name string
+
+func (n Name) String() string {
+	return string(n)
+}
 
 func (c ContentModelID) String() string {
 	return string(c)
@@ -12,6 +17,7 @@ func (c ContentModelID) String() string {
 
 type ContentModel struct {
 	ID     ContentModelID
+	Name   Name
 	Fields field.Fields
 }
 
