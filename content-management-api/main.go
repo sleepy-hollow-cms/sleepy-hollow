@@ -9,13 +9,22 @@ import (
 
 func main() {
 	container := cache.NewContainer()
-	db, err := mongo.NewClient().Connect()
-
+	dbClient := mongo.NewClient()
+	_, err := dbClient.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	container.Store(cache.MongoDB, db)
+	go dbClient.StartWatch()
+	defer dbClient.StopWatch()
+	defer func() {
+		closeErr := dbClient.Disconnect()
+		if closeErr != nil {
+			log.Fatal(closeErr)
+		}
+	}()
+
+	container.Store(cache.MongoDB, dbClient)
 	server := handler.NewServer(container)
 	server.Start()
 }
