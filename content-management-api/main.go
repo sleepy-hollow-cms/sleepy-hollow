@@ -4,15 +4,16 @@ import (
 	"content-management-api/cache"
 	"content-management-api/driver/mongo"
 	"content-management-api/handler"
-	"log"
+	"content-management-api/log"
 )
 
 func main() {
+	log.Logger.Debugw("Starting...")
 	container := cache.NewContainer()
 	dbClient := mongo.NewClient()
 	_, err := dbClient.Connect()
 	if err != nil {
-		log.Fatal(err)
+		log.Logger.Fatalw("DB Connect Error", log.Logger.Error(err))
 	}
 
 	go dbClient.StartWatch()
@@ -20,7 +21,7 @@ func main() {
 	defer func() {
 		closeErr := dbClient.Disconnect()
 		if closeErr != nil {
-			log.Fatal(closeErr)
+			log.Logger.Fatalw("DB Close Error", log.Logger.Error(err))
 		}
 	}()
 
