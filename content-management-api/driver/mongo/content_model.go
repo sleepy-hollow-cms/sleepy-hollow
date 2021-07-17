@@ -60,6 +60,7 @@ func (c ContentModelDriver) Create(name string, fields []string) (*model.Content
 
 	return &model.ContentModel{
 		ID:     result.InsertedID.(primitive.ObjectID).Hex(),
+		Name:   insert.Name,
 		Fields: resultFields,
 	}, err
 }
