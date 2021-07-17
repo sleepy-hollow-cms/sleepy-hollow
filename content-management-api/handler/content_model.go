@@ -98,7 +98,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 
 	c.JSON(http.StatusOK, ContentModelPutResponseBody{
 		ID:     contentModel.ID.String(),
-		Name:   "NOT IMPLEMENTED",
+		Name:   contentModel.Name.String(),
 		Fields: resFields,
 	})
 
