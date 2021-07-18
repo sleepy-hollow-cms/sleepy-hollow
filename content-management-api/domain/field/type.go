@@ -15,6 +15,16 @@ func Of(value string) Type {
 	switch value {
 	case Text.String():
 		return Text
+	case MultipleText.String():
+		return MultipleText
+	case Date.String():
+		return Date
+	case Number.String():
+		return Number
+	case Bool.String():
+		return Bool
+	case Reference.String():
+		return Reference
 	default:
 		return -1
 	}

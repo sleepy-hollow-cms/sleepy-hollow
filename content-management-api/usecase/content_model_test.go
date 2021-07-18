@@ -122,7 +122,7 @@ func TestContentModel(t *testing.T) {
 
 		retContentModel := domain.ContentModel{
 			ID:     domain.ContentModelID("id"),
-			Name: domain.Name("name"),
+			Name:   domain.Name("name"),
 			Fields: nil,
 		}
 
@@ -135,7 +135,7 @@ func TestContentModel(t *testing.T) {
 
 		expected := domain.ContentModel{
 			ID:     domain.ContentModelID("id"),
-			Name: domain.Name("name"),
+			Name:   domain.Name("name"),
 			Fields: nil,
 		}
 
