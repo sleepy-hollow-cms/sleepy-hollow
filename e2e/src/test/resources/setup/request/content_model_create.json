@@ -2,10 +2,15 @@
   "name": "name",
   "fields": [
     {
-      "type": "type1"
+      "type": "text",
+      "required" : true
     },
     {
-      "type": "type2"
+      "type": "multiple-text",
+      "required" : false
+    },
+    {
+      "type": "user-created-type"
     }
   ]
 }

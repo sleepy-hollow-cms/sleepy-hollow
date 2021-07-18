@@ -23,17 +23,30 @@ func TestContentModel(t *testing.T) {
 			ID:   "id",
 			Name: "name",
 			Fields: []model.Field{
-				{Type: "text"},
+				{
+					Type:     "text",
+					Required: true,
+				},
 			},
 		}
 
-		mockContentModelDriver.On("Create", "name", []string{"text"}).Return(&contentModel, nil)
+		fields := []model.Field{
+			{
+				Type:     "text",
+				Required: true,
+			},
+		}
+
+		mockContentModelDriver.On("Create", "name", fields).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
 		model := write.ContentModel{
 			Name: "name",
 			Fields: field.Fields{
-				{Type: field.Text},
+				{
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
 			},
 		}
 
@@ -43,7 +56,10 @@ func TestContentModel(t *testing.T) {
 			ID:   domain.ContentModelID("id"),
 			Name: domain.Name("name"),
 			Fields: field.Fields{
-				{Type: field.Text},
+				{
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
 			},
 		}
 
@@ -57,7 +73,7 @@ type MockContentModelDriver struct {
 	mock.Mock
 }
 
-func (_m *MockContentModelDriver) Create(name string, strings []string) (*model.ContentModel, error) {
-	ret := _m.Called(name, strings)
+func (_m *MockContentModelDriver) Create(name string, fields []model.Field) (*model.ContentModel, error) {
+	ret := _m.Called(name, fields)
 	return ret.Get(0).(*model.ContentModel), ret.Error(1)
 }
