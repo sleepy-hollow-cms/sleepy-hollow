@@ -15,12 +15,12 @@ class HttpClient {
                 .let(client)
                 .let { it.toTriple() }
 
-        fun putRequest(
+        fun postRequest(
             url: String,
             body: String?,
             headers: List<Pair<String, String?>> = emptyList()
         ): Triple<Int, String, List<Pair<String, String?>>> =
-            Request(Method.PUT, url)
+            Request(Method.POST, url)
                 .headers(headers)
                 .let { if (body != null) it.body(body) else it.body(Body.EMPTY) }
                 .let(client)

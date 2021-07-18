@@ -10,16 +10,9 @@ import org.litote.kmongo.findOne
 
 class ContentManagementApiTest : TestBase {
 
-    @Step("<path>にアクセスするとボディ<body>、ステータスコード<code>のレスポンスを返す")
-    fun systemLivenessCheck(path: String, body: String, code: Int) {
-        val (statusCode, resBody) = HttpClient.getRequest("${Configuration[content_management_api.endpoint]}$path")
-        statusCode shouldBeEqualTo code
-        resBody.trimEnd() shouldBeEqualTo body
-    }
-
-    @Step("<path>にボディ<filePath>でリクエストを送る")
-    fun requestCreateContentModel(path: String, filePath: String) {
-        val (statusCode, body, _) = HttpClient.putRequest(
+    @Step("<path>にボディ<filePath>でPOSTリクエストを送る")
+    fun requestPost(path: String, filePath: String) {
+        val (statusCode, body, _) = HttpClient.postRequest(
             "${Configuration[content_management_api.endpoint]}$path",
             readFromFile(filePath),
             listOf(Pair("Content-Type", "application/json"))
@@ -28,6 +21,16 @@ class ContentManagementApiTest : TestBase {
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
     }
+
+    @Step("<path>にGETリクエストを送る")
+    fun requestGet(path: String) {
+        val (statusCode, body, _) = HttpClient.getRequest(
+            "${Configuration[content_management_api.endpoint]}$path")
+
+        SpecDataStore.put("statusCode", statusCode)
+        SpecDataStore.put("body", body)
+    }
+
 
     @Step("<statusCode>ステータスコードが返ってくる")
     fun verifyStatusCode(statusCode: Int) =
