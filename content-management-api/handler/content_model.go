@@ -30,7 +30,7 @@ func (r *ContentModelResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.GET("/spaces/:spaceId/contentModels/:contentModelId", r.GetByID)
 	g.GET("/spaces/:spaceId/contentModels", r.GetBySpaceID)
-	g.PUT("/spaces/:spaceId/contentModels", r.CreateContentModel)
+	g.POST("/spaces/:spaceId/contentModels", r.CreateContentModel)
 }
 
 func (r *ContentModelResource) GetByID(c echo.Context) error {
@@ -96,7 +96,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		}
 	}
 
-	c.JSON(http.StatusOK, ContentModelPutResponseBody{
+	c.JSON(http.StatusCreated, ContentModelPutResponseBody{
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
