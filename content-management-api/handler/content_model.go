@@ -76,7 +76,10 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 
 	fields := make(field.Fields, len(m.Fields))
 	for i, f := range m.Fields {
-		fields[i] = field.Field{Type: field.Of(f.Type)}
+		fields[i] = field.Field{
+			Type:     field.Of(f.Type),
+			Required: field.Required(f.Required),
+		}
 	}
 
 	contentModel, err := r.ContentModelUseCase.Create(write.ContentModel{
@@ -93,6 +96,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	for i, field := range contentModel.Fields {
 		resFields[i] = Field{
 			Type: field.Type.String(),
+			Required: bool(field.Required),
 		}
 	}
 
@@ -117,5 +121,6 @@ type ContentModelPutRequestBody struct {
 }
 
 type Field struct {
-	Type string `json:"type"`
+	Type     string `json:"type"`
+	Required bool   `json:"required"`
 }

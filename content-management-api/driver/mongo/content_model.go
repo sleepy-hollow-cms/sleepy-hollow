@@ -15,7 +15,8 @@ type ContentModel struct {
 }
 
 type Field struct {
-	Type string `bson:"field_type"`
+	Type     string `bson:"field_type"`
+	Required bool   `bson:"required"`
 }
 
 //ContentModelDriver ContentModel Collection on MongoDB
@@ -29,7 +30,7 @@ func NewContentModelDriver(client *Client) driver.ContentModel {
 	}
 }
 
-func (c ContentModelDriver) Create(name string, fields []string) (*model.ContentModel, error) {
+func (c ContentModelDriver) Create(name string, fields []model.Field) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -40,7 +41,8 @@ func (c ContentModelDriver) Create(name string, fields []string) (*model.Content
 	fieldsModel := make([]Field, len(fields))
 	for i, field := range fields {
 		fieldsModel[i] = Field{
-			Type: field,
+			Type:     field.Type,
+			Required: field.Required,
 		}
 	}
 
@@ -54,7 +56,8 @@ func (c ContentModelDriver) Create(name string, fields []string) (*model.Content
 	resultFields := make([]model.Field, len(insert.Fields))
 	for i, field := range insert.Fields {
 		resultFields[i] = model.Field{
-			Type: field.Type,
+			Type:     field.Type,
+			Required: field.Required,
 		}
 	}
 

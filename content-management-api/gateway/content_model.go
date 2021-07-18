@@ -4,6 +4,7 @@ import (
 	"content-management-api/domain"
 	"content-management-api/domain/field"
 	"content-management-api/driver"
+	"content-management-api/driver/model"
 	"content-management-api/usecase/write"
 	"context"
 )
@@ -27,10 +28,13 @@ func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (do
 }
 
 func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error) {
-	fields := make([]string, len(contentModel.Fields))
+	fields := make([]model.Field, len(contentModel.Fields))
 
 	for i, field := range contentModel.Fields {
-		fields[i] = field.Type.String()
+		fields[i] = model.Field{
+			Type:     field.Type.String(),
+			Required: bool(field.Required),
+		}
 	}
 
 	created, err := c.Driver.Create(contentModel.Name.String(), fields)
@@ -42,7 +46,8 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 	createdFields := make(field.Fields, len(created.Fields))
 	for i, createdField := range created.Fields {
 		createdFields[i] = field.Field{
-			Type: field.Of(createdField.Type),
+			Type:     field.Of(createdField.Type),
+			Required: field.Required(createdField.Required),
 		}
 	}
 
