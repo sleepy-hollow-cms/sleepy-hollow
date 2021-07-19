@@ -9,6 +9,7 @@
 * レスポンスボディのJsonPath"$.fields[2].required"の真偽値が"false"である
 
 # ContentModelの作成でDBに登録されている値が正しい値である
+* MongoDBのContentModelに保存されているのデータをSpecDataStoreにストアする
 * MongoDBに登録されている値のJsonPath"name"の値が"name"である
 * MongoDBに登録されている値のJsonPath"$.fields[0].field_type"の値が"text"である
 * MongoDBに登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
