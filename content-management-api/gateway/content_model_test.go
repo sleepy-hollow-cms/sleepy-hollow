@@ -24,6 +24,7 @@ func TestContentModel(t *testing.T) {
 			Name: "name",
 			Fields: []model.Field{
 				{
+					Name:     "fname",
 					Type:     "text",
 					Required: true,
 				},
@@ -32,6 +33,7 @@ func TestContentModel(t *testing.T) {
 
 		fields := []model.Field{
 			{
+				Name:     "fname",
 				Type:     "text",
 				Required: true,
 			},
@@ -44,6 +46,7 @@ func TestContentModel(t *testing.T) {
 			Name: "name",
 			Fields: field.Fields{
 				{
+					Name:     field.Name("fname"),
 					Type:     field.Text,
 					Required: field.Required(true),
 				},
@@ -57,6 +60,7 @@ func TestContentModel(t *testing.T) {
 			Name: domain.Name("name"),
 			Fields: field.Fields{
 				{
+					Name:     field.Name("fname"),
 					Type:     field.Text,
 					Required: field.Required(true),
 				},

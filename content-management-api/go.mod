@@ -11,4 +11,5 @@ require (
 	github.com/stretchr/testify v1.7.0
 	go.mongodb.org/mongo-driver v1.6.0
 	go.uber.org/zap v1.18.1
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

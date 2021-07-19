@@ -1,10 +1,12 @@
 package com.sleepyhollow
 
+import com.sleepyhollow.HttpClient.Companion.toTriple
 import org.http4k.client.ApacheClient
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
+import org.http4k.routing.header
 
 class HttpClient {
     companion object {
@@ -19,12 +21,19 @@ class HttpClient {
             url: String,
             body: String?,
             headers: List<Pair<String, String?>> = emptyList()
-        ): Triple<Int, String, List<Pair<String, String?>>> =
-            Request(Method.POST, url)
-                .headers(headers)
-                .let { if (body != null) it.body(body) else it.body(Body.EMPTY) }
-                .let(client)
-                .let { it.toTriple() }
+        ): Triple<Int, String, List<Pair<String, String?>>> = request(Method.POST, body, url, headers)
+
+        fun putRequest(
+            url: String,
+            body: String?,
+            headers: List<Pair<String, String?>> = emptyList()
+        ): Triple<Int, String, List<Pair<String, String?>>> = request(Method.PUT, body, url, headers)
+
+        private fun request(method: Method, body: String?, url: String, headers: List<Pair<String, String?>>) = Request(method, url)
+            .headers(headers)
+            .let { if (body != null) it.body(body) else it.body(Body.EMPTY) }
+            .let(client)
+            .let { it.toTriple() }
 
         private fun Response.toTriple() =
             Triple(this.status.code, this.bodyString(), this.headers)
