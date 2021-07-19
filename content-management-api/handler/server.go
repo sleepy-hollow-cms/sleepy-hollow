@@ -5,6 +5,7 @@ import (
 	"content-management-api/driver/mongo"
 	"content-management-api/env"
 	"content-management-api/gateway"
+	"content-management-api/handler/validator"
 	"content-management-api/usecase"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -28,6 +29,9 @@ func NewServer(container cache.Cache) Server {
 	config := env.GetServerConfig()
 	// Echo instance
 	e := echo.New()
+
+	// set Validator
+	e.Validator = validator.NewValidator()
 
 	// Middleware
 	e.Use(middleware.Logger())

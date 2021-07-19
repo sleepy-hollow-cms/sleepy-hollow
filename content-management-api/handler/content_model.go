@@ -74,6 +74,11 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		return err
 	}
 
+	if err := c.Validate(m); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return err
+	}
+
 	fields := make(field.Fields, len(m.Fields))
 	for i, f := range m.Fields {
 		fields[i] = field.Field{
@@ -95,7 +100,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		resFields[i] = Field{
-			Type: field.Type.String(),
+			Type:     field.Type.String(),
 			Required: bool(field.Required),
 		}
 	}
@@ -116,11 +121,11 @@ type ContentModelPostResponseBody struct {
 }
 
 type ContentModelPutRequestBody struct {
-	Name   string  `json:"name"`
-	Fields []Field `json:"fields"`
+	Name   string  `json:"name" validate:"required"`
+	Fields []Field `json:"fields" validate:"dive,required"`
 }
 
 type Field struct {
-	Type     string `json:"type"`
+	Type     string `json:"type" validate:"required"`
 	Required bool   `json:"required"`
 }
