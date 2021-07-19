@@ -6,3 +6,7 @@ import "content-management-api/driver/model"
 type ContentModel interface {
 	Create(string, []model.Field) (*model.ContentModel, error)
 }
+
+type Entry interface {
+	Create() (*model.Entry, error)
+}

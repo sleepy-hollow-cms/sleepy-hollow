@@ -1,4 +1,4 @@
-# ContentModelを取得できる
+# ContentModel
 
 ## ContentModelを保存できる
 * "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_create.json"でPOSTリクエストを送る
