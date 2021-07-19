@@ -15,6 +15,7 @@ type ContentModel struct {
 }
 
 type Field struct {
+	Name     string `bson:"name"`
 	Type     string `bson:"field_type"`
 	Required bool   `bson:"required"`
 }
@@ -41,6 +42,7 @@ func (c ContentModelDriver) Create(name string, fields []model.Field) (*model.Co
 	fieldsModel := make([]Field, len(fields))
 	for i, field := range fields {
 		fieldsModel[i] = Field{
+			Name:     field.Name,
 			Type:     field.Type,
 			Required: field.Required,
 		}
@@ -56,6 +58,7 @@ func (c ContentModelDriver) Create(name string, fields []model.Field) (*model.Co
 	resultFields := make([]model.Field, len(insert.Fields))
 	for i, field := range insert.Fields {
 		resultFields[i] = model.Field{
+			Name:     field.Name,
 			Type:     field.Type,
 			Required: field.Required,
 		}

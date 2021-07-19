@@ -32,6 +32,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 
 	for i, field := range contentModel.Fields {
 		fields[i] = model.Field{
+			Name:     field.Name.String(),
 			Type:     field.Type.String(),
 			Required: bool(field.Required),
 		}
@@ -46,6 +47,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 	createdFields := make(field.Fields, len(created.Fields))
 	for i, createdField := range created.Fields {
 		createdFields[i] = field.Field{
+			Name:     field.Name(createdField.Name),
 			Type:     field.Of(createdField.Type),
 			Required: field.Required(createdField.Required),
 		}

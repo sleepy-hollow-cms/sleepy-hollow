@@ -70,7 +70,7 @@ compose-up: docker-build
 
 .PHONY: compose-up-mongo
 compose-up-mongo:
-	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml up -d mongo
+	@docker-compose -f $(DOCKER_DIR)/docker-compose.yml up -d mongo mongo-express
 
 .PHONY: compose-down
 compose-down:

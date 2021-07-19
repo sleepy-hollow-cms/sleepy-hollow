@@ -1,4 +1,4 @@
-# ContentModelの作成でレスボンスボディが正しい形である
+# ContentModelの作成でレスポンスボディが正しい形である
 * レスポンスボディのJsonPath"$.name"の値が"name"である
 * レスポンスボディのJsonPath"$.fields[0].type"の値が"text"である
 * レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である

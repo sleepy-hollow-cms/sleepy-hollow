@@ -67,7 +67,7 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 }
 
 func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
-	m := ContentModelPutRequestBody{}
+	m := ContentModelPostRequestBody{}
 
 	if err := c.Bind(&m); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
@@ -84,6 +84,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		fields[i] = field.Field{
 			Type:     field.Of(f.Type),
 			Required: field.Required(f.Required),
+			Name:     field.Name(f.Name),
 		}
 	}
 
@@ -100,12 +101,13 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		resFields[i] = Field{
+			Name:     field.Name.String(),
 			Type:     field.Type.String(),
 			Required: bool(field.Required),
 		}
 	}
 
-	c.JSON(http.StatusCreated, ContentModelPutResponseBody{
+	c.JSON(http.StatusCreated, ContentModelPostResponseBody{
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
@@ -114,13 +116,13 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	return nil
 }
 
-type ContentModelPutResponseBody struct {
+type ContentModelPostResponseBody struct {
 	ID     string  `json:"id"`
 	Name   string  `json:"name"`
 	Fields []Field `json:"fields"`
 }
 
-type ContentModelPutRequestBody struct {
+type ContentModelPostRequestBody struct {
 	Name   string  `json:"name" validate:"required"`
 	Fields []Field `json:"fields" validate:"dive,required"`
 }
@@ -128,4 +130,5 @@ type ContentModelPutRequestBody struct {
 type Field struct {
 	Type     string `json:"type" validate:"required"`
 	Required bool   `json:"required"`
+	Name     string `json:"name"`
 }
