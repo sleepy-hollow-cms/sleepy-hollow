@@ -100,7 +100,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		}
 	}
 
-	c.JSON(http.StatusCreated, ContentModelPutResponseBody{
+	c.JSON(http.StatusCreated, ContentModelPostResponseBody{
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
@@ -109,7 +109,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	return nil
 }
 
-type ContentModelPutResponseBody struct {
+type ContentModelPostResponseBody struct {
 	ID     string  `json:"id"`
 	Name   string  `json:"name"`
 	Fields []Field `json:"fields"`

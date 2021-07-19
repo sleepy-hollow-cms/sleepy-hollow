@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath
 import com.thoughtworks.gauge.Step
 import com.thoughtworks.gauge.datastore.SpecDataStore
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldNotBe
 import org.bson.types.ObjectId
 import org.litote.kmongo.findOneById
 
@@ -17,14 +18,8 @@ class ContentManagementApiTest : TestBase {
             listOf(Pair("Content-Type", "application/json"))
         )
 
-        val id = JsonPath.read<String>(body, "$.id")
-        val storedData = MongoClient.CONTENT_MODEL.getCollection()
-            .findOneById(ObjectId(id))
-            ?.toJson()
-
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
-        SpecDataStore.put("storedData", storedData)
     }
 
     @Step("<path>にGETリクエストを送る")
@@ -35,6 +30,26 @@ class ContentManagementApiTest : TestBase {
 
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
+    }
+
+    @Step("MongoDBのContentModelに保存されているのデータをSpecDataStoreにストアする")
+    fun storeMongoDBContentModel() {
+        val body = SpecDataStore.get("body") as String
+        val id = JsonPath.read<String>(body, "$.id")
+        val storedData = MongoClient.CONTENT_MODEL.getCollection()
+            .findOneById(ObjectId(id))
+            ?.toJson()
+        SpecDataStore.put("storedData", storedData)
+    }
+
+    @Step("MongoDBのEntryに保存されているのデータをSpecDataStoreにストアする")
+    fun storeMongoDBEntry() {
+        val body = SpecDataStore.get("body") as String
+        val id = JsonPath.read<String>(body, "$.id")
+        val storedData = MongoClient.ENTRY.getCollection()
+            .findOneById(ObjectId(id))
+            ?.toJson()
+        SpecDataStore.put("storedData", storedData)
     }
 
     @Step("<statusCode>ステータスコードが返ってくる")
@@ -64,5 +79,11 @@ class ContentManagementApiTest : TestBase {
     fun verifyMongoDBBoolean(jsonPath: String, value: Boolean) {
         val body = SpecDataStore.get("storedData") as String
         JsonPath.read<String>(body, jsonPath) shouldBeEqualTo value
+    }
+
+    @Step("MongoDBにIDが保存されている")
+    fun verifyMongoDBEntryId() {
+        val body = SpecDataStore.get("storedData") as String
+        JsonPath.read<String>(body, "$._id") shouldNotBe null
     }
 }

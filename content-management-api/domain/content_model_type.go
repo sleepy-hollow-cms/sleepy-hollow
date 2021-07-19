@@ -3,15 +3,15 @@ package domain
 type ContentModelType int
 
 const (
-	Entry ContentModelType = iota
-	Media
+	EntryType ContentModelType = iota
+	MediaType
 )
 
 func (c ContentModelType) String() string {
 	switch c {
-	case Entry:
+	case EntryType:
 		return "entry"
-	case Media:
+	case MediaType:
 		return "media"
 	default:
 		return "Unknown"
