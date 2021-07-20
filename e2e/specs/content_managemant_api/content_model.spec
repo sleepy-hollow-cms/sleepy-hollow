@@ -11,6 +11,7 @@
 * "201"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.fields[0].type"の値が"number"である
 * レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
+* MongoDBのContentModelに保存されているのデータをSpecDataStoreにストアする
 * MongoDBに登録されている値のJsonPath"$.fields[0].field_type"の値が"number"である
 * MongoDBに登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 
@@ -20,6 +21,7 @@
 * レスポンスボディのJsonPath"$.fields[0].type"の値が"text"である
 * レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
 * レスポンスボディのJsonPath"$.fields[0].name"の値が"fieldName"である
+* MongoDBのContentModelに保存されているのデータをSpecDataStoreにストアする
 * MongoDBに登録されている値のJsonPath"$.fields[0].field_type"の値が"text"である
 * MongoDBに登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 * MongoDBに登録されている値のJsonPath"$.fields[0].name"の値が"fieldName"である
