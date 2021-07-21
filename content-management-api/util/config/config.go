@@ -23,6 +23,7 @@ type config struct {
 type log struct {
 	Encoding string `yaml:"encoding" default:"json"`
 	Output   string `yaml:"output" default:"stdout"`
+	Level    string `yaml:"level" default:"debug"`
 }
 
 type server struct {

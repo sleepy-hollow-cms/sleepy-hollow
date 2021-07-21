@@ -2,11 +2,11 @@ package handler
 
 import (
 	"content-management-api/cache"
-	"content-management-api/config"
 	"content-management-api/driver/mongo"
 	"content-management-api/gateway"
 	"content-management-api/handler/validator"
 	"content-management-api/usecase"
+	"content-management-api/util/config"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

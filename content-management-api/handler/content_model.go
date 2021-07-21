@@ -52,8 +52,8 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, ContentModelResponseBody{
-		ID:   contentModel.ID.String(),
-		Name: contentModel.Name.String(),
+		ID:     contentModel.ID.String(),
+		Name:   contentModel.Name.String(),
 		Fields: resFields,
 	})
 }
