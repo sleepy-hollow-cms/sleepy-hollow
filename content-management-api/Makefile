@@ -35,11 +35,11 @@ clean:
 	rm -f $(DISTDIR)/$(BINARY_NAME)*
 
 .PHONY: run
-run: export APP_PORT=3000
-run: export MONGO_USER=root
-run: export MONGO_PASSWORD=password
-run: export MONGO_HOST=localhost
-run: export MONGO_PORT=27017
+run: export SLEEPY_HOLLOW_SERVER_PORT=3000
+run: export SLEEPY_HOLLOW_MONGODB_USER=root
+run: export SLEEPY_HOLLOW_MONGODB_PASSWORD=password
+run: export SLEEPY_HOLLOW_MONGODB_HOST=localhost
+run: export SLEEPY_HOLLOW_MONGODB_PORT=27017
 run:
 	$(GORUN) main.go
 
