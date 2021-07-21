@@ -71,6 +71,7 @@ func TestContentModel(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
 	})
+
 }
 
 type MockContentModelDriver struct {
