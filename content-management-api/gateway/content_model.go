@@ -10,10 +10,10 @@ import (
 )
 
 type ContentModel struct {
-	Driver driver.ContentModel
+	Driver driver.ContentDriver
 }
 
-func NewContentModel(driver driver.ContentModel) *ContentModel {
+func NewContentModel(driver driver.ContentDriver) *ContentModel {
 	return &ContentModel{
 		Driver: driver,
 	}
@@ -38,7 +38,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		}
 	}
 
-	created, err := c.Driver.Create(contentModel.Name.String(), fields)
+	created, err := c.Driver.CreateModel(contentModel.Name.String(), fields)
 
 	if err != nil {
 		return domain.ContentModel{}, err
