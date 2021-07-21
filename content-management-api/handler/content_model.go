@@ -42,8 +42,19 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, &ContentModel{
-		ID: contentModel.ID.String(),
+	resFields := make([]Field, len(contentModel.Fields))
+	for i, field := range contentModel.Fields {
+		resFields[i] = Field{
+			Name:     field.Name.String(),
+			Type:     field.Type.String(),
+			Required: bool(field.Required),
+		}
+	}
+
+	return c.JSON(http.StatusOK, ContentModelResponseBody{
+		ID:   contentModel.ID.String(),
+		Name: contentModel.Name.String(),
+		Fields: resFields,
 	})
 }
 
@@ -107,7 +118,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		}
 	}
 
-	c.JSON(http.StatusCreated, ContentModelPostResponseBody{
+	c.JSON(http.StatusCreated, ContentModelResponseBody{
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
@@ -116,7 +127,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	return nil
 }
 
-type ContentModelPostResponseBody struct {
+type ContentModelResponseBody struct {
 	ID     string  `json:"id"`
 	Name   string  `json:"name"`
 	Fields []Field `json:"fields"`

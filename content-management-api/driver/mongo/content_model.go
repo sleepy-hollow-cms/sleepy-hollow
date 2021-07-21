@@ -4,6 +4,7 @@ import (
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"context"
+	"go.mongodb.org/mongo-driver/bson"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -55,6 +56,10 @@ func (c ContentModelDriver) Create(name string, fields []model.Field) (*model.Co
 
 	result, err := collections.InsertOne(context.Background(), insert)
 
+	if err != nil {
+		return nil, err
+	}
+
 	resultFields := make([]model.Field, len(insert.Fields))
 	for i, field := range insert.Fields {
 		resultFields[i] = model.Field{
@@ -81,4 +86,41 @@ func (c ContentModelDriver) Update() (*model.ContentModel, error) {
 
 func (c ContentModelDriver) Delete() error {
 	panic("implement me")
+}
+
+func (c ContentModelDriver) FindByID(id string) (*model.ContentModel, error) {
+
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("models").Collection("content_model")
+
+	//objectid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	found := collections.FindOne(context.Background(), bson.M{})
+
+	var contentModel  ContentModel
+	err = found.Decode(&contentModel)
+	if err != nil {
+		return nil, err
+	}
+
+	resultFields := make([]model.Field, len(contentModel.Fields))
+	for i, field := range contentModel.Fields {
+		resultFields[i] = model.Field{
+			Name:     field.Name,
+			Type:     field.Type,
+			Required: field.Required,
+		}
+	}
+
+	return &model.ContentModel{
+		ID:     contentModel.ID.Hex(),
+		Name:   contentModel.Name,
+		Fields: resultFields,
+	}, nil
 }

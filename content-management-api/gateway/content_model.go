@@ -20,7 +20,28 @@ func NewContentModel(driver driver.ContentModel) *ContentModel {
 }
 
 func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (domain.ContentModel, error) {
-	panic("implement me")
+
+	contentModels, err := c.Driver.FindByID(id.String())
+
+	if err != nil {
+		return domain.ContentModel{}, err
+	}
+	fields := make(field.Fields, len(contentModels.Fields))
+
+	for i, getField := range contentModels.Fields {
+		fields[i] = field.Field{
+			Name:     field.Name(getField.Name),
+			Type:     field.Of(getField.Type),
+			Required: field.Required(getField.Required),
+		}
+	}
+
+	return domain.ContentModel{
+		ID:     domain.ContentModelID(contentModels.ID),
+		Name:   domain.Name(contentModels.Name),
+		Fields: fields,
+	}, nil
+
 }
 
 func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (domain.ContentModels, error) {
