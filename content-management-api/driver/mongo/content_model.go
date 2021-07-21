@@ -124,7 +124,7 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	}
 	found := collections.FindOne(context.Background(), bson.M{})
 
-	var contentModel  ContentModel
+	var contentModel ContentModel
 	err = found.Decode(&contentModel)
 	if err != nil {
 		return nil, err

@@ -13,6 +13,6 @@ type Field struct {
 }
 
 type Entry struct {
-	ID string
+	ID      string
 	ModelID string
 }

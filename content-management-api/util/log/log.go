@@ -1,6 +1,7 @@
 package log
 
 import (
+	"content-management-api/util/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -41,14 +42,20 @@ var (
 )
 
 func init() {
+
+	err := config.Config.Load()
+	if err != nil {
+		panic(err)
+	}
+
 	outputPaths := []string{}
-	outputPaths = append(outputPaths, "stdout")
-	var ll logLevel = "debug"
+	outputPaths = append(outputPaths, config.Config.Log.Output)
+	var ll logLevel = logLevel(config.Config.Log.Level)
 
 	logConfig := zap.Config{
 		OutputPaths: outputPaths,
 		Level:       zap.NewAtomicLevelAt(ll.zapLogLevel()),
-		Encoding:    "json",
+		Encoding:    config.Config.Log.Encoding,
 		EncoderConfig: zapcore.EncoderConfig{
 			LevelKey:     "level",
 			TimeKey:      "time",

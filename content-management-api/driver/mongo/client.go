@@ -1,8 +1,8 @@
 package mongo
 
 import (
-	"content-management-api/config"
 	"content-management-api/driver"
+	"content-management-api/util/config"
 	"context"
 	"errors"
 	"fmt"

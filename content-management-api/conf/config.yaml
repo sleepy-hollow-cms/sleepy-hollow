@@ -1,6 +1,7 @@
 log:
   encoding: json
   output: stdout
+  level: debug
 
 server:
   port: 3000
