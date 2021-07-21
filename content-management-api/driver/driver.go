@@ -8,5 +8,5 @@ type ContentModel interface {
 }
 
 type Entry interface {
-	Create() (*model.Entry, error)
+	Create(model.Entry) (*model.Entry, error)
 }

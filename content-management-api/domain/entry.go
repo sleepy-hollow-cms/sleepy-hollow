@@ -3,7 +3,8 @@ package domain
 type EntryId string
 
 type Entry struct {
-	ID EntryId
+	ID             EntryId
+	ContentModelID ContentModelID
 }
 
 func (c EntryId) String() string {
