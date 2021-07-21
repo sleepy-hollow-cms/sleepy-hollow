@@ -72,4 +72,55 @@ func TestContentModel(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
+	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
+
+		mockContentModelDriver := new(MockContentDriver)
+		id := domain.ContentModelID("id")
+		model := model.ContentModel{
+			ID:   "id",
+			Name: "name",
+			Fields: []model.Field{
+				{
+					Name:     "fname0",
+					Type:     "text",
+					Required: true,
+				},
+				{
+					Name:     "fname1",
+					Type:     "multiple-text",
+					Required: false,
+				},
+			},
+		}
+		mockContentModelDriver.On("FindContentModelByID", "id").Return(&model, nil)
+
+		target.Driver = mockContentModelDriver
+
+		expected := domain.ContentModel{
+			ID:   id,
+			Name: domain.Name("name"),
+			Fields: field.Fields{
+				{
+					Name:     field.Name("fname0"),
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+				{
+					Name:     field.Name("fname1"),
+					Type:     field.MultipleText,
+					Required: field.Required(false),
+				},
+			},
+		}
+
+		actual, err := target.FindByID(context.TODO(), id)
+
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
 }
+
+
+
+

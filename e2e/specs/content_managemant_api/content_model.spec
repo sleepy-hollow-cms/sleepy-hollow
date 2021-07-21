@@ -22,3 +22,13 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].field_type"の値が"text"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].name"の値が"fieldName"である
+
+## ID指定でContentModelを取得できる
+* "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b004"にGETリクエストを送る
+* "200"ステータスコードが返ってくる
+* レスポンスボディのJsonPath"$.fields[0].type"の値が"text"である
+* レスポンスボディのJsonPath"$.fields[0].name"の値が"name0"である
+* レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
+* レスポンスボディのJsonPath"$.fields[1].type"の値が"text"である
+* レスポンスボディのJsonPath"$.fields[1].name"の値が"name1"である
+* レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"fase"である
