@@ -14,4 +14,5 @@ type Field struct {
 
 type Entry struct {
 	ID string
+	ModelID string
 }

@@ -8,8 +8,8 @@ import (
 )
 
 type Entry struct {
-	ID   primitive.ObjectID `bson:"_id,omitempty"`
-	Name string             `bson:"name"`
+	ID             primitive.ObjectID `bson:"_id,omitempty"`
+	ContentModelID string             `bson:"content_model_id"`
 }
 
 type EntryDriver struct {
@@ -22,7 +22,7 @@ func NewEntryDriver(client *Client) driver.Entry {
 	}
 }
 
-func (e EntryDriver) Create() (*model.Entry, error) {
+func (e EntryDriver) Create(entry model.Entry) (*model.Entry, error) {
 	client, err := e.Client.Get()
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (e EntryDriver) Create() (*model.Entry, error) {
 	collection := client.Database("models").Collection("entry")
 
 	insert := Entry{
-		Name: "Not implement yet",
+		ContentModelID: entry.ModelID,
 	}
 
 	result, err := collection.InsertOne(context.Background(), insert)
