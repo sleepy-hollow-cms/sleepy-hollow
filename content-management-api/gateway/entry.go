@@ -9,10 +9,10 @@ import (
 )
 
 type Entry struct {
-	Driver driver.Entry
+	Driver driver.ContentDriver
 }
 
-func NewEntry(driver driver.Entry) *Entry {
+func NewEntry(driver driver.ContentDriver) *Entry {
 	return &Entry{
 		Driver: driver,
 	}
@@ -20,7 +20,7 @@ func NewEntry(driver driver.Entry) *Entry {
 
 func (e *Entry) Create(ctx context.Context, entry write.Entry) (domain.Entry, error) {
 
-	create, err := e.Driver.Create(model.Entry{ModelID: entry.ContentModelID.String()})
+	create, err := e.Driver.CreateEntry(model.Entry{ModelID: entry.ContentModelID.String()})
 
 	if err != nil {
 		return domain.Entry{}, err

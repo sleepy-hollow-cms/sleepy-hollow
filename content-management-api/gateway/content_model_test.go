@@ -1,24 +1,24 @@
-package gateway
+package gateway_test
 
 import (
 	"content-management-api/domain"
 	"content-management-api/domain/field"
 	"content-management-api/driver/model"
+	"content-management-api/gateway"
 	"content-management-api/usecase/write"
 	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestContentModel(t *testing.T) {
 
-	var target ContentModel
+	var target gateway.ContentModel
 
 	t.Run("テキスト文字列のフィールドを含んだContentModelを登録できる", func(t *testing.T) {
 		// Mock setting
-		mockContentModelDriver := new(MockContentModelDriver)
+		mockContentModelDriver := new(MockContentDriver)
 		contentModel := model.ContentModel{
 			ID:   "id",
 			Name: "name",
@@ -39,7 +39,7 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		mockContentModelDriver.On("Create", "name", fields).Return(&contentModel, nil)
+		mockContentModelDriver.On("CreateModel", "name", fields).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
 		model := write.ContentModel{
@@ -74,7 +74,7 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
 
-		mockContentModelDriver := new(MockContentModelDriver)
+		mockContentModelDriver := new(MockContentDriver)
 		id := domain.ContentModelID("id")
 		model := model.ContentModel{
 			ID:   "id",
@@ -92,7 +92,7 @@ func TestContentModel(t *testing.T) {
 				},
 			},
 		}
-		mockContentModelDriver.On("FindByID", "id").Return(&model, nil)
+		mockContentModelDriver.On("FindContentModelByID", "id").Return(&model, nil)
 
 		target.Driver = mockContentModelDriver
 
@@ -121,16 +121,6 @@ func TestContentModel(t *testing.T) {
 
 }
 
-type MockContentModelDriver struct {
-	mock.Mock
-}
 
-func (_m *MockContentModelDriver) Create(name string, fields []model.Field) (*model.ContentModel, error) {
-	ret := _m.Called(name, fields)
-	return ret.Get(0).(*model.ContentModel), ret.Error(1)
-}
 
-func (_m *MockContentModelDriver) FindByID(id string) (*model.ContentModel, error) {
-	ret := _m.Called(id)
-	return ret.Get(0).(*model.ContentModel), ret.Error(1)
-}
+

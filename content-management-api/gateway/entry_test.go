@@ -7,7 +7,6 @@ import (
 	"content-management-api/usecase/write"
 	"context"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"testing"
 )
 
@@ -16,7 +15,7 @@ func TestEntry(t *testing.T) {
 	target := gateway.Entry{}
 
 	t.Run("Entryを登録しそのIDを返す", func(t *testing.T) {
-		mockEntryDriver := new(MockEntryDriver)
+		mockEntryDriver := new(MockContentDriver)
 
 		inputEntry := write.Entry{
 			ContentModelID: "modelId",
@@ -30,7 +29,7 @@ func TestEntry(t *testing.T) {
 			ModelID: "modelId",
 		}
 
-		mockEntryDriver.On("Create", inputModelEntry).Return(&returnEntry)
+		mockEntryDriver.On("CreateEntry", inputModelEntry).Return(&returnEntry, nil)
 
 		target.Driver = mockEntryDriver
 
@@ -44,13 +43,4 @@ func TestEntry(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
 	})
-}
-
-type MockEntryDriver struct {
-	mock.Mock
-}
-
-func (_m *MockEntryDriver) Create(entry model.Entry) (*model.Entry, error) {
-	ret := _m.Called(entry)
-	return ret.Get(0).(*model.Entry), nil
 }

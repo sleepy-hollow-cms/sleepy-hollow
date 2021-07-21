@@ -21,18 +21,18 @@ type Field struct {
 	Required bool   `bson:"required"`
 }
 
-//ContentModelDriver ContentModel Collection on MongoDB
-type ContentModelDriver struct {
+//ContentDriver ContentModel Collection on MongoDB
+type ContentDriver struct {
 	Client *Client
 }
 
-func NewContentModelDriver(client *Client) driver.ContentModel {
-	return &ContentModelDriver{
+func NewContentDriver(client *Client) driver.ContentDriver {
+	return &ContentDriver{
 		Client: client,
 	}
 }
 
-func (c ContentModelDriver) Create(name string, fields []model.Field) (*model.ContentModel, error) {
+func (c ContentDriver) CreateModel(name string, fields []model.Field) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -76,19 +76,40 @@ func (c ContentModelDriver) Create(name string, fields []model.Field) (*model.Co
 	}, err
 }
 
-func (c ContentModelDriver) Select() (*model.ContentModel, error) {
+func (e ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
+	client, err := e.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collection := client.Database("models").Collection("entry")
+
+	insert := Entry{
+		ContentModelID: entry.ModelID,
+	}
+
+	result, err := collection.InsertOne(context.Background(), insert)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Entry{ID: result.InsertedID.(primitive.ObjectID).Hex()}, nil
+}
+
+func (c ContentDriver) Select() (*model.ContentModel, error) {
 	panic("implement me")
 }
 
-func (c ContentModelDriver) Update() (*model.ContentModel, error) {
+func (c ContentDriver) Update() (*model.ContentModel, error) {
 	panic("implement me")
 }
 
-func (c ContentModelDriver) Delete() error {
+func (c ContentDriver) Delete() error {
 	panic("implement me")
 }
 
-func (c ContentModelDriver) FindByID(id string) (*model.ContentModel, error) {
+func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {
 
 	client, err := c.Client.Get()
 	if err != nil {

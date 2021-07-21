@@ -10,10 +10,10 @@ import (
 )
 
 type ContentModel struct {
-	Driver driver.ContentModel
+	Driver driver.ContentDriver
 }
 
-func NewContentModel(driver driver.ContentModel) *ContentModel {
+func NewContentModel(driver driver.ContentDriver) *ContentModel {
 	return &ContentModel{
 		Driver: driver,
 	}
@@ -21,7 +21,7 @@ func NewContentModel(driver driver.ContentModel) *ContentModel {
 
 func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (domain.ContentModel, error) {
 
-	contentModels, err := c.Driver.FindByID(id.String())
+	contentModels, err := c.Driver.FindContentModelByID(id.String())
 
 	if err != nil {
 		return domain.ContentModel{}, err
@@ -59,7 +59,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		}
 	}
 
-	created, err := c.Driver.Create(contentModel.Name.String(), fields)
+	created, err := c.Driver.CreateModel(contentModel.Name.String(), fields)
 
 	if err != nil {
 		return domain.ContentModel{}, err

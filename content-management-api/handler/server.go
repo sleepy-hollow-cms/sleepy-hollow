@@ -2,8 +2,8 @@ package handler
 
 import (
 	"content-management-api/cache"
+	"content-management-api/config"
 	"content-management-api/driver/mongo"
-	"content-management-api/env"
 	"content-management-api/gateway"
 	"content-management-api/handler/validator"
 	"content-management-api/usecase"
@@ -22,14 +22,57 @@ type Server interface {
 }
 
 func (e *instance) Start() {
+	fmt.Printf(banner, version, website)
 	e.server.Logger.Fatal(e.server.Start(fmt.Sprintf(":%v", e.port)))
 }
 
+const (
+	// Version of Sleepy-Hollow Content-Management-API
+	version = "0.0.0"
+	website = "https://sleepy-hollow.io"
+	// http://patorjk.com/software/taag/#p=display&f=Small%20Slant&t=Echo
+	banner = `
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNkkkkkkkkkkkkMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNkkkkkkkkkkMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM#Y=H@@H@@H@HHTWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMM"""~<<("T"Y<~~~~d@H@@H@@H@::<?WMH8Y3<<<YYMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMM"!.~.~~~~~~~_____~:~d@@H@@H@@K::;;<<<;;;;;>>>>>>1TMMMMMMMMMMMMMMM
+MMMMMMMMMMMM9~..~.~~.~(jXH@@H@@@@HmH@H@@H@@@MkH@@@@H@MHky+>>>>????zTMMMMMMMMMMMM
+MMMMMMMMMM9~..~.~~.~~~~~~~~?TM@H@@H@MMMMMMMMH@@H@HM9C<>>>>>>????????zTMMMMMMMMMM
+MMMMMMMM#!..~.~~.~~~~~~~~~~~:~?HBT<::::::;;;<?THBC>;>>>>>>??>???????==zMMMMMMMMM
+MMMMMMM@..~..~.~~~~~~~~~~~~:~:::::::::::;:;;;;;;;;>>>>>>>??>??????==????MMMMMMMM
+MMMMMM@.~~.~~~~~~~~~~~~~~:~::~:::::::::;;;:;;;;;>>>>>>>??>???????=?==?=?=HMMMMMM
+MMMMM#..~.~.~~~.~~~~~~~~:~:~::~:::::::;;;;;;;;>>>>>>>>????????=?=?=?==?=?=MMMMMM
+MMMMM>.~.~~~~~~~~~~~~~:~:::::::::::::;;;;;;;;>>>>>>>?????????=?==?=??==?=?vMMMMM
+MMMMF.~~~~~~~~~~~~~~MNgJ-:~:::::::::;;;;;;;;>>>>>>>????zugMM=?=?==?==?=?==?dMMMM
+MMMM$~~.~~.~~~~~~~~:(MMMMNNgJ<::::;;;;;;;;>>>>>>>?1ggNMMMMM$?==??=?=?=?=?==dMMMM
+MMMM~~~~~~~~~~~~~:~::dMMMMMMMMMNe;;;;;;;>>>>>>>qNMMMMMMMMM@=?=?==?=?=?=?=?==MMMM
+MMMM~.~~~~~~~~~~:~:~::dMMMMMMMBC;;;;;;>>>>>>>???vTMMMMMMME=?=?=?==?==?==?=??MMMM
+MMMM~~~~~~~~~~::~:::::::T""5C;;;;;;;>>>>>>>?>??????vdBW8?=?==?=??=?=?=?=?==?MMMM
+MMMM~~~~~~~~:~:~::::::::::;;;;;;;;;>>>>>>>??????????=?=?=?=?==?==?=?=?=?=?==MMMM
+MMMM~~~~~~:~::~::::~:::::;;;;;;;;>>>>>>>??>???????==?=?==?=??=?=?==?==?=?=??MMMM
+MMMMF~~~~:~:~:::::?MMMMb;;;;;;MMMMMM#>?>???MMMMMMM?==?=?dMMMM#=?=?==?=?==?=dMMMM
+MMMMN_~::~:::::::::TMMM#;;;;;;MMMMMM#>?????MMMMMMM?=?==?dMMM5=?=?=??=?=?==1MMMMM
+MMMMMp~:~::~::::::::?HMNJJJJJ(MMMMMMNgJJJJ+MMMMMMMe+++++dM#6=?=?==?==?=??=qMMMMM
+MMMMMMx~:::::::::::;;;?MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM6=?=?==?==?==?==dMMMMMM
+MMMMMMN+:::::::::;;;;;;;<?HM>>>>??dMMMMMMMMMM#=====?MM9z?=?=?=?=??=??=?=1MMMMMMM
+MMMMMMMMJ:::::::;;;;;;;>>>>>>?????dMMMMMMMMMM#?==?==?==?==?==?=?==?==?=aMMMMMMMM
+MMMMMMMMMR::::;;;;;;;;>>>>>>?>??????=??TTT6==?=??=?=?=?=?==?=?==?==?=?dMMMMMMMMM
+MMMMMMMMMMNe;;;;;;;;>>>>>>>???>?????==?==?=?=?==?==?=?=?=??=?=?=??=?gMMMMMMMMMMM
+MMMMMMMMMMMMNg+;;;>>>>>>>>??>?????=?=?=?==?=?=?==?=?==?==?==?==?=1gMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMNgJ>>>>>>????????=?==?=?=?=?==?=??=?=?=?=?==?=?ugMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMN+gggggggNNgz?=?=?==?=?=?=?=1ggMNNgggggggNMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMNaggzzzzzzugggMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+--------------------------------------------------------------------------------
+Version: %s
+Web: %s
+`
+)
+
 func NewServer(container cache.Cache) Server {
-	config := env.GetServerConfig()
 	// Echo instance
 	e := echo.New()
-
+	e.HideBanner = true
 	// set Validator
 	e.Validator = validator.NewValidator()
 
@@ -43,7 +86,7 @@ func NewServer(container cache.Cache) Server {
 	routing(e, container)
 
 	return &instance{
-		port:   config.Port,
+		port:   config.Config.Server.Port,
 		server: e,
 	}
 }
@@ -54,11 +97,10 @@ func routing(e *echo.Echo, container cache.Cache) *echo.Echo {
 	if err != nil {
 		return nil
 	}
-	mongoContentModelDriver := mongo.NewContentModelDriver(db.(*mongo.Client))
-	mongoEntryDriver := mongo.NewEntryDriver(db.(*mongo.Client))
+	mongoContentDriver := mongo.NewContentDriver(db.(*mongo.Client))
 
-	contentModelResource := NewContentModelResource(usecase.NewContentModel(gateway.NewContentModel(mongoContentModelDriver)))
-	entryResource := NewEntryResource(usecase.NewEntry(gateway.NewEntry(mongoEntryDriver)))
+	contentModelResource := NewContentModelResource(usecase.NewContentModel(gateway.NewContentModel(mongoContentDriver)))
+	entryResource := NewEntryResource(usecase.NewEntry(gateway.NewEntry(mongoContentDriver)))
 	spaceResource := NewSpaceResource(usecase.NewSpace(gateway.NewSpace()))
 
 	contentModelResource.Routing(e)

@@ -1,0 +1,12 @@
+log:
+  encoding: json
+  output: stdout
+
+server:
+  port: 3000
+
+mongoDB:
+  user: root
+  password: password
+  host: mongo
+  port: 27017
