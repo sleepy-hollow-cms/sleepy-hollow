@@ -30,7 +30,7 @@ func (r *ContentModelResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.GET("/spaces/:spaceId/contentModels/:contentModelId", r.GetByID)
 	g.GET("/spaces/:spaceId/contentModels", r.GetBySpaceID)
-	g.PUT("/spaces/:spaceId/contentModels", r.CreateContentModel)
+	g.POST("/spaces/:spaceId/contentModels", r.CreateContentModel)
 }
 
 func (r *ContentModelResource) GetByID(c echo.Context) error {
@@ -67,16 +67,25 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 }
 
 func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
-	m := ContentModelPutRequestBody{}
+	m := ContentModelPostRequestBody{}
 
 	if err := c.Bind(&m); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
 		return err
 	}
 
+	if err := c.Validate(m); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return err
+	}
+
 	fields := make(field.Fields, len(m.Fields))
 	for i, f := range m.Fields {
-		fields[i] = field.Field{Type: field.Of(f.Type)}
+		fields[i] = field.Field{
+			Type:     field.Of(f.Type),
+			Required: field.Required(f.Required),
+			Name:     field.Name(f.Name),
+		}
 	}
 
 	contentModel, err := r.ContentModelUseCase.Create(write.ContentModel{
@@ -92,11 +101,13 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		resFields[i] = Field{
-			Type: field.Type.String(),
+			Name:     field.Name.String(),
+			Type:     field.Type.String(),
+			Required: bool(field.Required),
 		}
 	}
 
-	c.JSON(http.StatusOK, ContentModelPutResponseBody{
+	c.JSON(http.StatusCreated, ContentModelPostResponseBody{
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
@@ -105,17 +116,19 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	return nil
 }
 
-type ContentModelPutResponseBody struct {
+type ContentModelPostResponseBody struct {
 	ID     string  `json:"id"`
 	Name   string  `json:"name"`
 	Fields []Field `json:"fields"`
 }
 
-type ContentModelPutRequestBody struct {
-	Name   string  `json:"name"`
-	Fields []Field `json:"fields"`
+type ContentModelPostRequestBody struct {
+	Name   string  `json:"name" validate:"required"`
+	Fields []Field `json:"fields" validate:"dive,required"`
 }
 
 type Field struct {
-	Type string `json:"type"`
+	Type     string `json:"type" validate:"required"`
+	Required bool   `json:"required"`
+	Name     string `json:"name"`
 }

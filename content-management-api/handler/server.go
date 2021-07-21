@@ -5,6 +5,7 @@ import (
 	"content-management-api/driver/mongo"
 	"content-management-api/env"
 	"content-management-api/gateway"
+	"content-management-api/handler/validator"
 	"content-management-api/usecase"
 	"fmt"
 	"github.com/labstack/echo/v4"
@@ -29,6 +30,9 @@ func NewServer(container cache.Cache) Server {
 	// Echo instance
 	e := echo.New()
 
+	// set Validator
+	e.Validator = validator.NewValidator()
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -51,10 +55,14 @@ func routing(e *echo.Echo, container cache.Cache) *echo.Echo {
 		return nil
 	}
 	mongoContentModelDriver := mongo.NewContentModelDriver(db.(*mongo.Client))
+	mongoEntryDriver := mongo.NewEntryDriver(db.(*mongo.Client))
+
 	contentModelResource := NewContentModelResource(usecase.NewContentModel(gateway.NewContentModel(mongoContentModelDriver)))
+	entryResource := NewEntryResource(usecase.NewEntry(gateway.NewEntry(mongoEntryDriver)))
 	spaceResource := NewSpaceResource(usecase.NewSpace(gateway.NewSpace()))
 
 	contentModelResource.Routing(e)
+	entryResource.Routing(e)
 	spaceResource.Routing(e)
 
 	return e

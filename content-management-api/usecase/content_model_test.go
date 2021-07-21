@@ -115,15 +115,24 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelを登録することができる", func(t *testing.T) {
 		contentModel := write.ContentModel{
+			Name: domain.Name("name"),
 			Fields: []field.Field{
-				{Type: field.Text},
+				{
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
 			},
 		}
 
 		retContentModel := domain.ContentModel{
-			ID:     domain.ContentModelID("id"),
+			ID:   domain.ContentModelID("id"),
 			Name: domain.Name("name"),
-			Fields: nil,
+			Fields: []field.Field{
+				{
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+			},
 		}
 
 		// Mock setting
@@ -134,9 +143,14 @@ func TestContentModel(t *testing.T) {
 		actual, err := target.Create(contentModel)
 
 		expected := domain.ContentModel{
-			ID:     domain.ContentModelID("id"),
+			ID:   domain.ContentModelID("id"),
 			Name: domain.Name("name"),
-			Fields: nil,
+			Fields: []field.Field{
+				{
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+			},
 		}
 
 		mockContentModelPort.AssertExpectations(t)

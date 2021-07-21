@@ -4,5 +4,9 @@ import "content-management-api/driver/model"
 
 // ContentModel is data-store driver
 type ContentModel interface {
-	Create(string, []string) (*model.ContentModel, error)
+	Create(string, []model.Field) (*model.ContentModel, error)
+}
+
+type Entry interface {
+	Create() (*model.Entry, error)
 }

@@ -1,0 +1,10 @@
+{
+  "name": "name",
+  "fields": [
+    {
+      "type": "text",
+      "required" : true,
+      "name": "fieldName"
+    }
+  ]
+}

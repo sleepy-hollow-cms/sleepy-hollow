@@ -7,5 +7,11 @@ type ContentModel struct {
 }
 
 type Field struct {
-	Type string
+	Name     string
+	Type     string
+	Required bool
+}
+
+type Entry struct {
+	ID string
 }

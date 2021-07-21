@@ -1,0 +1,18 @@
+# ContentModelの作成でレスポンスボディが正しい形である
+* レスポンスボディのJsonPath"$.name"の値が"name"である
+* レスポンスボディのJsonPath"$.fields[0].type"の値が"text"である
+* レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
+* レスポンスボディのJsonPath"$.fields[1].type"の値が"multiple-text"である
+* レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"false"である
+* レスポンスボディのJsonPath"$.fields[1].type"の値が"multiple-text"である
+* レスポンスボディのJsonPath"$.fields[2].type"の値が"Unknown"である
+* レスポンスボディのJsonPath"$.fields[2].required"の真偽値が"false"である
+
+# ContentModelの作成でDBに登録されている値が正しい値である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.name"の値が"name"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].field_type"の値が"text"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[1].field_type"の値が"multiple-text"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[1].required"の真偽値が"false"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[2].field_type"の値が"Unknown"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[2].required"の真偽値が"false"である
