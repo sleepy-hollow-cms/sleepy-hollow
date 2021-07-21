@@ -1,8 +1,8 @@
 package mongo
 
 import (
+	"content-management-api/config"
 	"content-management-api/driver"
-	"content-management-api/env"
 	"context"
 	"errors"
 	"fmt"
@@ -28,9 +28,8 @@ type Client struct {
 }
 
 func NewClient() driver.Client {
-	config := env.GetMongoConfig()
 	return &Client{
-		uri:               fmt.Sprintf("mongodb://%s:%s@%s:%v", config.User, config.Password, config.Host, config.Port),
+		uri:               fmt.Sprintf("mongodb://%s:%s@%s:%v", config.Config.MongoDB.User, config.Config.MongoDB.Password, config.Config.MongoDB.Host, config.Config.MongoDB.Port),
 		maxConnectionPool: 100,
 		timeOut:           10 * time.Second,
 		cacheKey:          "mongo-client",

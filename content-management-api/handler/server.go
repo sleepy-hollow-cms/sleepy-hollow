@@ -2,8 +2,8 @@ package handler
 
 import (
 	"content-management-api/cache"
+	"content-management-api/config"
 	"content-management-api/driver/mongo"
-	"content-management-api/env"
 	"content-management-api/gateway"
 	"content-management-api/handler/validator"
 	"content-management-api/usecase"
@@ -26,7 +26,6 @@ func (e *instance) Start() {
 }
 
 func NewServer(container cache.Cache) Server {
-	config := env.GetServerConfig()
 	// Echo instance
 	e := echo.New()
 
@@ -43,7 +42,7 @@ func NewServer(container cache.Cache) Server {
 	routing(e, container)
 
 	return &instance{
-		port:   config.Port,
+		port:   config.Config.Server.Port,
 		server: e,
 	}
 }
