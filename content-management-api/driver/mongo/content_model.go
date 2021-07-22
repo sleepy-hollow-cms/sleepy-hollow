@@ -141,3 +141,25 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 		Fields: resultFields,
 	}, nil
 }
+
+func (c ContentDriver) DeleteContentModelByID(id string) (error) {
+
+	client, err := c.Client.Get()
+	if err != nil {
+		return err
+	}
+
+	collections := client.Database("models").Collection("content_model")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = collections.DeleteOne(context.Background(), bson.M{"_id": id})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

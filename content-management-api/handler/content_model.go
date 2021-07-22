@@ -29,6 +29,7 @@ func NewContentModelResource(useCase *usecase.ContentModel) *ContentModelResourc
 func (r *ContentModelResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.GET("/spaces/:spaceId/contentModels/:contentModelId", r.GetByID)
+	g.DELETE("/spaces/:spaceId/contentModels/:contentModelId", r.DeleteByID)
 	g.GET("/spaces/:spaceId/contentModels", r.GetBySpaceID)
 	g.POST("/spaces/:spaceId/contentModels", r.CreateContentModel)
 }
@@ -56,6 +57,18 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
 	})
+}
+
+func (r *ContentModelResource) DeleteByID(c echo.Context) error {
+	contentModelId := c.Param("contentModelId")
+
+	err := r.ContentModelUseCase.DeleteContentModelByID(domain.ContentModelID(contentModelId))
+
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }
 
 func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {

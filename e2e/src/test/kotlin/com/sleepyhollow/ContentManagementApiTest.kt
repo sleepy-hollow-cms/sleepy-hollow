@@ -36,6 +36,15 @@ class ContentManagementApiTest : TestBase {
         SpecDataStore.put("body", body)
     }
 
+    @Step("<path>にDELETEリクエストを送る")
+    fun requestDelete(path: String) {
+        val (statusCode, body, _) = HttpClient.deleteRequest(
+            "${Configuration[content_management_api.endpoint]}$path"
+        )
+
+        SpecDataStore.put("statusCode", statusCode)
+    }
+
     @Step("死活監視用GETリクエストを送る")
     fun requestGetLiveness() {
         val (statusCode, body, _) = HttpClient.getRequest(
