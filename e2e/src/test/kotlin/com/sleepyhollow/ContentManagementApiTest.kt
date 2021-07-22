@@ -4,7 +4,6 @@ import com.jayway.jsonpath.JsonPath
 import com.thoughtworks.gauge.Step
 import com.thoughtworks.gauge.datastore.SpecDataStore
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldNotBe
 import org.bson.types.ObjectId
 import org.litote.kmongo.findOneById
 
@@ -18,10 +17,8 @@ class ContentManagementApiTest : TestBase {
             listOf(Pair("Content-Type", "application/json"))
         )
 
-        val id = JsonPath.read<String>(body, "$.id")
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
-        SpecDataStore.put("id", id)
     }
 
     @Step("<path>にGETリクエストを送る")
@@ -31,7 +28,6 @@ class ContentManagementApiTest : TestBase {
         )
 
         val id = JsonPath.read<String>(body, "$.id")
-        SpecDataStore.put("id", id)
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
     }
@@ -65,7 +61,8 @@ class ContentManagementApiTest : TestBase {
 
     @Step("MongoDBの<collection>に登録されている値のJsonPath<jsonPath>の値が<value>である")
     fun verifyMongoDB(collection: String, jsonPath: String, value: String) {
-        val id = SpecDataStore.get("id") as String
+        val body = SpecDataStore.get("body") as String
+        val id = JsonPath.read<String>(body, "$.id")
         val data = MongoClient.valueOf(collection)
             .getCollection()
             .findOneById(ObjectId(id))
@@ -75,21 +72,12 @@ class ContentManagementApiTest : TestBase {
 
     @Step("MongoDBの<collection>に登録されている値のJsonPath<jsonPath>の真偽値が<value>である")
     fun verifyMongoDBBoolean(collection: String, jsonPath: String, value: Boolean) {
-        val id = SpecDataStore.get("id") as String
+        val body = SpecDataStore.get("body") as String
+        val id = JsonPath.read<String>(body, "$.id")
         val data = MongoClient.valueOf(collection)
             .getCollection()
             .findOneById(ObjectId(id))
             ?.toJson()
         JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
-    }
-
-    @Step("MongoDBにIDが保存されている")
-    fun verifyMongoDBEntryId() {
-        val id = SpecDataStore.get("id") as String
-        val data = MongoClient.valueOf("ENTRY")
-            .getCollection()
-            .findOneById(ObjectId(id))
-            ?.toJson()
-        JsonPath.read<String>(data, "$._id") shouldNotBe null
     }
 }

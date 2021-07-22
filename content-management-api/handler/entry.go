@@ -4,6 +4,7 @@ import (
 	"content-management-api/domain"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
+	"content-management-api/util/log"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -38,8 +39,15 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	createdEntry, err := en.EntryUseCase.Create(entry)
 
 	if err != nil {
-		println(err)
-		c.JSON(http.StatusInternalServerError, err.Error())
+		switch err := err.(type) {
+		case usecase.ContentModelNotFoundError:
+			log.Logger.Warnf("Entry cannot Found Becouse Content Model ID %s Not Found", modelID.ContentModelID)
+			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
+		default:
+			log.Logger.Warnf("Something Happened: %s", modelID.ContentModelID)
+			c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		return nil
 	}
 
 	c.JSON(http.StatusCreated, EntryPostResponseBody{

@@ -99,8 +99,9 @@ func routing(e *echo.Echo, container cache.Cache) *echo.Echo {
 	}
 	mongoContentDriver := mongo.NewContentDriver(db.(*mongo.Client))
 
-	contentModelResource := NewContentModelResource(usecase.NewContentModel(gateway.NewContentModel(mongoContentDriver)))
-	entryResource := NewEntryResource(usecase.NewEntry(gateway.NewEntry(mongoContentDriver)))
+	contentModelGateway := gateway.NewContentModel(mongoContentDriver)
+	contentModelResource := NewContentModelResource(usecase.NewContentModel(contentModelGateway))
+	entryResource := NewEntryResource(usecase.NewEntry(gateway.NewEntry(mongoContentDriver), contentModelGateway))
 	spaceResource := NewSpaceResource(usecase.NewSpace(gateway.NewSpace()))
 
 	contentModelResource.Routing(e)
@@ -108,4 +109,8 @@ func routing(e *echo.Echo, container cache.Cache) *echo.Echo {
 	spaceResource.Routing(e)
 
 	return e
+}
+
+type ErrorResponse struct {
+	Message string `json:"message"`
 }

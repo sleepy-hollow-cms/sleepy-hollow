@@ -3,10 +3,13 @@ package gateway_test
 import (
 	"content-management-api/domain"
 	"content-management-api/domain/field"
+	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"content-management-api/gateway"
+	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -117,6 +120,24 @@ func TestContentModel(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("ContentModelをID指定で取得し、存在なかった場合Errorを返す", func(t *testing.T) {
+
+		mockContentModelDriver := new(MockContentDriver)
+		id := domain.ContentModelID("id")
+
+		contentModelCannotFind := driver.NewContentModelCannotFindById("id")
+
+		mockContentModelDriver.On("FindContentModelByID", "id").Return(&model.ContentModel{}, contentModelCannotFind)
+
+		target.Driver = mockContentModelDriver
+
+		_, err := target.FindByID(context.TODO(), id)
+		expected := usecase.NewContentModelNotFoundError("Contents Not Found By Id: id")
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &expected))
 	})
 
 }
