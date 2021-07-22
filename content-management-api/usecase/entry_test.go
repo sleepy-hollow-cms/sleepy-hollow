@@ -57,7 +57,7 @@ func TestEntry(t *testing.T) {
 		}
 
 		contentModelNotFound := usecase.NewContentModelNotFoundError("content model not found")
-		mockContentModelPort.On("FindByID", id).Return(domain.ContentModel{}, &contentModelNotFound)
+		mockContentModelPort.On("FindByID", id).Return(domain.ContentModel{}, contentModelNotFound)
 
 		target.EntryPort = mockEntryPort
 		target.ContentModelPort = mockContentModelPort
@@ -66,6 +66,29 @@ func TestEntry(t *testing.T) {
 
 		assert.NotNil(t, err)
 		assert.True(t, errors.As(err, &contentModelNotFound))
+		mockEntryPort.AssertNotCalled(t, "FindByID")
+	})
+
+	t.Run("不明なエラーが返された場合はそのままに返す", func(t *testing.T) {
+
+		mockEntryPort := new(MockEntryPort)
+		mockContentModelPort := new(MockContentModelPort)
+
+		id := domain.ContentModelID("id")
+		entry := write.Entry{
+			ContentModelID: id,
+		}
+
+		someError := errors.New("some error")
+		mockContentModelPort.On("FindByID", id).Return(domain.ContentModel{}, someError)
+
+		target.EntryPort = mockEntryPort
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.Create(entry)
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &someError))
 		mockEntryPort.AssertNotCalled(t, "FindByID")
 	})
 }

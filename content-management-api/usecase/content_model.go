@@ -4,8 +4,8 @@ import (
 	"content-management-api/domain"
 	"content-management-api/port"
 	"content-management-api/usecase/write"
+	"content-management-api/util/log"
 	"context"
-	"fmt"
 )
 
 type ContentModel struct {
@@ -20,21 +20,23 @@ func NewContentModel(
 	}
 }
 
-func (c *ContentModel) FindContentModelByID(id domain.ContentModelID) (domain.ContentModel, error) {
+func (c *ContentModel) FindByID(id domain.ContentModelID) (domain.ContentModel, error) {
 	result, err := c.ContentModelPort.FindByID(context.TODO(), id)
 
 	if err != nil {
-		return domain.ContentModel{}, NewContentModelNotFoundError(fmt.Sprintf("content model ID: %+v", id))
+		log.Logger.Warn(err.Error())
+		return domain.ContentModel{}, err
 	}
 
 	return result, nil
 }
 
-func (c *ContentModel) DeleteContentModelByID(id domain.ContentModelID) (error) {
+func (c *ContentModel) DeleteContentModelByID(id domain.ContentModelID) error {
 	err := c.ContentModelPort.DeleteByID(context.TODO(), id)
 
 	if err != nil {
-		return NewContentModelNotFoundError(fmt.Sprintf("content model ID: %+v", id))
+		log.Logger.Warn(err.Error())
+		return err
 	}
 
 	return nil

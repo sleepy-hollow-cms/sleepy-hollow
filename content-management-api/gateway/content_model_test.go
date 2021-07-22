@@ -77,7 +77,7 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
 
-		mockContentModelDriver := new(MockContentDriver)
+		mockContentDriver := new(MockContentDriver)
 		id := domain.ContentModelID("id")
 		model := model.ContentModel{
 			ID:   "id",
@@ -95,9 +95,9 @@ func TestContentModel(t *testing.T) {
 				},
 			},
 		}
-		mockContentModelDriver.On("FindContentModelByID", "id").Return(&model, nil)
+		mockContentDriver.On("FindContentModelByID", "id").Return(&model, nil)
 
-		target.Driver = mockContentModelDriver
+		target.Driver = mockContentDriver
 
 		expected := domain.ContentModel{
 			ID:   id,
@@ -138,6 +138,23 @@ func TestContentModel(t *testing.T) {
 
 		assert.NotNil(t, err)
 		assert.True(t, errors.As(err, &expected))
+	})
+
+	t.Run("ContentModelをID指定で取得時に不明なエラーが発生したらそのまま返す", func(t *testing.T) {
+
+		mockContentModelDriver := new(MockContentDriver)
+		id := domain.ContentModelID("id")
+
+		someError := errors.New("some error")
+
+		mockContentModelDriver.On("FindContentModelByID", "id").Return(&model.ContentModel{}, someError)
+
+		target.Driver = mockContentModelDriver
+
+		_, err := target.FindByID(context.TODO(), id)
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &someError))
 	})
 
 	t.Run("ContentModelをID指定で削除することができる", func(t *testing.T) {

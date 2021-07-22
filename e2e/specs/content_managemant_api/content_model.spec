@@ -36,3 +36,4 @@
 ## ID指定でContentModelを削除できる
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b001"にDELETEリクエストを送る
 * "204"ステータスコードが返ってくる
+* MongoDBの"CONTENT_MODEL"に"5063114bd386d8fadbd6b001"のIDでデータが登録されていない
