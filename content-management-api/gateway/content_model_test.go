@@ -140,4 +140,18 @@ func TestContentModel(t *testing.T) {
 		assert.True(t, errors.As(err, &expected))
 	})
 
+	t.Run("ContentModelをID指定で削除することができる", func(t *testing.T) {
+
+		mockContentModelDriver := new(MockContentDriver)
+		id := domain.ContentModelID("id")
+
+		mockContentModelDriver.On("DeleteContentModelByID", "id").Return(nil)
+
+		target.Driver = mockContentModelDriver
+
+		err := target.DeleteByID(context.TODO(), id)
+
+		mockContentModelDriver.AssertExpectations(t)
+		assert.Nil(t, err)
+	})
 }

@@ -32,3 +32,7 @@
 * レスポンスボディのJsonPath"$.fields[1].type"の値が"text"である
 * レスポンスボディのJsonPath"$.fields[1].name"の値が"name1"である
 * レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"fase"である
+
+## ID指定でContentModelを削除できる
+* "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b001"にDELETEリクエストを送る
+* "204"ステータスコードが返ってくる

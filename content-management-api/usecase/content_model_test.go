@@ -39,7 +39,7 @@ func TestContentModel(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
-	t.Run("存在しないContentModelのIDの場合はContentModelNotFoundErrorを返す", func(t *testing.T) {
+	t.Run("存在しないContentModelのIDを取得した場合はContentModelNotFoundErrorを返す", func(t *testing.T) {
 		id := domain.ContentModelID("id")
 
 		// Mock setting
@@ -58,6 +58,40 @@ func TestContentModel(t *testing.T) {
 
 		mockContentModelPort.AssertExpectations(t)
 		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &contentModelNotFoundError))
+	})
+
+	t.Run("ContentModelをIDを使って削除することができる", func(t *testing.T) {
+		id := domain.ContentModelID("id")
+
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		modelID := domain.ContentModelID("id")
+
+		mockContentModelPort.On("DeleteByID", modelID).Return(nil)
+		target.ContentModelPort = mockContentModelPort
+
+		err := target.DeleteContentModelByID(id)
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.Nil(t, err)
+	})
+
+	t.Run("存在しないContentModelのIDを削除した場合はContentModelNotFoundErrorを返す", func(t *testing.T) {
+		id := domain.ContentModelID("id")
+
+		// Mock setting
+		mockContentModelPort := new(MockContentModelPort)
+		modelID := domain.ContentModelID("id")
+
+		contentModelNotFoundError := usecase.NewContentModelNotFoundError("test")
+
+		mockContentModelPort.On("DeleteByID", modelID).Return(&contentModelNotFoundError)
+		target.ContentModelPort = mockContentModelPort
+
+		err := target.DeleteContentModelByID(id)
+
+		mockContentModelPort.AssertExpectations(t)
 		assert.True(t, errors.As(err, &contentModelNotFoundError))
 	})
 
@@ -193,6 +227,11 @@ type MockContentModelPort struct {
 func (_m *MockContentModelPort) FindByID(ctx context.Context, id domain.ContentModelID) (domain.ContentModel, error) {
 	ret := _m.Called(id)
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
+}
+
+func (_m *MockContentModelPort) DeleteByID(ctx context.Context, id domain.ContentModelID) (error) {
+	ret := _m.Called(id)
+	return ret.Error(0)
 }
 
 func (_m *MockContentModelPort) FindBySpaceID(ctx context.Context, id domain.SpaceID) (domain.ContentModels, error) {
