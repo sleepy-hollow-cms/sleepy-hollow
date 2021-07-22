@@ -23,3 +23,8 @@ func (_m *MockContentDriver) FindContentModelByID(id string) (*model.ContentMode
 	ret := _m.Called(id)
 	return ret.Get(0).(*model.ContentModel), ret.Error(1)
 }
+
+func (_m *MockContentDriver) DeleteContentModelByID(id string) (error) {
+	ret := _m.Called(id)
+	return ret.Error(0)
+}

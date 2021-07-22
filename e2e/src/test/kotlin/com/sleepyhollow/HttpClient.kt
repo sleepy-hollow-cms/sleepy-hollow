@@ -29,6 +29,11 @@ class HttpClient {
             headers: List<Pair<String, String?>> = emptyList()
         ): Triple<Int, String, List<Pair<String, String?>>> = request(Method.PUT, body, url, headers)
 
+        fun deleteRequest(url: String): Triple<Int, String, List<Pair<String, String?>>> =
+            Request(Method.DELETE, url)
+                .let(client)
+                .let { it.toTriple() }
+
         private fun request(method: Method, body: String?, url: String, headers: List<Pair<String, String?>>) = Request(method, url)
             .headers(headers)
             .let { if (body != null) it.body(body) else it.body(Body.EMPTY) }
