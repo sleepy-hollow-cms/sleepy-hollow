@@ -146,7 +146,7 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	}, nil
 }
 
-func (c ContentDriver) DeleteContentModelByID(id string) (error) {
+func (c ContentDriver) DeleteContentModelByID(id string) error {
 
 	client, err := c.Client.Get()
 	if err != nil {

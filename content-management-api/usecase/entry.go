@@ -17,7 +17,7 @@ func NewEntry(
 	contentModelPort port.ContentModel,
 ) *Entry {
 	return &Entry{
-		EntryPort: entryPort,
+		EntryPort:        entryPort,
 		ContentModelPort: contentModelPort,
 	}
 }

@@ -229,7 +229,7 @@ func (_m *MockContentModelPort) FindByID(ctx context.Context, id domain.ContentM
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }
 
-func (_m *MockContentModelPort) DeleteByID(ctx context.Context, id domain.ContentModelID) (error) {
+func (_m *MockContentModelPort) DeleteByID(ctx context.Context, id domain.ContentModelID) error {
 	ret := _m.Called(id)
 	return ret.Error(0)
 }

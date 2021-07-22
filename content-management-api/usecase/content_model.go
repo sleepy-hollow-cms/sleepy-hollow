@@ -30,7 +30,7 @@ func (c *ContentModel) FindContentModelByID(id domain.ContentModelID) (domain.Co
 	return result, nil
 }
 
-func (c *ContentModel) DeleteContentModelByID(id domain.ContentModelID) (error) {
+func (c *ContentModel) DeleteContentModelByID(id domain.ContentModelID) error {
 	err := c.ContentModelPort.DeleteByID(context.TODO(), id)
 
 	if err != nil {
