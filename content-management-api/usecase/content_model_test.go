@@ -32,7 +32,7 @@ func TestContentModel(t *testing.T) {
 			ID: id,
 		}
 
-		actual, err := target.FindContentModelByID(id)
+		actual, err := target.FindByID(id)
 
 		mockContentModelPort.AssertExpectations(t)
 		assert.Nil(t, err)
@@ -51,10 +51,10 @@ func TestContentModel(t *testing.T) {
 
 		contentModelNotFoundError := usecase.NewContentModelNotFoundError("test")
 
-		mockContentModelPort.On("FindByID", modelID).Return(model, &contentModelNotFoundError)
+		mockContentModelPort.On("FindByID", modelID).Return(model, contentModelNotFoundError)
 		target.ContentModelPort = mockContentModelPort
 
-		_, err := target.FindContentModelByID(id)
+		_, err := target.FindByID(id)
 
 		mockContentModelPort.AssertExpectations(t)
 		assert.NotNil(t, err)
@@ -86,7 +86,7 @@ func TestContentModel(t *testing.T) {
 
 		contentModelNotFoundError := usecase.NewContentModelNotFoundError("test")
 
-		mockContentModelPort.On("DeleteByID", modelID).Return(&contentModelNotFoundError)
+		mockContentModelPort.On("DeleteByID", modelID).Return(contentModelNotFoundError)
 		target.ContentModelPort = mockContentModelPort
 
 		err := target.DeleteContentModelByID(id)

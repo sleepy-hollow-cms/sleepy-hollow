@@ -37,7 +37,7 @@ func (r *ContentModelResource) Routing(e *echo.Echo) {
 func (r *ContentModelResource) GetByID(c echo.Context) error {
 	contentModelId := c.Param("contentModelId")
 
-	contentModel, err := r.ContentModelUseCase.FindContentModelByID(domain.ContentModelID(contentModelId))
+	contentModel, err := r.ContentModelUseCase.FindByID(domain.ContentModelID(contentModelId))
 
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())

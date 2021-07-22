@@ -34,7 +34,7 @@ class ContentManagementApiTest : TestBase {
 
     @Step("<path>にDELETEリクエストを送る")
     fun requestDelete(path: String) {
-        val (statusCode, body, _) = HttpClient.deleteRequest(
+        val (statusCode, _, _) = HttpClient.deleteRequest(
             "${Configuration[content_management_api.endpoint]}$path"
         )
 
@@ -88,5 +88,15 @@ class ContentManagementApiTest : TestBase {
             .findOneById(ObjectId(id))
             ?.toJson()
         JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
+
+    }
+
+    @Step("MongoDBの<collection>に<id>のIDでデータが登録されていない")
+    fun verifyMongoDBNotExist(collection: String, id: String) {
+        val data = MongoClient.valueOf(collection)
+            .getCollection()
+            .findOneById(ObjectId(id))
+            ?.toJson()
+        data shouldBeEqualTo null
     }
 }

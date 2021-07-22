@@ -9,6 +9,7 @@ import (
 	"content-management-api/usecase/write"
 	"content-management-api/util/log"
 	"context"
+	"errors"
 )
 
 type ContentModel struct {
@@ -24,10 +25,9 @@ func NewContentModel(driver driver.ContentDriver) *ContentModel {
 func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (domain.ContentModel, error) {
 
 	contentModels, err := c.Driver.FindContentModelByID(id.String())
-
 	if err != nil {
-		switch err := err.(type) {
-		case driver.ContentModelCannotFindByIdError:
+		switch {
+		case errors.As(err, &driver.ContentModelCannotFindByIdError{}):
 			log.Logger.Warn(err.Error())
 			return domain.ContentModel{}, usecase.NewContentModelNotFoundError(err.Error())
 		default:
@@ -35,8 +35,8 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 			return domain.ContentModel{}, err
 		}
 	}
-	fields := make(field.Fields, len(contentModels.Fields))
 
+	fields := make(field.Fields, len(contentModels.Fields))
 	for i, getField := range contentModels.Fields {
 		fields[i] = field.Field{
 			Name:     field.Name(getField.Name),
@@ -58,6 +58,7 @@ func (c *ContentModel) DeleteByID(ctx context.Context, id domain.ContentModelID)
 	err := c.Driver.DeleteContentModelByID(id.String())
 
 	if err != nil {
+		log.Logger.Warn(err.Error())
 		return err
 	}
 
@@ -83,6 +84,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 	created, err := c.Driver.CreateModel(contentModel.Name.String(), fields)
 
 	if err != nil {
+		log.Logger.Warn(err.Error())
 		return domain.ContentModel{}, err
 	}
 

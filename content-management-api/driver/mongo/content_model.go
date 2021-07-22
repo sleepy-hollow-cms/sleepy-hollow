@@ -4,6 +4,7 @@ import (
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -118,11 +119,16 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 
 	collections := client.Database("models").Collection("content_model")
 
-	found := collections.FindOne(context.Background(), bson.M{"_id": id})
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, driver.NewContentModelCannotFindById(fmt.Sprintf("%s is invalid format Id",id) )
+	}
+
+	found := collections.FindOne(context.Background(), bson.M{"_id": objectId})
 
 	var contentModel ContentModel
 	if found.Err() == mongo.ErrNoDocuments {
-		return nil, driver.NewContentModelCannotFindById(id)
+		return nil, driver.NewContentModelCannotFindById(fmt.Sprintf("%s is not registered", id))
 	}
 
 	err = found.Decode(&contentModel)
@@ -155,11 +161,11 @@ func (c ContentDriver) DeleteContentModelByID(id string) error {
 
 	collections := client.Database("models").Collection("content_model")
 
+	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
-
-	_, err = collections.DeleteOne(context.Background(), bson.M{"_id": id})
+	_, err = collections.DeleteOne(context.Background(), bson.M{"_id": objectId})
 
 	if err != nil {
 		return err
