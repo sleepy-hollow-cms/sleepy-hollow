@@ -118,11 +118,7 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 
 	collections := client.Database("models").Collection("content_model")
 
-	//objectid, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return nil, err
-	}
-	found := collections.FindOne(context.Background(), bson.M{})
+	found := collections.FindOne(context.Background(), bson.M{"_id": id})
 
 	var contentModel ContentModel
 	err = found.Decode(&contentModel)
