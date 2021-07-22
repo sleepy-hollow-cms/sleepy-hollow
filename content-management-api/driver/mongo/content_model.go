@@ -5,8 +5,8 @@ import (
 	"content-management-api/driver/model"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ContentModel struct {
@@ -121,6 +121,10 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	found := collections.FindOne(context.Background(), bson.M{"_id": id})
 
 	var contentModel ContentModel
+	if found.Err() == mongo.ErrNoDocuments {
+		return nil, driver.NewContentModelCannotFindById(id)
+	}
+
 	err = found.Decode(&contentModel)
 	if err != nil {
 		return nil, err

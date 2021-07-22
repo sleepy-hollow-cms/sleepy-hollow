@@ -5,6 +5,7 @@ import (
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"context"
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
@@ -40,8 +41,32 @@ func TestEntry(t *testing.T) {
 		}
 		actual, err := target.Create(inputEntry)
 
+		mockContentModelPort.AssertExpectations(t)
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("ContentModelIDが存在しないものであった場合はErrorを返す", func(t *testing.T) {
+
+		mockEntryPort := new(MockEntryPort)
+		mockContentModelPort := new(MockContentModelPort)
+
+		id := domain.ContentModelID("id")
+		entry := write.Entry{
+			ContentModelID: id,
+		}
+
+		contentModelNotFound := usecase.NewContentModelNotFoundError("content model not found")
+		mockContentModelPort.On("FindByID", id).Return(domain.ContentModel{}, &contentModelNotFound)
+
+		target.EntryPort = mockEntryPort
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.Create(entry)
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &contentModelNotFound))
+		mockEntryPort.AssertNotCalled(t, "FindByID")
 	})
 }
 

@@ -14,12 +14,21 @@ type Entry struct {
 
 func NewEntry(
 	entryPort port.Entry,
+	contentModelPort port.ContentModel,
 ) *Entry {
 	return &Entry{
 		EntryPort: entryPort,
+		ContentModelPort: contentModelPort,
 	}
 }
 
 func (e *Entry) Create(entry write.Entry) (domain.Entry, error) {
-	return e.EntryPort.Create(context.TODO(), entry)
+	if _, err := e.ContentModelPort.FindByID(context.TODO(), entry.ContentModelID); err != nil {
+		return domain.Entry{}, NewContentModelNotFoundError(err.Error())
+	}
+	create, err := e.EntryPort.Create(context.TODO(), entry)
+	if err != nil {
+		return domain.Entry{}, err
+	}
+	return create, nil
 }

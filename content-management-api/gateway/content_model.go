@@ -5,7 +5,9 @@ import (
 	"content-management-api/domain/field"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
+	"content-management-api/usecase"
 	"content-management-api/usecase/write"
+	"content-management-api/util/log"
 	"context"
 )
 
@@ -24,7 +26,14 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 	contentModels, err := c.Driver.FindContentModelByID(id.String())
 
 	if err != nil {
-		return domain.ContentModel{}, err
+		switch err := err.(type) {
+		case driver.ContentModelCannotFindByIdError:
+			log.Logger.Warn(err.Error())
+			return domain.ContentModel{}, usecase.NewContentModelNotFoundError(err.Error())
+		default:
+			log.Logger.Warn(err.Error())
+			return domain.ContentModel{}, err
+		}
 	}
 	fields := make(field.Fields, len(contentModels.Fields))
 
@@ -44,7 +53,7 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 
 }
 
-func (c *ContentModel) DeleteByID(ctx context.Context, id domain.ContentModelID) (error) {
+func (c *ContentModel) DeleteByID(ctx context.Context, id domain.ContentModelID) error {
 
 	err := c.Driver.DeleteContentModelByID(id.String())
 
