@@ -58,8 +58,14 @@ func (c *ContentModel) DeleteByID(ctx context.Context, id domain.ContentModelID)
 	err := c.Driver.DeleteContentModelByID(id.String())
 
 	if err != nil {
-		log.Logger.Warn(err.Error())
-		return err
+		switch {
+		case errors.As(err, &driver.ContentModelCannotFindByIdError{}):
+			log.Logger.Warn(err.Error())
+			return usecase.NewContentModelNotFoundError(err.Error())
+		default:
+			log.Logger.Warn(err.Error())
+			return err
+		}
 	}
 
 	return nil

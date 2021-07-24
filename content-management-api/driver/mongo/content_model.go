@@ -121,7 +121,7 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return nil, driver.NewContentModelCannotFindById(fmt.Sprintf("%s is invalid format Id",id) )
+		return nil, driver.NewContentModelCannotFindById(fmt.Sprintf("%s is invalid format Id", id))
 	}
 
 	found := collections.FindOne(context.Background(), bson.M{"_id": objectId})
@@ -165,10 +165,14 @@ func (c ContentDriver) DeleteContentModelByID(id string) error {
 	if err != nil {
 		return err
 	}
-	_, err = collections.DeleteOne(context.Background(), bson.M{"_id": objectId})
+	deletedResult, err := collections.DeleteOne(context.Background(), bson.M{"_id": objectId})
 
 	if err != nil {
 		return err
+	}
+
+	if deletedResult.DeletedCount == 0 {
+		return driver.NewContentModelCannotFindById(fmt.Sprintf("Content model is not found: %s", id))
 	}
 
 	return nil

@@ -5,6 +5,7 @@ import (
 	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
+	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -65,7 +66,12 @@ func (r *ContentModelResource) DeleteByID(c echo.Context) error {
 	err := r.ContentModelUseCase.DeleteContentModelByID(domain.ContentModelID(contentModelId))
 
 	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+		switch {
+		case errors.As(err, &usecase.ContentModelNotFoundError{}):
+			return c.String(http.StatusNotFound, err.Error())
+		default:
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
 	}
 
 	return c.NoContent(http.StatusNoContent)
