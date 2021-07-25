@@ -152,6 +152,51 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	}, nil
 }
 
+func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentModel, error) {
+
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("models").Collection("content_model")
+
+	found, err := collections.Find(context.Background(), bson.M{"space_id": id})
+	if err != nil {
+		return nil, err
+	}
+	defer found.Close(context.Background())
+	contentModels := make([]ContentModel, found.RemainingBatchLength())
+	for i := 0; found.Next(context.Background()); i++ {
+		var contentModel ContentModel
+		err := found.Decode(&contentModel)
+		if err != nil {
+			return nil, err
+		}
+		contentModels[i] = contentModel
+	}
+
+	resultModels := make([]model.ContentModel, len(contentModels))
+
+	for i, contentModel := range contentModels {
+		resultFields := make([]model.Field, len(contentModel.Fields))
+		for i, field := range contentModel.Fields {
+			resultFields[i] = model.Field{
+				Name:     field.Name,
+				Type:     field.Type,
+				Required: field.Required,
+			}
+		}
+		resultModels[i] = model.ContentModel{
+			ID:     contentModel.ID.Hex(),
+			Name:   contentModel.Name,
+			Fields: resultFields,
+		}
+	}
+
+	return resultModels, nil
+}
+
 func (c ContentDriver) DeleteContentModelByID(id string) error {
 
 	client, err := c.Client.Get()

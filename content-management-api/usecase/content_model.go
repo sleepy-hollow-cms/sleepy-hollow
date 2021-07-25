@@ -43,7 +43,12 @@ func (c *ContentModel) DeleteContentModelByID(id domain.ContentModelID) error {
 }
 
 func (c *ContentModel) FindContentModelBySpaceID(spaceID domain.SpaceID) (domain.ContentModels, error) {
-	return c.ContentModelPort.FindBySpaceID(context.TODO(), spaceID)
+	models, err := c.ContentModelPort.FindBySpaceID(context.TODO(), spaceID)
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return domain.ContentModels{}, err
+	}
+	return models, nil
 }
 
 func (c *ContentModel) Create(contentModel write.ContentModel) (domain.ContentModel, error) {

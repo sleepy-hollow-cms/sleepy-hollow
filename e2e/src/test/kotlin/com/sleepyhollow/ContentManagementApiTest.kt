@@ -27,7 +27,6 @@ class ContentManagementApiTest : TestBase {
             "${Configuration[content_management_api.endpoint]}$path"
         )
 
-        val id = JsonPath.read<String>(body, "$.id")
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
     }
@@ -49,7 +48,6 @@ class ContentManagementApiTest : TestBase {
         SpecDataStore.put("statusCode", statusCode)
         SpecDataStore.put("body", body)
     }
-
 
     @Step("<statusCode>ステータスコードが返ってくる")
     fun verifyStatusCode(statusCode: Int) =

@@ -122,6 +122,93 @@ func TestContentModel(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
+	t.Run("Spaceに紐づくContentModelを取得することができる", func(t *testing.T) {
+
+		mockContentDriver := new(MockContentDriver)
+		id := domain.SpaceID("id")
+		models := []model.ContentModel{
+			{
+				ID:   "id0",
+				Name: "name0",
+				Fields: []model.Field{
+					{
+						Name:     "fname00",
+						Type:     "text",
+						Required: true,
+					},
+					{
+						Name:     "fname01",
+						Type:     "multiple-text",
+						Required: false,
+					},
+				},
+			},
+			{
+				ID:   "id1",
+				Name: "name1",
+				Fields: []model.Field{
+					{
+						Name:     "fname10",
+						Type:     "text",
+						Required: true,
+					},
+					{
+						Name:     "fname11",
+						Type:     "multiple-text",
+						Required: false,
+					},
+				},
+			},
+		}
+
+		mockContentDriver.On("FindContentModelBySpaceID", "id").Return(models, nil)
+
+		target.Driver = mockContentDriver
+
+		expected := domain.ContentModels{
+			SpaceID: id,
+			Models: []domain.ContentModel{
+				{
+					ID:   "id0",
+					Name: domain.Name("name0"),
+					Fields: field.Fields{
+						{
+							Name:     field.Name("fname00"),
+							Type:     field.Text,
+							Required: field.Required(true),
+						},
+						{
+							Name:     field.Name("fname01"),
+							Type:     field.MultipleText,
+							Required: field.Required(false),
+						},
+					},
+				},
+				{
+					ID:   "id1",
+					Name: domain.Name("name1"),
+					Fields: field.Fields{
+						{
+							Name:     field.Name("fname10"),
+							Type:     field.Text,
+							Required: field.Required(true),
+						},
+						{
+							Name:     field.Name("fname11"),
+							Type:     field.MultipleText,
+							Required: field.Required(false),
+						},
+					},
+				},
+			},
+		}
+
+		actual, err := target.FindBySpaceID(context.TODO(), id)
+
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
 	t.Run("ContentModelをID指定で取得し、存在なかった場合Errorを返す", func(t *testing.T) {
 
 		mockContentModelDriver := new(MockContentDriver)
@@ -171,4 +258,5 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.AssertExpectations(t)
 		assert.Nil(t, err)
 	})
+
 }

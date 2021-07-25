@@ -7,5 +7,6 @@ type ContentDriver interface {
 	CreateModel(string, []model.Field) (*model.ContentModel, error)
 	CreateEntry(model.Entry) (*model.Entry, error)
 	FindContentModelByID(string) (*model.ContentModel, error)
+	FindContentModelBySpaceID(string) ([]model.ContentModel, error)
 	DeleteContentModelByID(string) error
 }

@@ -26,12 +26,18 @@
 ## ID指定でContentModelを取得できる
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b004"にGETリクエストを送る
 * "200"ステータスコードが返ってくる
-* レスポンスボディのJsonPath"$.fields[0].type"の値が"text"である
-* レスポンスボディのJsonPath"$.fields[0].name"の値が"name0"である
+* レスポンスボディのJsonPath"$.fields[0].type"の値が"multiple-text"である
+* レスポンスボディのJsonPath"$.fields[0].name"の値が"name00"である
 * レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
 * レスポンスボディのJsonPath"$.fields[1].type"の値が"text"である
-* レスポンスボディのJsonPath"$.fields[1].name"の値が"name1"である
-* レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"fase"である
+* レスポンスボディのJsonPath"$.fields[1].name"の値が"name01"である
+* レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"false"である
+
+## Spaceに紐づくContentModelをリストで取得できる
+tags: default
+* "/v1/spaces/5063114bd386d8fadbd6b007/contentModels"にGETリクエストを送る
+* "200"ステータスコードが返ってくる
+* ContentModelの一覧取得でレスポンスボディのContentModelリストが正しい形である
 
 ## ID指定でContentModelを削除できる
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b001"にDELETEリクエストを送る

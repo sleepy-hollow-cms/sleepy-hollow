@@ -36,21 +36,11 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 		}
 	}
 
-	fields := make(field.Fields, len(contentModels.Fields))
-	for i, getField := range contentModels.Fields {
-		fields[i] = field.Field{
-			Name:     field.Name(getField.Name),
-			Type:     field.Of(getField.Type),
-			Required: field.Required(getField.Required),
-		}
-	}
-
 	return domain.ContentModel{
 		ID:     domain.ContentModelID(contentModels.ID),
 		Name:   domain.Name(contentModels.Name),
-		Fields: fields,
+		Fields: newFields(contentModels.Fields),
 	}, nil
-
 }
 
 func (c *ContentModel) DeleteByID(ctx context.Context, id domain.ContentModelID) error {
@@ -73,12 +63,31 @@ func (c *ContentModel) DeleteByID(ctx context.Context, id domain.ContentModelID)
 }
 
 func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (domain.ContentModels, error) {
-	panic("implement me")
+	contentModels, err := c.Driver.FindContentModelBySpaceID(id.String())
+
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return domain.ContentModels{}, err
+	}
+
+	foundModels := make([]domain.ContentModel, len(contentModels))
+
+	for i, foundModel := range contentModels {
+		foundModels[i] = domain.ContentModel{
+			ID:     domain.ContentModelID(foundModel.ID),
+			Name:   domain.Name(foundModel.Name),
+			Fields: newFields(foundModel.Fields),
+		}
+	}
+
+	return domain.ContentModels{
+		SpaceID: id,
+		Models:  foundModels,
+	}, nil
 }
 
 func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error) {
 	fields := make([]model.Field, len(contentModel.Fields))
-
 	for i, field := range contentModel.Fields {
 		fields[i] = model.Field{
 			Name:     field.Name.String(),
@@ -94,18 +103,21 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		return domain.ContentModel{}, err
 	}
 
-	createdFields := make(field.Fields, len(created.Fields))
-	for i, createdField := range created.Fields {
-		createdFields[i] = field.Field{
-			Name:     field.Name(createdField.Name),
-			Type:     field.Of(createdField.Type),
-			Required: field.Required(createdField.Required),
-		}
-	}
-
 	return domain.ContentModel{
 		ID:     domain.ContentModelID(created.ID),
 		Name:   domain.Name(created.Name),
-		Fields: createdFields,
+		Fields: newFields(created.Fields),
 	}, nil
+}
+
+func newFields(modelFields []model.Field) []field.Field {
+	fields := make(field.Fields, len(modelFields))
+	for i, getField := range modelFields {
+		fields[i] = field.Field{
+			Name:     field.Name(getField.Name),
+			Type:     field.Of(getField.Type),
+			Required: field.Required(getField.Required),
+		}
+	}
+	return fields
 }
