@@ -21,14 +21,19 @@ type ContentModel struct {
 	Fields field.Fields
 }
 
-type ContentModels []ContentModel
+type ContentModels struct {
+	SpaceID SpaceID
+	Models  []ContentModel
+}
 
 func NewContentModels(list []ContentModel) ContentModels {
-	contentModels := make(ContentModels, len(list))
+	contentModels := make([]ContentModel, len(list))
 	for i, m := range list {
 		contentModels[i] = ContentModel{
 			ID: m.ID,
 		}
 	}
-	return contentModels
+	return ContentModels{
+		Models: contentModels,
+	}
 }

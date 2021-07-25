@@ -144,7 +144,7 @@ func TestContentModel(t *testing.T) {
 
 		mockContentModelPort.AssertExpectations(t)
 		assert.Nil(t, err)
-		assert.True(t, len(actual) == 0)
+		assert.True(t, len(actual.Models) == 0)
 	})
 
 	t.Run("ContentModelを登録することができる", func(t *testing.T) {

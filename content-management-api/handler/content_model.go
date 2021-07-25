@@ -83,17 +83,30 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 	contentModels, err := r.ContentModelUseCase.FindContentModelBySpaceID(domain.SpaceID(spaceId))
 
 	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+		return c.String(http.StatusInternalServerError, "Somethings happened")
 	}
 
-	rest := make([]ContentModel, len(contentModels))
-	for i, contentModel := range contentModels {
-		rest[i] = ContentModel{
-			ID: contentModel.ID.String(),
+	rest := make([]ContentModelResponseBody, len(contentModels.Models))
+	for i, m := range contentModels.Models {
+
+		resFields := make([]Field, len(m.Fields))
+		for i, field := range m.Fields {
+			resFields[i] = Field{
+				Name:     field.Name.String(),
+				Type:     field.Type.String(),
+				Required: bool(field.Required),
+			}
+		}
+		rest[i] = ContentModelResponseBody{
+			ID:     m.ID.String(),
+			Name:   m.Name.String(),
+			Fields: resFields,
 		}
 	}
-
-	return c.JSON(http.StatusOK, rest)
+	return c.JSON(http.StatusOK, ContentModelsResponseBody{
+		SpaceID: spaceId,
+		Models:  rest,
+	})
 }
 
 func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
@@ -146,6 +159,10 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	return nil
 }
 
+type ContentModelsResponseBody struct {
+	SpaceID string                     `json:"id"`
+	Models  []ContentModelResponseBody `json:"models"`
+}
 type ContentModelResponseBody struct {
 	ID     string  `json:"id"`
 	Name   string  `json:"name"`
