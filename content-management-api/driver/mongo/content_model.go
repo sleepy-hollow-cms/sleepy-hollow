@@ -8,18 +8,20 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"time"
 )
 
 type ContentModel struct {
 	ID     primitive.ObjectID `bson:"_id,omitempty"`
 	Fields []Field            `bson:"fields"`
 	Name   string             `bson:"name"`
+	CreatedAt primitive.DateTime `bson:"created_at"`
 }
 
 type Field struct {
-	Name     string `bson:"name"`
-	Type     string `bson:"field_type"`
-	Required bool   `bson:"required"`
+	Name      string             `bson:"name"`
+	Type      string             `bson:"field_type"`
+	Required  bool               `bson:"required"`
 }
 
 //ContentDriver ContentModel Collection on MongoDB
@@ -33,7 +35,7 @@ func NewContentDriver(client *Client) driver.ContentDriver {
 	}
 }
 
-func (c ContentDriver) CreateModel(name string, fields []model.Field) (*model.ContentModel, error) {
+func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -44,15 +46,16 @@ func (c ContentDriver) CreateModel(name string, fields []model.Field) (*model.Co
 	fieldsModel := make([]Field, len(fields))
 	for i, field := range fields {
 		fieldsModel[i] = Field{
-			Name:     field.Name,
-			Type:     field.Type,
-			Required: field.Required,
+			Name:      field.Name,
+			Type:      field.Type,
+			Required:  field.Required,
 		}
 	}
 
 	insert := ContentModel{
 		Name:   name,
 		Fields: fieldsModel,
+		CreatedAt: primitive.NewDateTimeFromTime(createdAt),
 	}
 
 	result, err := collections.InsertOne(context.Background(), insert)
@@ -73,6 +76,7 @@ func (c ContentDriver) CreateModel(name string, fields []model.Field) (*model.Co
 	return &model.ContentModel{
 		ID:     result.InsertedID.(primitive.ObjectID).Hex(),
 		Name:   insert.Name,
+		CreatedAt: createdAt,
 		Fields: resultFields,
 	}, err
 }

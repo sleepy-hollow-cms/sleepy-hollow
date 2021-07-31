@@ -8,4 +8,5 @@ import (
 type ContentModel struct {
 	Name   domain.Name
 	Fields field.Fields
+	CreatedAt domain.CreatedAt
 }
