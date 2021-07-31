@@ -4,9 +4,14 @@
 * レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
 * レスポンスボディのJsonPath"$.fields[1].type"の値が"multiple-text"である
 * レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"false"である
-* レスポンスボディのJsonPath"$.fields[1].type"の値が"multiple-text"である
-* レスポンスボディのJsonPath"$.fields[2].type"の値が"Unknown"である
+* レスポンスボディのJsonPath"$.fields[2].type"の値が"date"である
 * レスポンスボディのJsonPath"$.fields[2].required"の真偽値が"false"である
+* レスポンスボディのJsonPath"$.fields[3].type"の値が"bool"である
+* レスポンスボディのJsonPath"$.fields[3].required"の真偽値が"true"である
+* レスポンスボディのJsonPath"$.fields[4].type"の値が"reference"である
+* レスポンスボディのJsonPath"$.fields[4].required"の真偽値が"true"である
+* レスポンスボディのJsonPath"$.fields[5].type"の値が"Unknown"である
+* レスポンスボディのJsonPath"$.fields[5].required"の真偽値が"false"である
 
 # ContentModelの作成でDBに登録されている値が正しい値である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.name"の値が"name"である
@@ -14,8 +19,14 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[1].field_type"の値が"multiple-text"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[1].required"の真偽値が"false"である
-* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[2].field_type"の値が"Unknown"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[2].field_type"の値が"date"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[2].required"の真偽値が"false"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[3].field_type"の値が"bool"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[3].required"の真偽値が"true"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[4].field_type"の値が"reference"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[4].required"の真偽値が"true"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[5].field_type"の値が"Unknown"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[5].required"の真偽値が"false"である
 
 # ContentModelの一覧取得でレスポンスボディのContentModelリストが正しい形である
 * レスポンスボディのJsonPath"$.models[0].name"の値が"name0"である

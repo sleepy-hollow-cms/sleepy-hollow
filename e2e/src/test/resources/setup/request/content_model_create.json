@@ -10,6 +10,18 @@
       "required" : false
     },
     {
+      "type": "date",
+      "required" : false
+    },
+    {
+      "type": "bool",
+      "required" : true
+    },
+    {
+      "type": "reference",
+      "required" : true
+    },
+    {
       "type": "user-created-type"
     }
   ]
