@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/creasty/defaults v1.5.1
+	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/kelseyhightower/envconfig v1.4.0
@@ -14,4 +15,5 @@ require (
 	go.mongodb.org/mongo-driver v1.7.0
 	go.uber.org/zap v1.18.1
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
+	gotest.tools v2.2.0+incompatible
 )
