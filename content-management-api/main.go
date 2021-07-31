@@ -5,9 +5,13 @@ import (
 	"content-management-api/driver/mongo"
 	"content-management-api/handler"
 	"content-management-api/util/log"
+	"time"
 )
 
 func main() {
+
+	time.Local = time.UTC
+
 	log.Logger.Debugw("Starting...")
 
 	container := cache.NewContainer()

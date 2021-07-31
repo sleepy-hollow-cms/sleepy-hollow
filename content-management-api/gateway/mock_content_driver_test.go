@@ -3,14 +3,15 @@ package gateway_test
 import (
 	"content-management-api/driver/model"
 	"github.com/stretchr/testify/mock"
+	"time"
 )
 
 type MockContentDriver struct {
 	mock.Mock
 }
 
-func (_m *MockContentDriver) CreateModel(name string, fields []model.Field) (*model.ContentModel, error) {
-	ret := _m.Called(name, fields)
+func (_m *MockContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {
+	ret := _m.Called(name, createdAt, fields)
 	return ret.Get(0).(*model.ContentModel), ret.Error(1)
 }
 

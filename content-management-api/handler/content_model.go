@@ -6,9 +6,9 @@ import (
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"errors"
-	"net/http"
-
 	"github.com/labstack/echo/v4"
+	"net/http"
+	"time"
 )
 
 type (
@@ -132,15 +132,15 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	}
 
 	contentModel, err := r.ContentModelUseCase.Create(write.ContentModel{
-		Name:   domain.Name(m.Name),
-		Fields: fields,
+		Name:      domain.Name(m.Name),
+		Fields:    fields,
+		CreatedAt: domain.CreatedAt(time.Now()),
 	})
 
 	if err != nil {
 		println(err)
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		resFields[i] = Field{
@@ -154,6 +154,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
 		Fields: resFields,
+		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
 	})
 
 	return nil
@@ -164,9 +165,10 @@ type ContentModelsResponseBody struct {
 	Models  []ContentModelResponseBody `json:"models"`
 }
 type ContentModelResponseBody struct {
-	ID     string  `json:"id"`
-	Name   string  `json:"name"`
-	Fields []Field `json:"fields"`
+	ID        string  `json:"id"`
+	Name      string  `json:"name"`
+	Fields    []Field `json:"fields"`
+	CreatedAt string  `json:"created-at"`
 }
 
 type ContentModelPostRequestBody struct {

@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
+	"time"
 )
 
 func TestContentModel(t *testing.T) {
@@ -148,11 +149,16 @@ func TestContentModel(t *testing.T) {
 	})
 
 	t.Run("ContentModelを登録することができる", func(t *testing.T) {
+
+		createdAt := domain.CreatedAt(time.Now())
+
 		contentModel := write.ContentModel{
 			Name: domain.Name("name"),
+			CreatedAt: createdAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Text,
+					Name: field.Name("fieldName"),
 					Required: field.Required(true),
 				},
 			},
@@ -161,9 +167,11 @@ func TestContentModel(t *testing.T) {
 		retContentModel := domain.ContentModel{
 			ID:   domain.ContentModelID("id"),
 			Name: domain.Name("name"),
+			CreatedAt: createdAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Text,
+					Name: field.Name("fieldName"),
 					Required: field.Required(true),
 				},
 			},
@@ -179,9 +187,11 @@ func TestContentModel(t *testing.T) {
 		expected := domain.ContentModel{
 			ID:   domain.ContentModelID("id"),
 			Name: domain.Name("name"),
+			CreatedAt: createdAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Text,
+					Name: field.Name("fieldName"),
 					Required: field.Required(true),
 				},
 			},

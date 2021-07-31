@@ -96,7 +96,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		}
 	}
 
-	created, err := c.Driver.CreateModel(contentModel.Name.String(), fields)
+	created, err := c.Driver.CreateModel(contentModel.Name.String(), contentModel.CreatedAt.Time(), fields)
 
 	if err != nil {
 		log.Logger.Warn(err.Error())
@@ -107,6 +107,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		ID:     domain.ContentModelID(created.ID),
 		Name:   domain.Name(created.Name),
 		Fields: newFields(created.Fields),
+		CreatedAt: domain.CreatedAt(created.CreatedAt),
 	}, nil
 }
 

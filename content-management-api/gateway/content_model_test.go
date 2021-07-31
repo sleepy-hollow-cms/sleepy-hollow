@@ -11,6 +11,7 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -19,12 +20,13 @@ func TestContentModel(t *testing.T) {
 
 	var target gateway.ContentModel
 
-	t.Run("テキスト文字列のフィールドを含んだContentModelを登録できる", func(t *testing.T) {
-		// Mock setting
+	t.Run("ContentModelを登録できる", func(t *testing.T) {
+		createdAt := time.Now()
 		mockContentModelDriver := new(MockContentDriver)
 		contentModel := model.ContentModel{
-			ID:   "id",
-			Name: "name",
+			ID:        "id",
+			Name:      "name",
+			CreatedAt: createdAt,
 			Fields: []model.Field{
 				{
 					Name:     "fname",
@@ -42,11 +44,12 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		mockContentModelDriver.On("CreateModel", "name", fields).Return(&contentModel, nil)
+		mockContentModelDriver.On("CreateModel", "name", createdAt, fields).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
 		model := write.ContentModel{
-			Name: "name",
+			Name:      "name",
+			CreatedAt: domain.CreatedAt(createdAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),
@@ -59,8 +62,9 @@ func TestContentModel(t *testing.T) {
 		actual, err := target.Create(context.TODO(), model)
 
 		expected := domain.ContentModel{
-			ID:   domain.ContentModelID("id"),
-			Name: domain.Name("name"),
+			ID:        domain.ContentModelID("id"),
+			Name:      domain.Name("name"),
+			CreatedAt: domain.CreatedAt(createdAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),

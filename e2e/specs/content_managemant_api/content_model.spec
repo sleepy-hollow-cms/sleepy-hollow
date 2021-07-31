@@ -13,6 +13,12 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].field_type"の値が"number"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 
+## ContentModelの作成日時が保存されている
+* "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_with_number.json"でPOSTリクエストを送る
+* "201"ステータスコードが返ってくる
+* レスポンスボディのJsonPath"$.created-at"の日付がISO 8601形式でUTCである
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.created_at"に作成日時が保存されている
+
 ## ContentModelのフィールドに名前をつけて保存できる
 * "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_fieldname.json"でPOSTリクエストを送る
 * "201"ステータスコードが返ってくる
