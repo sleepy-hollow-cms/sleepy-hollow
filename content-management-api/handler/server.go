@@ -8,6 +8,7 @@ import (
 	"content-management-api/usecase"
 	"content-management-api/util/config"
 	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -86,7 +87,7 @@ func NewServer(container cache.Cache) Server {
 	routing(e, container)
 
 	return &instance{
-		port:   config.Config.Server.Port,
+		port:   config.Conf.Server.Port,
 		server: e,
 	}
 }

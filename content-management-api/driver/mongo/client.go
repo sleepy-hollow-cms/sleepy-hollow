@@ -6,12 +6,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	"sync"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 type Client struct {
@@ -29,7 +30,7 @@ type Client struct {
 
 func NewClient() driver.Client {
 	return &Client{
-		uri:               fmt.Sprintf("mongodb://%s:%s@%s:%v", config.Config.MongoDB.User, config.Config.MongoDB.Password, config.Config.MongoDB.Host, config.Config.MongoDB.Port),
+		uri:               fmt.Sprintf("mongodb://%s:%s@%s:%v", config.Conf.MongoDB.User, config.Conf.MongoDB.Password, config.Conf.MongoDB.Host, config.Conf.MongoDB.Port),
 		maxConnectionPool: 100,
 		timeOut:           10 * time.Second,
 		cacheKey:          "mongo-client",

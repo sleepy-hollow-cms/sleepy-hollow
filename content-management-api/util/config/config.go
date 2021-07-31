@@ -1,9 +1,10 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/creasty/defaults"
 	"github.com/spf13/viper"
-	"strings"
 )
 
 const (
@@ -11,26 +12,26 @@ const (
 )
 
 var (
-	Config *config
+	Conf *Config
 )
 
-type config struct {
-	Log     log     `yaml:"log"`
-	Server  server  `yaml:"server"`
-	MongoDB mongoDB `yaml:"mongodb"`
+type Config struct {
+	Log     Log     `yaml:"log"`
+	Server  Server  `yaml:"server"`
+	MongoDB MongoDB `yaml:"mongodb"`
 }
 
-type log struct {
+type Log struct {
 	Encoding string `yaml:"encoding" default:"json"`
 	Output   string `yaml:"output" default:"stdout"`
 	Level    string `yaml:"level" default:"debug"`
 }
 
-type server struct {
+type Server struct {
 	Port int `yaml:"port" default:"3000"`
 }
 
-type mongoDB struct {
+type MongoDB struct {
 	User     string `yaml:"user" default:"root"`
 	Password string `yaml:"password" default:"password"`
 	Host     string `yaml:"host" default:"mongo"`
@@ -38,14 +39,14 @@ type mongoDB struct {
 }
 
 func init() {
-	Config = &config{
-		Log:     log{},
-		Server:  server{},
-		MongoDB: mongoDB{},
+	Conf = &Config{
+		Log:     Log{},
+		Server:  Server{},
+		MongoDB: MongoDB{},
 	}
 }
 
-func (c *config) Load() error {
+func (c *Config) Load() error {
 	defaults.Set(c)
 
 	viper.SetConfigName("config")
@@ -65,6 +66,5 @@ func (c *config) Load() error {
 		return err
 	}
 
-	Config = c
 	return nil
 }
