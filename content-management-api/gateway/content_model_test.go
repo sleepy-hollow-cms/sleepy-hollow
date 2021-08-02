@@ -81,11 +81,15 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
 
+		createdAt := time.Now()
+
 		mockContentDriver := new(MockContentDriver)
+
 		id := domain.ContentModelID("id")
 		model := model.ContentModel{
 			ID:   "id",
 			Name: "name",
+			CreatedAt: createdAt,
 			Fields: []model.Field{
 				{
 					Name:     "fname0",
@@ -106,6 +110,7 @@ func TestContentModel(t *testing.T) {
 		expected := domain.ContentModel{
 			ID:   id,
 			Name: domain.Name("name"),
+			CreatedAt: domain.CreatedAt(createdAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname0"),
@@ -128,12 +133,14 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("Spaceに紐づくContentModelを取得することができる", func(t *testing.T) {
 
+		createdAt := time.Now()
 		mockContentDriver := new(MockContentDriver)
 		id := domain.SpaceID("id")
 		models := []model.ContentModel{
 			{
-				ID:   "id0",
-				Name: "name0",
+				ID:        "id0",
+				Name:      "name0",
+				CreatedAt: createdAt,
 				Fields: []model.Field{
 					{
 						Name:     "fname00",
@@ -148,8 +155,9 @@ func TestContentModel(t *testing.T) {
 				},
 			},
 			{
-				ID:   "id1",
-				Name: "name1",
+				ID:        "id1",
+				Name:      "name1",
+				CreatedAt: createdAt,
 				Fields: []model.Field{
 					{
 						Name:     "fname10",
@@ -173,8 +181,9 @@ func TestContentModel(t *testing.T) {
 			SpaceID: id,
 			Models: []domain.ContentModel{
 				{
-					ID:   "id0",
-					Name: domain.Name("name0"),
+					ID:        "id0",
+					Name:      domain.Name("name0"),
+					CreatedAt: domain.CreatedAt(createdAt),
 					Fields: field.Fields{
 						{
 							Name:     field.Name("fname00"),
@@ -189,8 +198,9 @@ func TestContentModel(t *testing.T) {
 					},
 				},
 				{
-					ID:   "id1",
-					Name: domain.Name("name1"),
+					ID:        "id1",
+					Name:      domain.Name("name1"),
+					CreatedAt: domain.CreatedAt(createdAt),
 					Fields: field.Fields{
 						{
 							Name:     field.Name("fname10"),

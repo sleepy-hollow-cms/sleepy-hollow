@@ -32,6 +32,8 @@
 ## ID指定でContentModelを取得できる
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b004"にGETリクエストを送る
 * "200"ステータスコードが返ってくる
+* レスポンスボディのJsonPath"$.name"の値が"name0"である
+* レスポンスボディのJsonPath"$.created-at"の日付がISO 8601形式でUTCである
 * レスポンスボディのJsonPath"$.fields[0].type"の値が"multiple-text"である
 * レスポンスボディのJsonPath"$.fields[0].name"の値が"name00"である
 * レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"true"である
