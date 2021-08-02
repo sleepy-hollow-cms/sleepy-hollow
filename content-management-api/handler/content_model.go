@@ -56,6 +56,7 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, ContentModelResponseBody{
 		ID:     contentModel.ID.String(),
 		Name:   contentModel.Name.String(),
+		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
 		Fields: resFields,
 	})
 }
@@ -100,6 +101,7 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 		rest[i] = ContentModelResponseBody{
 			ID:     m.ID.String(),
 			Name:   m.Name.String(),
+			CreatedAt: m.CreatedAt.Time().Format(time.RFC3339),
 			Fields: resFields,
 		}
 	}

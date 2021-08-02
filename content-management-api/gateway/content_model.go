@@ -39,6 +39,7 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 	return domain.ContentModel{
 		ID:     domain.ContentModelID(contentModels.ID),
 		Name:   domain.Name(contentModels.Name),
+		CreatedAt: domain.CreatedAt(contentModels.CreatedAt),
 		Fields: newFields(contentModels.Fields),
 	}, nil
 }
@@ -76,6 +77,7 @@ func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (do
 		foundModels[i] = domain.ContentModel{
 			ID:     domain.ContentModelID(foundModel.ID),
 			Name:   domain.Name(foundModel.Name),
+			CreatedAt: domain.CreatedAt(foundModel.CreatedAt),
 			Fields: newFields(foundModel.Fields),
 		}
 	}
