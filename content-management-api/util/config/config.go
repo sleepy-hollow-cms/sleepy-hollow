@@ -57,12 +57,9 @@ func (c *Config) Load() error {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetConfigFile(viper.GetString(configFileKey))
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		return err
-	}
+	_ = viper.ReadInConfig()
 
-	err = viper.Unmarshal(c)
+	err := viper.Unmarshal(c)
 	if err != nil {
 		return err
 	}
