@@ -12,5 +12,6 @@ RUN go build -o content-management-api main.go
 FROM alpine:3.14.0
 
 COPY --from=buildImage /usr/src/content-management-api /
+COPY --from=buildImage /usr/src/conf/config.yaml /etc/sleepy-hollow/
 
 ENTRYPOINT ["/content-management-api"]
