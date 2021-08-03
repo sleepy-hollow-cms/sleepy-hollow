@@ -8,7 +8,9 @@ import (
 )
 
 const (
-	prefix string = "SLEEPY_HOLLOW"
+	prefix            string = "SLEEPY_HOLLOW"
+	configFileKey     string = "config"
+	configDefaultPath string = "/etc/sleepy-hollow/config.yaml"
 )
 
 var (
@@ -48,17 +50,16 @@ func init() {
 
 func (c *Config) Load() error {
 	defaults.Set(c)
+	viper.SetDefault(configFileKey, configDefaultPath)
 
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./conf/")
-	viper.AutomaticEnv()
 	viper.SetEnvPrefix(prefix)
+	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.SetConfigFile(viper.GetString(configFileKey))
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		// TODO: output log when cannot load config file
+		return err
 	}
 
 	err = viper.Unmarshal(c)

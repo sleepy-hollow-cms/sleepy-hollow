@@ -5,7 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Flaque/filet"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/yaml.v2"
 )
 
 func TestConfig(t *testing.T) {
@@ -30,12 +32,36 @@ func TestConfig(t *testing.T) {
 			},
 		}
 
+		// create temp config file
+		c := &config.Config{
+			Log: config.Log{
+				Encoding: "json",
+				Output:   "stdout",
+				Level:    "debug",
+			},
+			Server: config.Server{
+				Port: 3000,
+			},
+			MongoDB: config.MongoDB{
+				User:     "root",
+				Password: "password",
+				Host:     "mongo",
+				Port:     27017,
+			},
+		}
+		b, _ := yaml.Marshal(c)
+		filet.File(t, "config.yaml", string(b))
+		os.Setenv("SLEEPY_HOLLOW_CONFIG", "./config.yaml")
+
 		// set environment variables to override
 		os.Setenv("SLEEPY_HOLLOW_LOG_LEVEL", "info")
 		os.Setenv("SLEEPY_HOLLOW_MONGODB_PASSWORD", "password2")
+
 		t.Cleanup(func() {
 			os.Unsetenv("SLEEPY_HOLLOW_LOG_LEVEL")
 			os.Unsetenv("SLEEPY_HOLLOW_MONGODB_PASSWORD")
+			os.Unsetenv("SLEEPY_HOLLOW_CONFIG")
+			filet.CleanUp(t)
 		})
 
 		config.Conf.Load()
