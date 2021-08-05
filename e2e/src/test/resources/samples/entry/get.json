@@ -1,0 +1,31 @@
+{
+  "content-model-id": "5063114bd386d8fadbd6b004",
+  "createdAt": "2014-10-10T09:00:00Z",
+  "modifiedAt": "2014-10-10T09:00:00Z",
+  "items": [
+    {
+      "meta-info": {
+        "contentType": "text"
+      },
+      "contents": {
+        "title": "タイトル"
+      }
+    },
+    {
+      "meta-info": {
+        "contentType": "multiple-text"
+      },
+      "contents": {
+        "body": ["line1", "line2", "line3"]
+      }
+    },
+    {
+      "meta-info": {
+        "contentType": "number"
+      },
+      "contents": {
+        "titleNumber": 1
+      }
+    }
+  ]
+}

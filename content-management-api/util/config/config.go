@@ -36,7 +36,7 @@ type Server struct {
 type MongoDB struct {
 	User     string `yaml:"user" default:"root"`
 	Password string `yaml:"password" default:"password"`
-	Host     string `yaml:"host" default:"mongo"`
+	Host     string `yaml:"host" default:"localhost"`
 	Port     int    `yaml:"port" default:"27017"`
 }
 
