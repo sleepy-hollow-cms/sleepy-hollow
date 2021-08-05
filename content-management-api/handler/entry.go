@@ -2,6 +2,7 @@ package handler
 
 import (
 	"content-management-api/domain"
+	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"content-management-api/util/log"
@@ -25,15 +26,26 @@ func (en *EntryResource) Routing(e *echo.Echo) {
 }
 
 func (en *EntryResource) CreateEntry(c echo.Context) error {
-	modelID := EntryPostRequestBody{}
+	requestBody := EntryPostRequestBody{}
 
-	if err := c.Bind(&modelID); err != nil {
+	if err := c.Bind(&requestBody); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
 		return err
 	}
 
+	entryItems := make([]write.EntryItem, len(requestBody.Items))
+	for i, item := range requestBody.Items {
+		contentType := field.Of(item.ContentType)
+		entryItems[i] = write.EntryItem{
+			ContentType: contentType,
+			FieldName:   field.Name(item.Name),
+			Value:       field.FactoryValue(contentType, item.Value),
+		}
+	}
+
 	entry := write.Entry{
-		ContentModelID: domain.ContentModelID(modelID.ContentModelID),
+		ContentModelID: domain.ContentModelID(requestBody.ContentModelID),
+		Items:          entryItems,
 	}
 
 	createdEntry, err := en.EntryUseCase.Create(entry)
@@ -41,10 +53,10 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	if err != nil {
 		switch err := err.(type) {
 		case usecase.ContentModelNotFoundError:
-			log.Logger.Warnf("Entry cannot Found Becouse Content Model ID %s Not Found", modelID.ContentModelID)
+			log.Logger.Warnf("Entry cannot Create Becouse Content Model ID %s Not Found", requestBody.ContentModelID)
 			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
 		default:
-			log.Logger.Warnf("Something Happened: %s", modelID.ContentModelID)
+			log.Logger.Warnf("Something Happened: %s", requestBody.ContentModelID)
 			c.JSON(http.StatusInternalServerError, err.Error())
 		}
 		return nil
@@ -64,5 +76,12 @@ type EntryPostResponseBody struct {
 }
 
 type EntryPostRequestBody struct {
-	ContentModelID string `json:"content-model-id"`
+	ContentModelID string             `json:"content-model-id"`
+	Items          []ItemsRequestBody `json:"items"`
+}
+
+type ItemsRequestBody struct {
+	ContentType string      `json:"contentType"`
+	Name        string      `json:"name"`
+	Value       interface{} `json:"value"`
 }
