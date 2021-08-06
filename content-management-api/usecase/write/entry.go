@@ -7,11 +7,9 @@ import (
 
 type Entry struct {
 	ContentModelID domain.ContentModelID
-	Items          []EntryItem
 }
 
 type EntryItem struct {
-	ContentType field.Type
-	FieldName   field.Name
-	Value       interface{} // FIXME
+	FieldName field.Name
+	Value     interface{} // FIXME
 }

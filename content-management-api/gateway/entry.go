@@ -2,9 +2,11 @@ package gateway
 
 import (
 	"content-management-api/domain"
+	"content-management-api/domain/field"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"content-management-api/usecase/write"
+	"content-management-api/util/log"
 	"context"
 )
 
@@ -30,4 +32,9 @@ func (e *Entry) Create(ctx context.Context, entry write.Entry) (domain.Entry, er
 		ID:             domain.EntryId(create.ID),
 		ContentModelID: domain.ContentModelID(create.ModelID),
 	}, err
+}
+
+func (e *Entry) CreateItems(ctx context.Context, items []write.EntryItem) ([]field.HasValue, error) {
+	log.Logger.Warn("not implemented")
+	return nil, nil
 }

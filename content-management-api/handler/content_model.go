@@ -54,10 +54,10 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, ContentModelResponseBody{
-		ID:     contentModel.ID.String(),
-		Name:   contentModel.Name.String(),
+		ID:        contentModel.ID.String(),
+		Name:      contentModel.Name.String(),
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
-		Fields: resFields,
+		Fields:    resFields,
 	})
 }
 
@@ -99,10 +99,10 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 			}
 		}
 		rest[i] = ContentModelResponseBody{
-			ID:     m.ID.String(),
-			Name:   m.Name.String(),
+			ID:        m.ID.String(),
+			Name:      m.Name.String(),
 			CreatedAt: m.CreatedAt.Time().Format(time.RFC3339),
-			Fields: resFields,
+			Fields:    resFields,
 		}
 	}
 	return c.JSON(http.StatusOK, ContentModelsResponseBody{
@@ -124,9 +124,9 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		return err
 	}
 
-	fields := make(field.Fields, len(m.Fields))
+	fields := make(field.FieldModels, len(m.Fields))
 	for i, f := range m.Fields {
-		fields[i] = field.Field{
+		fields[i] = field.FieldModel{
 			Type:     field.Of(f.Type),
 			Required: field.Required(f.Required),
 			Name:     field.Name(f.Name),
@@ -153,9 +153,9 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 	}
 
 	c.JSON(http.StatusCreated, ContentModelResponseBody{
-		ID:     contentModel.ID.String(),
-		Name:   contentModel.Name.String(),
-		Fields: resFields,
+		ID:        contentModel.ID.String(),
+		Name:      contentModel.Name.String(),
+		Fields:    resFields,
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
 	})
 

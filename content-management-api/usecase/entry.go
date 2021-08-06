@@ -6,6 +6,7 @@ import (
 	"content-management-api/usecase/write"
 	"context"
 	"errors"
+	"fmt"
 )
 
 type Entry struct {
@@ -23,8 +24,10 @@ func NewEntry(
 	}
 }
 
-func (e *Entry) Create(entry write.Entry) (domain.Entry, error) {
-	if _, err := e.ContentModelPort.FindByID(context.TODO(), entry.ContentModelID); err != nil {
+func (e *Entry) Register(entry write.Entry, entryItems []write.EntryItem) (domain.Entry, error) {
+	todoCtx := context.TODO()
+
+	if _, err := e.ContentModelPort.FindByID(todoCtx, entry.ContentModelID); err != nil {
 		switch {
 		case errors.As(err, &ContentModelNotFoundError{}):
 			return domain.Entry{}, err
@@ -32,9 +35,15 @@ func (e *Entry) Create(entry write.Entry) (domain.Entry, error) {
 			return domain.Entry{}, err
 		}
 	}
-	create, err := e.EntryPort.Create(context.TODO(), entry)
+
+	createdEntry, err := e.EntryPort.Create(todoCtx, entry)
+	createdEntryItems, err := e.EntryPort.CreateItems(todoCtx, entryItems)
+
+	fmt.Println(createdEntryItems)
+
 	if err != nil {
 		return domain.Entry{}, err
 	}
-	return create, nil
+
+	return createdEntry, nil
 }

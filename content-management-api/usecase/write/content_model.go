@@ -6,7 +6,7 @@ import (
 )
 
 type ContentModel struct {
-	Name   domain.Name
-	Fields field.Fields
+	Name      domain.Name
+	Fields    field.FieldModels
 	CreatedAt domain.CreatedAt
 }

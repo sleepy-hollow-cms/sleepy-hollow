@@ -19,7 +19,7 @@ type NotFoundError struct {
 }
 
 func (c ContentModelCreateFailedError) Error() string {
-	return fmt.Sprintf("Create Failed. %s", c.Reason)
+	return fmt.Sprintf("Register Failed. %s", c.Reason)
 }
 
 func (c ContentModelNotFoundError) Error() string {

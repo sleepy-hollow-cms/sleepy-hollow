@@ -153,25 +153,25 @@ func TestContentModel(t *testing.T) {
 		createdAt := domain.CreatedAt(time.Now())
 
 		contentModel := write.ContentModel{
-			Name: domain.Name("name"),
+			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.Field{
+			Fields: []field.FieldModel{
 				{
 					Type:     field.Text,
-					Name: field.Name("fieldName"),
+					Name:     field.Name("fieldName"),
 					Required: field.Required(true),
 				},
 			},
 		}
 
 		retContentModel := domain.ContentModel{
-			ID:   domain.ContentModelID("id"),
-			Name: domain.Name("name"),
+			ID:        domain.ContentModelID("id"),
+			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.Field{
+			Fields: []field.FieldModel{
 				{
 					Type:     field.Text,
-					Name: field.Name("fieldName"),
+					Name:     field.Name("fieldName"),
 					Required: field.Required(true),
 				},
 			},
@@ -185,13 +185,13 @@ func TestContentModel(t *testing.T) {
 		actual, err := target.Create(contentModel)
 
 		expected := domain.ContentModel{
-			ID:   domain.ContentModelID("id"),
-			Name: domain.Name("name"),
+			ID:        domain.ContentModelID("id"),
+			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.Field{
+			Fields: []field.FieldModel{
 				{
 					Type:     field.Text,
-					Name: field.Name("fieldName"),
+					Name:     field.Name("fieldName"),
 					Required: field.Required(true),
 				},
 			},
@@ -204,7 +204,7 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelを登録時に失敗した場合はContentModelCreateFailedErrorを返す", func(t *testing.T) {
 		contentModel := write.ContentModel{
-			Fields: []field.Field{
+			Fields: []field.FieldModel{
 				{Type: field.Text},
 			},
 		}

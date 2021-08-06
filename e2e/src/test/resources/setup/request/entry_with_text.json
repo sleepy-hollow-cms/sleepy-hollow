@@ -5,11 +5,6 @@
       "contentType": "text",
       "name": "title",
       "value": "タイトル"
-    },
-    {
-      "contentType": "multiple-text",
-      "name": "title-line",
-      "value": ["1","2","3"]
     }
   ]
 }

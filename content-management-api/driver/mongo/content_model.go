@@ -12,16 +12,16 @@ import (
 )
 
 type ContentModel struct {
-	ID     primitive.ObjectID `bson:"_id,omitempty"`
-	Fields []Field            `bson:"fields"`
-	Name   string             `bson:"name"`
+	ID        primitive.ObjectID `bson:"_id,omitempty"`
+	Fields    []Field            `bson:"fields"`
+	Name      string             `bson:"name"`
 	CreatedAt primitive.DateTime `bson:"created_at"`
 }
 
 type Field struct {
-	Name      string             `bson:"name"`
-	Type      string             `bson:"field_type"`
-	Required  bool               `bson:"required"`
+	Name     string `bson:"name"`
+	Type     string `bson:"field_type"`
+	Required bool   `bson:"required"`
 }
 
 //ContentDriver ContentModel Collection on MongoDB
@@ -46,15 +46,15 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 	fieldsModel := make([]Field, len(fields))
 	for i, field := range fields {
 		fieldsModel[i] = Field{
-			Name:      field.Name,
-			Type:      field.Type,
-			Required:  field.Required,
+			Name:     field.Name,
+			Type:     field.Type,
+			Required: field.Required,
 		}
 	}
 
 	insert := ContentModel{
-		Name:   name,
-		Fields: fieldsModel,
+		Name:      name,
+		Fields:    fieldsModel,
 		CreatedAt: primitive.NewDateTimeFromTime(createdAt),
 	}
 
@@ -74,15 +74,15 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 	}
 
 	return &model.ContentModel{
-		ID:     result.InsertedID.(primitive.ObjectID).Hex(),
-		Name:   insert.Name,
+		ID:        result.InsertedID.(primitive.ObjectID).Hex(),
+		Name:      insert.Name,
 		CreatedAt: createdAt,
-		Fields: resultFields,
+		Fields:    resultFields,
 	}, err
 }
 
-func (e ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
-	client, err := e.Client.Get()
+func (c ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
+	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
 	}
@@ -100,18 +100,6 @@ func (e ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
 	}
 
 	return &model.Entry{ID: result.InsertedID.(primitive.ObjectID).Hex()}, nil
-}
-
-func (c ContentDriver) Select() (*model.ContentModel, error) {
-	panic("implement me")
-}
-
-func (c ContentDriver) Update() (*model.ContentModel, error) {
-	panic("implement me")
-}
-
-func (c ContentDriver) Delete() error {
-	panic("implement me")
 }
 
 func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {

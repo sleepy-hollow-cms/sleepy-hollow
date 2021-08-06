@@ -37,23 +37,21 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	for i, item := range requestBody.Items {
 		contentType := field.Of(item.ContentType)
 		entryItems[i] = write.EntryItem{
-			ContentType: contentType,
-			FieldName:   field.Name(item.Name),
-			Value:       field.FactoryValue(contentType, item.Value),
+			FieldName: field.Name(item.Name),
+			Value:     field.FactoryValue(contentType, item.Value),
 		}
 	}
 
 	entry := write.Entry{
 		ContentModelID: domain.ContentModelID(requestBody.ContentModelID),
-		Items:          entryItems,
 	}
 
-	createdEntry, err := en.EntryUseCase.Create(entry)
+	createdEntry, err := en.EntryUseCase.Register(entry, entryItems)
 
 	if err != nil {
 		switch err := err.(type) {
 		case usecase.ContentModelNotFoundError:
-			log.Logger.Warnf("Entry cannot Create Becouse Content Model ID %s Not Found", requestBody.ContentModelID)
+			log.Logger.Warnf("Entry cannot Register Becouse Content Model ID %s Not Found", requestBody.ContentModelID)
 			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
 		default:
 			log.Logger.Warnf("Something Happened: %s", requestBody.ContentModelID)

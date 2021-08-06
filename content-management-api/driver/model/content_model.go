@@ -3,10 +3,10 @@ package model
 import "time"
 
 type ContentModel struct {
-	ID     string
-	Name   string
+	ID        string
+	Name      string
 	CreatedAt time.Time
-	Fields []Field
+	Fields    []Field
 }
 
 type Field struct {

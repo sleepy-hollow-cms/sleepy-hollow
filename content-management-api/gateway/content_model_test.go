@@ -50,7 +50,7 @@ func TestContentModel(t *testing.T) {
 		model := write.ContentModel{
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
-			Fields: field.Fields{
+			Fields: field.FieldModels{
 				{
 					Name:     field.Name("fname"),
 					Type:     field.Text,
@@ -65,7 +65,7 @@ func TestContentModel(t *testing.T) {
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
-			Fields: field.Fields{
+			Fields: field.FieldModels{
 				{
 					Name:     field.Name("fname"),
 					Type:     field.Text,
@@ -87,8 +87,8 @@ func TestContentModel(t *testing.T) {
 
 		id := domain.ContentModelID("id")
 		model := model.ContentModel{
-			ID:   "id",
-			Name: "name",
+			ID:        "id",
+			Name:      "name",
 			CreatedAt: createdAt,
 			Fields: []model.Field{
 				{
@@ -108,10 +108,10 @@ func TestContentModel(t *testing.T) {
 		target.Driver = mockContentDriver
 
 		expected := domain.ContentModel{
-			ID:   id,
-			Name: domain.Name("name"),
+			ID:        id,
+			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
-			Fields: field.Fields{
+			Fields: field.FieldModels{
 				{
 					Name:     field.Name("fname0"),
 					Type:     field.Text,
@@ -184,7 +184,7 @@ func TestContentModel(t *testing.T) {
 					ID:        "id0",
 					Name:      domain.Name("name0"),
 					CreatedAt: domain.CreatedAt(createdAt),
-					Fields: field.Fields{
+					Fields: field.FieldModels{
 						{
 							Name:     field.Name("fname00"),
 							Type:     field.Text,
@@ -201,7 +201,7 @@ func TestContentModel(t *testing.T) {
 					ID:        "id1",
 					Name:      domain.Name("name1"),
 					CreatedAt: domain.CreatedAt(createdAt),
-					Fields: field.Fields{
+					Fields: field.FieldModels{
 						{
 							Name:     field.Name("fname10"),
 							Type:     field.Text,

@@ -1,13 +1,12 @@
 package field
 
-type Field struct {
-	Name      Name
-	Type      Type
-	Required  Required
+type FieldModel struct {
+	Name     Name
+	Type     Type
+	Required Required
 }
 
 type Name string
-
 
 func (n Name) String() string {
 	return string(n)
@@ -15,4 +14,4 @@ func (n Name) String() string {
 
 type Required bool
 
-type Fields []Field
+type FieldModels []FieldModel

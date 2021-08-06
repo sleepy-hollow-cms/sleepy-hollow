@@ -5,6 +5,10 @@ type TextValue struct {
 	Value string
 }
 
+func (t TextValue) FieldValue() interface{} {
+	return t.Value
+}
+
 type MultipleTextValue struct {
 	HasValue
 	Value []string
@@ -13,6 +17,11 @@ type MultipleTextValue struct {
 type NumberValue uint64
 
 type HasValue interface {
+	FieldValue() interface{}
+}
+
+type HasName interface {
+	FieldName() string
 }
 
 func FactoryValue(typeName Type, value interface{}) HasValue {

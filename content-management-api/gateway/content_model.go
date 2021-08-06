@@ -37,10 +37,10 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 	}
 
 	return domain.ContentModel{
-		ID:     domain.ContentModelID(contentModels.ID),
-		Name:   domain.Name(contentModels.Name),
+		ID:        domain.ContentModelID(contentModels.ID),
+		Name:      domain.Name(contentModels.Name),
 		CreatedAt: domain.CreatedAt(contentModels.CreatedAt),
-		Fields: newFields(contentModels.Fields),
+		Fields:    newFields(contentModels.Fields),
 	}, nil
 }
 
@@ -75,10 +75,10 @@ func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (do
 
 	for i, foundModel := range contentModels {
 		foundModels[i] = domain.ContentModel{
-			ID:     domain.ContentModelID(foundModel.ID),
-			Name:   domain.Name(foundModel.Name),
+			ID:        domain.ContentModelID(foundModel.ID),
+			Name:      domain.Name(foundModel.Name),
 			CreatedAt: domain.CreatedAt(foundModel.CreatedAt),
-			Fields: newFields(foundModel.Fields),
+			Fields:    newFields(foundModel.Fields),
 		}
 	}
 
@@ -106,17 +106,17 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 	}
 
 	return domain.ContentModel{
-		ID:     domain.ContentModelID(created.ID),
-		Name:   domain.Name(created.Name),
-		Fields: newFields(created.Fields),
+		ID:        domain.ContentModelID(created.ID),
+		Name:      domain.Name(created.Name),
+		Fields:    newFields(created.Fields),
 		CreatedAt: domain.CreatedAt(created.CreatedAt),
 	}, nil
 }
 
-func newFields(modelFields []model.Field) []field.Field {
-	fields := make(field.Fields, len(modelFields))
+func newFields(modelFields []model.Field) []field.FieldModel {
+	fields := make(field.FieldModels, len(modelFields))
 	for i, getField := range modelFields {
-		fields[i] = field.Field{
+		fields[i] = field.FieldModel{
 			Name:     field.Name(getField.Name),
 			Type:     field.Of(getField.Type),
 			Required: field.Required(getField.Required),
