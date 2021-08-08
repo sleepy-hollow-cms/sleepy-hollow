@@ -15,6 +15,11 @@ func (_m *MockContentDriver) CreateModel(name string, createdAt time.Time, field
 	return ret.Get(0).(*model.ContentModel), ret.Error(1)
 }
 
+func (_m *MockContentDriver) UpdateModel(contentModel model.ContentModel) (*model.ContentModel, error) {
+	ret := _m.Called(contentModel)
+	return ret.Get(0).(*model.ContentModel), ret.Error(1)
+}
+
 func (_m *MockContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {
 	ret := _m.Called(id)
 	return ret.Get(0).(*model.ContentModel), ret.Error(1)

@@ -24,6 +24,18 @@ class ContentManagementApiTest : TestBase {
         SpecDataStore.put("body", body)
     }
 
+    @Step("<path>にボディ<filePath>でPUTリクエストを送る")
+    fun requestPut(path: String, filePath: String) {
+        val (statusCode, body, _) = HttpClient.putRequest(
+            "${Configuration[content_management_api.endpoint]}$path",
+            readFromFile(filePath),
+            listOf(Pair("Content-Type", "application/json"))
+        )
+
+        SpecDataStore.put("statusCode", statusCode)
+        SpecDataStore.put("body", body)
+    }
+
     @Step("<path>にGETリクエストを送る")
     fun requestGet(path: String) {
         val (statusCode, body, _) = HttpClient.getRequest(
@@ -80,6 +92,20 @@ class ContentManagementApiTest : TestBase {
     fun verifyMongoDB(collection: String, jsonPath: String, value: String) {
         val body = SpecDataStore.get("body") as String
         val id = JsonPath.read<String>(body, "$.id")
+        val data = findDattaFromMongo(collection, id)
+        JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
+    }
+
+
+    @Step("MongoDBの<collection>にID<id>で登録されている値のJsonPath<jsonPath>の値が<value>である")
+    fun verifyMongoDBByID(collection: String, id: String, jsonPath: String, value: String) {
+        val data = findDattaFromMongo(collection, id)
+        JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
+    }
+
+
+    @Step("MongoDBの<collection>にID<id>で登録されている値のJsonPath<jsonPath>の真偽値が<value>である")
+    fun verifyMongoDBBooleanByID(collection: String, id: String, jsonPath: String, value: Boolean) {
         val data = findDattaFromMongo(collection, id)
         JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
     }
