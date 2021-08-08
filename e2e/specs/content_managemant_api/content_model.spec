@@ -34,7 +34,7 @@ tags: default
 * "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update.json"でPUTリクエストを送る
 * "200"ステータスコードが返ってくる
 * ContentModelの更新でレスポンスボディが正しい形である
-* ContentModelの更新でDBにID"5063114bd386d8fadbd6b004"で登録されている値が正しい値である
+* ContentModelの更新でDBにID"5063114bd386d8fadbd6b004"で登録されている値が正しい値に変更されている
 
 ## ID指定でContentModelを取得できる
 tags: default

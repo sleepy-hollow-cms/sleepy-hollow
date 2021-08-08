@@ -3,26 +3,32 @@
   "fields": [
     {
       "type": "text",
+      "name": "text-name",
       "required" : true
     },
     {
       "type": "multiple-text",
+      "name": "multiple-text-name",
       "required" : false
     },
     {
       "type": "date",
+      "name": "date-name",
       "required" : false
     },
     {
       "type": "bool",
+      "name": "bool-name",
       "required" : true
     },
     {
       "type": "reference",
+      "name": "reference-name",
       "required" : true
     },
     {
-      "type": "user-created-type"
+      "type": "user-created-type",
+      "name": "user-created-type-name"
     }
   ]
 }
