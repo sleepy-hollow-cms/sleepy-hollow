@@ -28,6 +28,20 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[5].field_type"の値が"Unknown"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[5].required"の真偽値が"false"である
 
+# ContentModelの更新でレスポンスボディが正しい形である
+* レスポンスボディのJsonPath"$.name"の値が"updated_name"である
+* レスポンスボディのJsonPath"$.fields[0].type"の値が"text"である
+* レスポンスボディのJsonPath"$.fields[0].required"の真偽値が"false"である
+* レスポンスボディのJsonPath"$.fields[1].type"の値が"number"である
+* レスポンスボディのJsonPath"$.fields[1].required"の真偽値が"true"である
+
+# ContentModelの更新でDBにID<id>で登録されている値が正しい値である
+* MongoDBの"CONTENT_MODEL"にID<id>で登録されている値のJsonPath"$.name"の値が"updated_name"である
+* MongoDBの"CONTENT_MODEL"にID<id>で登録されている値のJsonPath"$.fields[0].field_type"の値が"text"である
+* MongoDBの"CONTENT_MODEL"にID<id>で登録されている値のJsonPath"$.fields[0].required"の真偽値が"false"である
+* MongoDBの"CONTENT_MODEL"にID<id>で登録されている値のJsonPath"$.fields[1].field_type"の値が"number"である
+* MongoDBの"CONTENT_MODEL"にID<id>で登録されている値のJsonPath"$.fields[1].required"の真偽値が"true"である
+
 # ContentModelの一覧取得でレスポンスボディのContentModelリストが正しい形である
 * レスポンスボディのJsonPath"$.models[0].name"の値が"name0"である
 * レスポンスボディのJsonPath"$.models[0].created-at"の日付がISO 8601形式でUTCである

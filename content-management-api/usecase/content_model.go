@@ -60,3 +60,26 @@ func (c *ContentModel) Create(contentModel write.ContentModel) (domain.ContentMo
 
 	return result, err
 }
+
+func (c *ContentModel) Update(id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error) {
+
+	found, err := c.ContentModelPort.FindByID(context.TODO(), id)
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return domain.ContentModel{}, err
+	}
+
+	updated := write.ContentModel{
+		Name:      contentModel.Name,
+		CreatedAt: found.CreatedAt,
+		Fields:    contentModel.Fields,
+	}
+
+	result, err := c.ContentModelPort.Update(context.TODO(), id, updated)
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return domain.ContentModel{}, err
+	}
+
+	return result, nil
+}

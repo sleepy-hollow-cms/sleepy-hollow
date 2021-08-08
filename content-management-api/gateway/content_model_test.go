@@ -79,6 +79,59 @@ func TestContentModel(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
+	t.Run("ContentModelを更新できる", func(t *testing.T) {
+		createdAt := time.Now()
+		mockContentModelDriver := new(MockContentDriver)
+		id := domain.ContentModelID("id")
+
+		contentModel := model.ContentModel{
+			ID:        "id",
+			Name:      "name",
+			CreatedAt: createdAt,
+			Fields: []model.Field{
+				{
+					Name:     "fname",
+					Type:     "text",
+					Required: true,
+				},
+			},
+		}
+
+		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
+		target.Driver = mockContentModelDriver
+
+		model := write.ContentModel{
+			Name:      "name",
+			CreatedAt: domain.CreatedAt(createdAt),
+			Fields: field.Fields{
+				{
+					Name:     field.Name("fname"),
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+			},
+		}
+
+		actual, err := target.Update(context.TODO(), id, model)
+
+		expected := domain.ContentModel{
+			ID:        domain.ContentModelID("id"),
+			Name:      domain.Name("name"),
+			CreatedAt: domain.CreatedAt(createdAt),
+			Fields: field.Fields{
+				{
+					Name:     field.Name("fname"),
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+			},
+		}
+
+		mockContentModelDriver.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
 	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
 
 		createdAt := time.Now()
@@ -87,8 +140,8 @@ func TestContentModel(t *testing.T) {
 
 		id := domain.ContentModelID("id")
 		model := model.ContentModel{
-			ID:   "id",
-			Name: "name",
+			ID:        "id",
+			Name:      "name",
 			CreatedAt: createdAt,
 			Fields: []model.Field{
 				{
@@ -108,8 +161,8 @@ func TestContentModel(t *testing.T) {
 		target.Driver = mockContentDriver
 
 		expected := domain.ContentModel{
-			ID:   id,
-			Name: domain.Name("name"),
+			ID:        id,
+			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
 			Fields: field.Fields{
 				{

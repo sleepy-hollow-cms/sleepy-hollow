@@ -29,7 +29,15 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].name"の値が"fieldName"である
 
+## ContentModelを更新することができるすることができる
+tags: default
+* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update.json"でPUTリクエストを送る
+* "200"ステータスコードが返ってくる
+* ContentModelの更新でレスポンスボディが正しい形である
+* ContentModelの更新でDBにID"5063114bd386d8fadbd6b004"で登録されている値が正しい値である
+
 ## ID指定でContentModelを取得できる
+tags: default
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b004"にGETリクエストを送る
 * "200"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.name"の値が"name0"である
@@ -48,6 +56,7 @@ tags: default
 * ContentModelの一覧取得でレスポンスボディのContentModelリストが正しい形である
 
 ## ID指定でContentModelを削除できる
+tags: default
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b001"にDELETEリクエストを送る
 * "204"ステータスコードが返ってくる
 * MongoDBの"CONTENT_MODEL"に"5063114bd386d8fadbd6b001"のIDでデータが登録されていない
