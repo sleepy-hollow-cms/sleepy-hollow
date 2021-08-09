@@ -72,6 +72,7 @@ func (c *ContentModel) Update(id domain.ContentModelID, contentModel write.Conte
 	updated := write.ContentModel{
 		Name:      contentModel.Name,
 		CreatedAt: found.CreatedAt,
+		UpdatedAt: contentModel.UpdatedAt,
 		Fields:    contentModel.Fields,
 	}
 

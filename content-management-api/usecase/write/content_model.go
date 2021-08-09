@@ -9,4 +9,5 @@ type ContentModel struct {
 	Name   domain.Name
 	Fields field.Fields
 	CreatedAt domain.CreatedAt
+	UpdatedAt domain.UpdatedAt
 }

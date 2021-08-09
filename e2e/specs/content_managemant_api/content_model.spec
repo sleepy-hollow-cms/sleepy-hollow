@@ -13,11 +13,15 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].field_type"の値が"number"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 
-## ContentModelの作成日時が保存されている
+## ContentModelの作成で作成日時と更新日時が保存されている
 * "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_with_number.json"でPOSTリクエストを送る
 * "201"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.created-at"の日付がISO 8601形式でUTCである
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.created_at"に作成日時が保存されている
+* レスポンスボディのJsonPath"$.updated-at"の日付がISO 8601形式でUTCである
+* レプポンスボディのJsonPath"$.created-at"とJsonPath"$.updated-at"が同じ値である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.updated_at"に作成日時が保存されている
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.updated_at"とJsonPathの"$.updated_at"が同じ値である
 
 ## ContentModelのフィールドに名前をつけて保存できる
 * "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_fieldname.json"でPOSTリクエストを送る
@@ -35,6 +39,13 @@ tags: default
 * "200"ステータスコードが返ってくる
 * ContentModelの更新でレスポンスボディが正しい形である
 * ContentModelの更新でDBにID"5063114bd386d8fadbd6b004"で登録されている値が正しい値に変更されている
+
+## ContentModelの更新日時が保存されている
+tags: default
+* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update.json"でPUTリクエストを送る
+* "200"ステータスコードが返ってくる
+* レスポンスボディのJsonPath"$.updated-at"の日付がISO 8601形式でUTCである
+* MongoDBの"CONTENT_MODEL"にID"5063114bd386d8fadbd6b004"で登録されてい"$.updated_at"の日時が"2021-08-02T19:46:00.000Z"でない
 
 ## ID指定でContentModelを取得できる
 tags: default
