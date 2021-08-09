@@ -75,6 +75,12 @@ class ContentManagementApiTest : TestBase {
         JsonPath.read<String>(body, jsonPath) shouldBeEqualTo value
     }
 
+    @Step("レスポンスボディのJsonPath<jsonPath>の値が<value>でない")
+    fun verifyBodyNotEqual(jsonPath: String, value: String) {
+        val body = SpecDataStore.get("body") as String
+        JsonPath.read<String>(body, jsonPath) shouldNotBe  value
+    }
+
     @Step("レスポンスボディのJsonPath<jsonPath>の真偽値が<value>である")
     fun verifyBodyBoolean(jsonPath: String, value: Boolean) {
         val body = SpecDataStore.get("body") as String

@@ -45,6 +45,7 @@ tags: default
 * "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update.json"でPUTリクエストを送る
 * "200"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.updated-at"の日付がISO 8601形式でUTCである
+* レスポンスボディのJsonPath"$.updated-at"の値が"2021-08-02T19:46:00.000Z"でない
 * MongoDBの"CONTENT_MODEL"にID"5063114bd386d8fadbd6b004"で登録されてい"$.updated_at"の日時が"2021-08-02T19:46:00.000Z"でない
 
 ## ID指定でContentModelを取得できる
@@ -52,6 +53,8 @@ tags: default
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b004"にGETリクエストを送る
 * "200"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.name"の値が"name0"である
+* レスポンスボディのJsonPath"$.created-at"の値が"2021-08-02T19:46:00Z"である
+* レスポンスボディのJsonPath"$.updated-at"の値が"2021-08-02T19:47:00Z"である
 * レスポンスボディのJsonPath"$.created-at"の日付がISO 8601形式でUTCである
 * レスポンスボディのJsonPath"$.fields[0].type"の値が"multiple-text"である
 * レスポンスボディのJsonPath"$.fields[0].name"の値が"name00"である

@@ -60,7 +60,8 @@
 
 # ContentModelの一覧取得でレスポンスボディのContentModelリストが正しい形である
 * レスポンスボディのJsonPath"$.models[0].name"の値が"name0"である
-* レスポンスボディのJsonPath"$.models[0].created-at"の日付がISO 8601形式でUTCである
+* レスポンスボディのJsonPath"$.models[0].created-at"の値が"2021-08-02T19:46:00Z"である
+* レスポンスボディのJsonPath"$.models[0].updated-at"の値が"2021-08-02T19:47:00Z"である
 * レスポンスボディのJsonPath"$.models[0].fields[0].name"の値が"name00"である
 * レスポンスボディのJsonPath"$.models[0].fields[0].type"の値が"multiple-text"である
 * レスポンスボディのJsonPath"$.models[0].fields[0].required"の真偽値が"true"である
@@ -68,7 +69,8 @@
 * レスポンスボディのJsonPath"$.models[0].fields[1].name"の値が"name01"である
 * レスポンスボディのJsonPath"$.models[0].fields[1].required"の真偽値が"false"である
 * レスポンスボディのJsonPath"$.models[1].name"の値が"name1"である
-* レスポンスボディのJsonPath"$.models[1].created-at"の日付がISO 8601形式でUTCである
+* レスポンスボディのJsonPath"$.models[1].created-at"の値が"2021-08-03T19:46:00Z"である
+* レスポンスボディのJsonPath"$.models[1].updated-at"の値が"2021-08-03T19:47:00Z"である
 * レスポンスボディのJsonPath"$.models[1].fields[0].name"の値が"name10"である
 * レスポンスボディのJsonPath"$.models[1].fields[0].required"の真偽値が"true"である
 * レスポンスボディのJsonPath"$.models[1].fields[0].type"の値が"text"である
