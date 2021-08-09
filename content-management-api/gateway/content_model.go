@@ -110,6 +110,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		Name:      domain.Name(created.Name),
 		Fields:    newFields(created.Fields),
 		CreatedAt: domain.CreatedAt(created.CreatedAt),
+		UpdatedAt: domain.UpdatedAt(created.UpdatedAt),
 	}, nil
 }
 
@@ -128,6 +129,7 @@ func (c *ContentModel) Update(ctx context.Context, id domain.ContentModelID, con
 			ID:        id.String(),
 			Name:      contentModel.Name.String(),
 			CreatedAt: contentModel.CreatedAt.Time(),
+			UpdatedAt: contentModel.UpdatedAt.Time(),
 			Fields:    fields,
 		})
 
@@ -141,6 +143,7 @@ func (c *ContentModel) Update(ctx context.Context, id domain.ContentModelID, con
 		Name:      domain.Name(updated.Name),
 		Fields:    newFields(updated.Fields),
 		CreatedAt: domain.CreatedAt(updated.CreatedAt),
+		UpdatedAt: domain.UpdatedAt(updated.UpdatedAt),
 	}, nil
 }
 

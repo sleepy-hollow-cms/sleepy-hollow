@@ -22,11 +22,14 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelを登録できる", func(t *testing.T) {
 		createdAt := time.Now()
+
 		mockContentModelDriver := new(MockContentDriver)
+
 		contentModel := model.ContentModel{
 			ID:        "id",
 			Name:      "name",
 			CreatedAt: createdAt,
+			UpdatedAt: createdAt,
 			Fields: []model.Field{
 				{
 					Name:     "fname",
@@ -47,9 +50,10 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.On("CreateModel", "name", createdAt, fields).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
-		model := write.ContentModel{
+		createdModel := write.ContentModel{
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(createdAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),
@@ -59,12 +63,13 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		actual, err := target.Create(context.TODO(), model)
+		actual, err := target.Create(context.TODO(), createdModel)
 
 		expected := domain.ContentModel{
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(createdAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),
@@ -80,14 +85,19 @@ func TestContentModel(t *testing.T) {
 	})
 
 	t.Run("ContentModelを更新できる", func(t *testing.T) {
+
 		createdAt := time.Now()
+		updatedAt := time.Now()
+
 		mockContentModelDriver := new(MockContentDriver)
+
 		id := domain.ContentModelID("id")
 
 		contentModel := model.ContentModel{
 			ID:        "id",
 			Name:      "name",
 			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
 			Fields: []model.Field{
 				{
 					Name:     "fname",
@@ -103,6 +113,7 @@ func TestContentModel(t *testing.T) {
 		model := write.ContentModel{
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(updatedAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),
@@ -118,6 +129,7 @@ func TestContentModel(t *testing.T) {
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(updatedAt),
 			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),

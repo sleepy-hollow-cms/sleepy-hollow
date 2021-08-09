@@ -81,7 +81,6 @@ func TestContentModel(t *testing.T) {
 	t.Run("存在しないContentModelのIDを削除した場合はContentModelNotFoundErrorを返す", func(t *testing.T) {
 		id := domain.ContentModelID("id")
 
-		// Mock setting
 		mockContentModelPort := new(MockContentModelPort)
 		modelID := domain.ContentModelID("id")
 
@@ -149,8 +148,11 @@ func TestContentModel(t *testing.T) {
 	})
 
 	t.Run("ContentModelを更新することができる", func(t *testing.T) {
+		rowCreatedTime := time.Now()
+		createdAt := domain.CreatedAt(rowCreatedTime)
+		currentUpdateAt := domain.UpdatedAt(rowCreatedTime)
 
-		createdAt := domain.CreatedAt(time.Now())
+		updatedAt := domain.UpdatedAt(time.Now())
 
 		id := domain.ContentModelID("id")
 
@@ -158,6 +160,7 @@ func TestContentModel(t *testing.T) {
 			ID:        id,
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
+			UpdatedAt: currentUpdateAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Text,
@@ -170,6 +173,7 @@ func TestContentModel(t *testing.T) {
 		updatedContentModel := write.ContentModel{
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Number,
@@ -183,6 +187,7 @@ func TestContentModel(t *testing.T) {
 			ID:        id,
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Number,
@@ -204,6 +209,7 @@ func TestContentModel(t *testing.T) {
 			ID:        id,
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
 			Fields: []field.Field{
 				{
 					Type:     field.Number,

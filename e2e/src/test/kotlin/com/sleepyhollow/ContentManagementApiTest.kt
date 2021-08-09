@@ -88,6 +88,16 @@ class ContentManagementApiTest : TestBase {
         regex.matches(date) shouldBeEqualTo true
     }
 
+    //レプポンスボディのJsonPath"$.created-at"とJsonPath"$.updated-at"が同じ値である
+
+    @Step("レプポンスボディのJsonPath<jsonPath1>とJsonPath<jsonPath2>が同じ値である")
+    fun verifyBodyTwoValueEqual(jsonPath1: String, jsonPath2: String) {
+        val body = SpecDataStore.get("body") as String
+        val value1 = JsonPath.read<String>(body, jsonPath1)
+        val value2 = JsonPath.read<String>(body, jsonPath2)
+        value1 shouldBeEqualTo value2
+    }
+
     @Step("MongoDBの<collection>に登録されている値のJsonPath<jsonPath>の値が<value>である")
     fun verifyMongoDB(collection: String, jsonPath: String, value: String) {
         val body = SpecDataStore.get("body") as String
@@ -101,6 +111,23 @@ class ContentManagementApiTest : TestBase {
     fun verifyMongoDBByID(collection: String, id: String, jsonPath: String, value: String) {
         val data = findDattaFromMongo(collection, id)
         JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
+    }
+
+    @Step("MongoDBの<collection>にID<id>で登録されてい<jsonPath>の日時が<value>でない")
+    fun verifyMongoDBByIDNotEqualTo(collection: String, id: String, jsonPath: String, value: String) {
+        val data = findDattaFromMongo(collection, id)
+        val date = JsonPath.read<HashMap<String, String>>(data, jsonPath)
+        date["\$date"].toString() shouldNotBe value
+    }
+
+    @Step("MongoDBの<collection>に登録されている値のJsonPath<jsonPath1>とJsonPathの<jsonPath2>が同じ値である")
+    fun verifyCreateDateEqualToUpdateDate(collection: String, jsonPath1: String, jsonPath2: String) {
+        val body = SpecDataStore.get("body") as String
+        val id = JsonPath.read<String>(body, "$.id")
+        val data = findDattaFromMongo(collection, id)
+        val value1 = JsonPath.read<HashMap<String, String>>(data, jsonPath1)
+        val value2 = JsonPath.read<HashMap<String, String>>(data, jsonPath2)
+        value1 shouldNotBe value2
     }
 
 

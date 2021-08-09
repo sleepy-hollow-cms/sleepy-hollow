@@ -16,6 +16,7 @@ type ContentModel struct {
 	Fields    []Field            `bson:"fields"`
 	Name      string             `bson:"name"`
 	CreatedAt primitive.DateTime `bson:"created_at"`
+	UpdatedAt primitive.DateTime `bson:"updated_at"`
 }
 
 type Field struct {
@@ -56,6 +57,7 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 		Name:      name,
 		Fields:    fieldsModel,
 		CreatedAt: primitive.NewDateTimeFromTime(createdAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(createdAt),
 	}
 
 	result, err := collections.InsertOne(context.Background(), insert)
@@ -77,6 +79,7 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 		ID:        result.InsertedID.(primitive.ObjectID).Hex(),
 		Name:      insert.Name,
 		CreatedAt: createdAt,
+		UpdatedAt: createdAt,
 		Fields:    resultFields,
 	}, err
 }
@@ -107,6 +110,7 @@ func (c ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.Cont
 		Name:      updatedModel.Name,
 		Fields:    fieldsModel,
 		CreatedAt: primitive.NewDateTimeFromTime(updatedModel.CreatedAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(updatedModel.UpdatedAt),
 	}
 
 	_, errUpdate := collections.UpdateOne(

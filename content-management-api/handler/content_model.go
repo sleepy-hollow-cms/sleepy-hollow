@@ -138,11 +138,13 @@ func (r *ContentModelResource) Create(c echo.Context) error {
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
 		CreatedAt: domain.CreatedAt(time.Now()),
+		UpdatedAt: domain.UpdatedAt(time.Now()),
 	})
 
 	if err != nil {
 		println(err)
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return err
 	}
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
@@ -158,6 +160,7 @@ func (r *ContentModelResource) Create(c echo.Context) error {
 		Name:      contentModel.Name.String(),
 		Fields:    resFields,
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
+		UpdatedAt: contentModel.UpdatedAt.Time().Format(time.RFC3339),
 	})
 
 	return nil
@@ -172,6 +175,7 @@ type ContentModelResponseBody struct {
 	Name      string  `json:"name"`
 	Fields    []Field `json:"fields"`
 	CreatedAt string  `json:"created-at"`
+	UpdatedAt string  `json:"updated-at"`
 }
 
 type ContentModelRequestBody struct {
@@ -213,7 +217,7 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 	contentModel, err := r.ContentModelUseCase.Update(domain.ContentModelID(contentModelId), write.ContentModel{
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
-		CreatedAt: domain.CreatedAt(time.Now()),
+		UpdatedAt: domain.UpdatedAt(time.Now()),
 	})
 
 	if err != nil {
@@ -235,6 +239,7 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 		Name:      contentModel.Name.String(),
 		Fields:    resFields,
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
+		UpdatedAt: contentModel.UpdatedAt.Time().Format(time.RFC3339),
 	})
 
 	return nil

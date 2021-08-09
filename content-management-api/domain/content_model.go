@@ -16,7 +16,15 @@ func (n Name) String() string {
 
 type CreatedAt time.Time
 
+
 func (d CreatedAt) Time() time.Time {
+	return time.Time(d)
+}
+
+
+type UpdatedAt time.Time
+
+func (d UpdatedAt) Time() time.Time {
 	return time.Time(d)
 }
 
@@ -29,6 +37,7 @@ type ContentModel struct {
 	Name   Name
 	Fields field.Fields
 	CreatedAt CreatedAt
+	UpdatedAt UpdatedAt
 }
 
 
