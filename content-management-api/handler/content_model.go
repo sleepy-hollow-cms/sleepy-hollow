@@ -58,6 +58,7 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 		ID:        contentModel.ID.String(),
 		Name:      contentModel.Name.String(),
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
+		UpdatedAt: contentModel.UpdatedAt.Time().Format(time.RFC3339),
 		Fields:    resFields,
 	})
 }
@@ -103,6 +104,7 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 			ID:        m.ID.String(),
 			Name:      m.Name.String(),
 			CreatedAt: m.CreatedAt.Time().Format(time.RFC3339),
+			UpdatedAt: m.UpdatedAt.Time().Format(time.RFC3339),
 			Fields:    resFields,
 		}
 	}

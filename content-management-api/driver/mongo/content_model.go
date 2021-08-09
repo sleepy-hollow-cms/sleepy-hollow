@@ -136,6 +136,7 @@ func (c ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.Cont
 		ID:        updatedModel.ID,
 		Name:      update.Name,
 		CreatedAt: updatedModel.CreatedAt,
+		UpdatedAt: updatedModel.UpdatedAt,
 		Fields:    resultFields,
 	}, err
 }
@@ -159,18 +160,6 @@ func (e ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
 	}
 
 	return &model.Entry{ID: result.InsertedID.(primitive.ObjectID).Hex()}, nil
-}
-
-func (c ContentDriver) Select() (*model.ContentModel, error) {
-	panic("implement me")
-}
-
-func (c ContentDriver) Update() (*model.ContentModel, error) {
-	panic("implement me")
-}
-
-func (c ContentDriver) Delete() error {
-	panic("implement me")
 }
 
 func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {
@@ -209,9 +198,11 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	}
 
 	return &model.ContentModel{
-		ID:     contentModel.ID.Hex(),
-		Name:   contentModel.Name,
-		Fields: resultFields,
+		ID:        contentModel.ID.Hex(),
+		Name:      contentModel.Name,
+		CreatedAt: contentModel.CreatedAt.Time(),
+		UpdatedAt: contentModel.UpdatedAt.Time(),
+		Fields:    resultFields,
 	}, nil
 }
 
@@ -229,7 +220,9 @@ func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentMode
 		return nil, err
 	}
 	defer found.Close(context.Background())
+
 	contentModels := make([]ContentModel, found.RemainingBatchLength())
+
 	for i := 0; found.Next(context.Background()); i++ {
 		var contentModel ContentModel
 		err := found.Decode(&contentModel)
@@ -253,6 +246,8 @@ func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentMode
 		resultModels[i] = model.ContentModel{
 			ID:     contentModel.ID.Hex(),
 			Name:   contentModel.Name,
+			CreatedAt: contentModel.CreatedAt.Time(),
+			UpdatedAt: contentModel.UpdatedAt.Time(),
 			Fields: resultFields,
 		}
 	}
