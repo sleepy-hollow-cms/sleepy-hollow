@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"content-management-api/usecase"
@@ -149,13 +148,13 @@ func (c *ContentModel) Update(ctx context.Context, id domain.ContentModelID, con
 	}, nil
 }
 
-func newFields(modelFields []model.Field) []field.Field {
-	fields := make(field.Fields, len(modelFields))
+func newFields(modelFields []model.Field) []domain.Field {
+	fields := make(domain.Fields, len(modelFields))
 	for i, getField := range modelFields {
-		fields[i] = field.Field{
-			Name:     field.Name(getField.Name),
-			Type:     field.Of(getField.Type),
-			Required: field.Required(getField.Required),
+		fields[i] = domain.Field{
+			Name:     domain.Name(getField.Name),
+			Type:     domain.Of(getField.Type),
+			Required: domain.Required(getField.Required),
 		}
 	}
 	return fields

@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"content-management-api/domain/field"
 	"time"
 )
 
@@ -31,7 +30,7 @@ func (c ContentModelID) String() string {
 type ContentModel struct {
 	ID        ContentModelID
 	Name      Name
-	Fields    field.Fields
+	Fields    Fields
 	CreatedAt CreatedAt
 	UpdatedAt UpdatedAt
 }

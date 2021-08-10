@@ -1,7 +1,7 @@
-package field_test
+package domain_test
 
 import (
-	"content-management-api/domain/field"
+	field "content-management-api/domain"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

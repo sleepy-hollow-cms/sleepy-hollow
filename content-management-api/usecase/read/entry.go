@@ -2,7 +2,6 @@ package read
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 )
 
 type Entry struct {
@@ -12,12 +11,12 @@ type Entry struct {
 }
 
 type Item struct {
-	FieldName field.Name
-	Type      field.Type
-	Value     field.HasValue
+	FieldName domain.Name
+	Type      domain.Type
+	Value     domain.Value
 }
 
 type EntryItem struct {
-	ID    field.ID
+	ID    domain.ID
 	Items []Item
 }

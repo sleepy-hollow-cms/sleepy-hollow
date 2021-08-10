@@ -2,7 +2,6 @@ package gateway
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"content-management-api/usecase/read"
@@ -52,16 +51,16 @@ func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []writ
 
 	readItems := make([]read.Item, len(createEntryItems))
 	for i, createEntryItem := range createEntryItems {
-		itemType := field.Of(createEntryItem.Type)
+		itemType := domain.Of(createEntryItem.Type)
 		readItems[i] = read.Item{
-			FieldName: field.Name(createEntryItem.Name),
+			FieldName: domain.Name(createEntryItem.Name),
 			Type:      itemType,
-			Value:     field.FactoryValue(itemType, createEntryItem.Value),
+			Value:     domain.FactoryValue(itemType, createEntryItem.Value),
 		}
 	}
 
 	return read.EntryItem{
-		ID:    field.ID(id),
+		ID:    domain.ID(id),
 		Items: readItems,
 	}, nil
 }

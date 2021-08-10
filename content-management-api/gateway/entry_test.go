@@ -2,7 +2,6 @@ package gateway_test
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/driver/model"
 	"content-management-api/gateway"
 	"content-management-api/usecase/read"
@@ -49,9 +48,9 @@ func TestEntry(t *testing.T) {
 	t.Run("EntryItemsを登録する", func(t *testing.T) {
 		inputEntryItems := []write.EntryItem{
 			{
-				Type:      field.Text,
+				Type:      domain.Text,
 				FieldName: "fieldName",
-				Value:     field.FactoryValue(field.Text, "テキスト"),
+				Value:     domain.FactoryValue(domain.Text, "テキスト"),
 			},
 		}
 
@@ -72,15 +71,15 @@ func TestEntry(t *testing.T) {
 		items := []read.Item{
 			{
 				FieldName: "fieldName",
-				Type:      field.Text,
-				Value: field.TextValue{
+				Type:      domain.Text,
+				Value: domain.TextValue{
 					Value: "テキスト",
 				},
 			},
 		}
 
 		expected := read.EntryItem{
-			ID:    field.ID("id"),
+			ID:    domain.ID("id"),
 			Items: items,
 		}
 
