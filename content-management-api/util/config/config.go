@@ -1,9 +1,9 @@
 package config
 
 import (
+	"log"
 	"strings"
 
-	"github.com/creasty/defaults"
 	"github.com/spf13/viper"
 )
 
@@ -14,7 +14,8 @@ const (
 )
 
 var (
-	Conf *Config
+	Conf                *Config
+	configDefaultValues map[string]interface{}
 )
 
 type Config struct {
@@ -46,10 +47,20 @@ func init() {
 		Server:  Server{},
 		MongoDB: MongoDB{},
 	}
+
+	configDefaultValues = map[string]interface{}{
+		"LOG.ENCODING":     "json",
+		"LOG.OUTPUT":       "stdout",
+		"LOG.LEVEL":        "debug",
+		"SERVER.PORT":      3000,
+		"MONGODB.USER":     "root",
+		"MONGODB.PASSWORD": "password",
+		"MONGODB.HOST":     "localhost",
+		"MONGODB.PORT":     27017,
+	}
 }
 
 func (c *Config) Load() error {
-	defaults.Set(c)
 	viper.SetDefault(configFileKey, configDefaultPath)
 
 	viper.SetEnvPrefix(prefix)
@@ -57,9 +68,17 @@ func (c *Config) Load() error {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	viper.SetConfigFile(viper.GetString(configFileKey))
 
-	_ = viper.ReadInConfig()
+	// set default values
+	for k, v := range configDefaultValues {
+		viper.SetDefault(k, v)
+	}
 
-	err := viper.Unmarshal(c)
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Print("Config file is not found")
+	}
+
+	err = viper.Unmarshal(c)
 	if err != nil {
 		return err
 	}
