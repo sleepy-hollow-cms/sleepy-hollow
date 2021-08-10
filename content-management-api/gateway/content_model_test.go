@@ -2,7 +2,6 @@ package gateway_test
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"content-management-api/gateway"
@@ -38,7 +37,6 @@ func TestContentModel(t *testing.T) {
 				},
 			},
 		}
-
 		fields := []model.Field{
 			{
 				Name:     "fname",
@@ -54,11 +52,11 @@ func TestContentModel(t *testing.T) {
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(createdAt),
-			Fields: field.Fields{
+			Fields: domain.Fields{
 				{
-					Name:     field.Name("fname"),
-					Type:     field.Text,
-					Required: field.Required(true),
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -70,11 +68,11 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(createdAt),
-			Fields: field.Fields{
+			Fields: domain.Fields{
 				{
-					Name:     field.Name("fname"),
-					Type:     field.Text,
-					Required: field.Required(true),
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -114,11 +112,11 @@ func TestContentModel(t *testing.T) {
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(updatedAt),
-			Fields: field.Fields{
+			Fields: domain.Fields{
 				{
-					Name:     field.Name("fname"),
-					Type:     field.Text,
-					Required: field.Required(true),
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -130,11 +128,11 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(updatedAt),
-			Fields: field.Fields{
+			Fields: domain.Fields{
 				{
-					Name:     field.Name("fname"),
-					Type:     field.Text,
-					Required: field.Required(true),
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -179,16 +177,16 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(updatedAt),
-			Fields: field.Fields{
+			Fields: domain.Fields{
 				{
-					Name:     field.Name("fname0"),
-					Type:     field.Text,
-					Required: field.Required(true),
+					Name:     domain.Name("fname0"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
 				},
 				{
-					Name:     field.Name("fname1"),
-					Type:     field.MultipleText,
-					Required: field.Required(false),
+					Name:     domain.Name("fname1"),
+					Type:     domain.MultipleText,
+					Required: domain.Required(false),
 				},
 			},
 		}
@@ -256,16 +254,16 @@ func TestContentModel(t *testing.T) {
 					Name:      domain.Name("name0"),
 					CreatedAt: domain.CreatedAt(createdAt),
 					UpdatedAt: domain.UpdatedAt(updatedAt),
-					Fields: field.Fields{
+					Fields: domain.Fields{
 						{
-							Name:     field.Name("fname00"),
-							Type:     field.Text,
-							Required: field.Required(true),
+							Name:     domain.Name("fname00"),
+							Type:     domain.Text,
+							Required: domain.Required(true),
 						},
 						{
-							Name:     field.Name("fname01"),
-							Type:     field.MultipleText,
-							Required: field.Required(false),
+							Name:     domain.Name("fname01"),
+							Type:     domain.MultipleText,
+							Required: domain.Required(false),
 						},
 					},
 				},
@@ -274,16 +272,16 @@ func TestContentModel(t *testing.T) {
 					Name:      domain.Name("name1"),
 					CreatedAt: domain.CreatedAt(createdAt),
 					UpdatedAt: domain.UpdatedAt(updatedAt),
-					Fields: field.Fields{
+					Fields: domain.Fields{
 						{
-							Name:     field.Name("fname10"),
-							Type:     field.Text,
-							Required: field.Required(true),
+							Name:     domain.Name("fname10"),
+							Type:     domain.Text,
+							Required: domain.Required(true),
 						},
 						{
-							Name:     field.Name("fname11"),
-							Type:     field.MultipleText,
-							Required: field.Required(false),
+							Name:     domain.Name("fname11"),
+							Type:     domain.MultipleText,
+							Required: domain.Required(false),
 						},
 					},
 				},

@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/read"
 	"content-management-api/usecase/write"
@@ -28,9 +27,9 @@ func TestEntry(t *testing.T) {
 		entryItems := read.EntryItem{
 			Items: []read.Item{
 				{
-					Type:      field.Text,
+					Type:      domain.Text,
 					FieldName: "fieldName1",
-					Value: field.TextValue{
+					Value: domain.TextValue{
 						Value: "タイトル1",
 					},
 				},
@@ -43,9 +42,9 @@ func TestEntry(t *testing.T) {
 
 		inputEntryItems := []write.EntryItem{
 			{
-				Type:      field.Text,
+				Type:      domain.Text,
 				FieldName: "fieldName1",
-				Value: field.TextValue{
+				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},
@@ -86,13 +85,13 @@ func TestEntry(t *testing.T) {
 		inputEntryItems := []write.EntryItem{
 			{
 				FieldName: "fieldName1",
-				Value: field.TextValue{
+				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},
 			{
 				FieldName: "fieldName2",
-				Value: field.TextValue{
+				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},
@@ -124,13 +123,13 @@ func TestEntry(t *testing.T) {
 		inputEntryItems := []write.EntryItem{
 			{
 				FieldName: "fieldName1",
-				Value: field.TextValue{
+				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},
 			{
 				FieldName: "fieldName2",
-				Value: field.TextValue{
+				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},

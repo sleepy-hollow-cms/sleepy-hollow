@@ -1,4 +1,4 @@
-package field
+package domain
 
 type Type int
 

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"content-management-api/util/log"
@@ -35,11 +34,11 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 
 	entryItems := make([]write.EntryItem, len(requestBody.Items))
 	for i, item := range requestBody.Items {
-		contentType := field.Of(item.ContentType)
+		contentType := domain.Of(item.ContentType)
 		entryItems[i] = write.EntryItem{
 			Type:      contentType,
-			FieldName: field.Name(item.Name),
-			Value:     field.FactoryValue(contentType, item.Value),
+			FieldName: domain.Name(item.Name),
+			Value:     domain.FactoryValue(contentType, item.Value),
 		}
 	}
 

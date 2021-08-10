@@ -1,4 +1,4 @@
-package field
+package domain
 
 type TextValue struct {
 	Value string
@@ -18,7 +18,7 @@ func (m MultipleTextValue) FieldValue() interface{} {
 
 type NumberValue uint64
 
-type HasValue interface {
+type Value interface {
 	FieldValue() interface{}
 }
 
@@ -26,7 +26,7 @@ type HasName interface {
 	FieldName() string
 }
 
-func FactoryValue(typeName Type, value interface{}) HasValue {
+func FactoryValue(typeName Type, value interface{}) Value {
 	switch typeName {
 	case Text:
 		return TextValue{

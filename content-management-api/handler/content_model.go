@@ -2,7 +2,7 @@ package handler
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
+	field "content-management-api/domain"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"errors"

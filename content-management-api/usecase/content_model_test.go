@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"context"
@@ -161,11 +160,11 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
 			UpdatedAt: currentUpdateAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Text,
-					Name:     field.Name("fieldName"),
-					Required: field.Required(true),
+					Type:     domain.Text,
+					Name:     domain.Name("fieldName"),
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -174,11 +173,11 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
 			UpdatedAt: updatedAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Number,
-					Name:     field.Name("number"),
-					Required: field.Required(false),
+					Type:     domain.Number,
+					Name:     domain.Name("number"),
+					Required: domain.Required(false),
 				},
 			},
 		}
@@ -188,11 +187,11 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
 			UpdatedAt: updatedAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Number,
-					Name:     field.Name("number"),
-					Required: field.Required(false),
+					Type:     domain.Number,
+					Name:     domain.Name("number"),
+					Required: domain.Required(false),
 				},
 			},
 		}
@@ -210,11 +209,11 @@ func TestContentModel(t *testing.T) {
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
 			UpdatedAt: updatedAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Number,
-					Name:     field.Name("number"),
-					Required: field.Required(false),
+					Type:     domain.Number,
+					Name:     domain.Name("number"),
+					Required: domain.Required(false),
 				},
 			},
 		}
@@ -231,11 +230,11 @@ func TestContentModel(t *testing.T) {
 		contentModel := write.ContentModel{
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Text,
-					Name:     field.Name("fieldName"),
-					Required: field.Required(true),
+					Type:     domain.Text,
+					Name:     domain.Name("fieldName"),
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -244,11 +243,11 @@ func TestContentModel(t *testing.T) {
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Text,
-					Name:     field.Name("fieldName"),
-					Required: field.Required(true),
+					Type:     domain.Text,
+					Name:     domain.Name("fieldName"),
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -264,11 +263,11 @@ func TestContentModel(t *testing.T) {
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.Field{
+			Fields: []domain.Field{
 				{
-					Type:     field.Text,
-					Name:     field.Name("fieldName"),
-					Required: field.Required(true),
+					Type:     domain.Text,
+					Name:     domain.Name("fieldName"),
+					Required: domain.Required(true),
 				},
 			},
 		}
@@ -280,8 +279,8 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelを登録時に失敗した場合はContentModelCreateFailedErrorを返す", func(t *testing.T) {
 		contentModel := write.ContentModel{
-			Fields: []field.Field{
-				{Type: field.Text},
+			Fields: []domain.Field{
+				{Type: domain.Text},
 			},
 		}
 

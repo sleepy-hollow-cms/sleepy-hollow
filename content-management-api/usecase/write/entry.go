@@ -2,7 +2,6 @@ package write
 
 import (
 	"content-management-api/domain"
-	"content-management-api/domain/field"
 )
 
 type Entry struct {
@@ -10,7 +9,15 @@ type Entry struct {
 }
 
 type EntryItem struct {
-	FieldName field.Name
-	Type      field.Type
-	Value     field.HasValue
+	FieldName domain.Name
+	Type      domain.Type
+	Value     domain.Value
+}
+
+type Validator interface {
+	Do(p domain.Type, value domain.Value) error
+}
+
+func (e EntryItem) validaTypete(validator Validator) {
+	validator.Do(e.Type, e.Value)
 }
