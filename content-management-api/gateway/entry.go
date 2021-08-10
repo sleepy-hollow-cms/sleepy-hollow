@@ -5,8 +5,8 @@ import (
 	"content-management-api/domain/field"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
+	"content-management-api/usecase/read"
 	"content-management-api/usecase/write"
-	"content-management-api/util/log"
 	"context"
 )
 
@@ -34,7 +34,34 @@ func (e *Entry) Create(ctx context.Context, entry write.Entry) (domain.Entry, er
 	}, err
 }
 
-func (e *Entry) CreateItems(ctx context.Context, items []write.EntryItem) ([]field.HasValue, error) {
-	log.Logger.Warn("not implemented")
-	return nil, nil
+func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []write.EntryItem) (read.EntryItem, error) {
+	entryItems := make([]model.EntryItem, len(items))
+	for i, item := range items {
+		entryItems[i] = model.EntryItem{
+			Type:  item.Type.String(),
+			Name:  item.FieldName.String(),
+			Value: item.Value.FieldValue(),
+		}
+	}
+
+	createEntryItems, err := e.Driver.CreateEntryItems(model.EntryID(id.String()), entryItems)
+
+	if err != nil {
+		return read.EntryItem{}, err
+	}
+
+	readItems := make([]read.Item, len(createEntryItems))
+	for i, createEntryItem := range createEntryItems {
+		itemType := field.Of(createEntryItem.Type)
+		readItems[i] = read.Item{
+			FieldName: field.Name(createEntryItem.Name),
+			Type:      itemType,
+			Value:     field.FactoryValue(itemType, createEntryItem.Value),
+		}
+	}
+
+	return read.EntryItem{
+		ID:    field.ID(id),
+		Items: readItems,
+	}, nil
 }

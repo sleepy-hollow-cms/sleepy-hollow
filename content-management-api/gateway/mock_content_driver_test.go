@@ -30,6 +30,11 @@ func (_m *MockContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error
 	return ret.Get(0).(*model.Entry), ret.Error(1)
 }
 
+func (_m *MockContentDriver) CreateEntryItems(id model.EntryID, items []model.EntryItem) ([]model.EntryItem, error) {
+	ret := _m.Called(id, items)
+	return ret.Get(0).([]model.EntryItem), ret.Error(1)
+}
+
 func (_m *MockContentDriver) DeleteContentModelByID(id string) error {
 	ret := _m.Called(id)
 	return ret.Error(0)

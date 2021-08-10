@@ -37,6 +37,7 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	for i, item := range requestBody.Items {
 		contentType := field.Of(item.ContentType)
 		entryItems[i] = write.EntryItem{
+			Type:      contentType,
 			FieldName: field.Name(item.Name),
 			Value:     field.FactoryValue(contentType, item.Value),
 		}
@@ -60,17 +61,31 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 		return nil
 	}
 
-	c.JSON(http.StatusCreated, EntryPostResponseBody{
+	items := make([]ItemsRequestBody, len(createdEntry.EntryItems.Items))
+	for i, entryItem := range createdEntry.EntryItems.Items {
+		items[i] = ItemsRequestBody{
+			ContentType: entryItem.Type.String(),
+			Name:        entryItem.FieldName.String(),
+			Value:       entryItem.Value,
+		}
+	}
+
+	responseBody := EntryPostResponseBody{
 		ID:             createdEntry.ID.String(),
-		ContentModelID: createdEntry.ContentModelID.String(),
-	})
+		ContentModelID: requestBody.ContentModelID,
+		EntryItemID:    createdEntry.EntryItems.ID.String(),
+		Items:          items,
+	}
+	c.JSON(http.StatusCreated, responseBody)
 
 	return nil
 }
 
 type EntryPostResponseBody struct {
-	ID             string `json:"id"`
-	ContentModelID string `json:"content-model-id"`
+	ID             string             `json:"id"`
+	ContentModelID string             `json:"content-model-id"`
+	EntryItemID    string             `json:"item-id"`
+	Items          []ItemsRequestBody `json:"items"`
 }
 
 type EntryPostRequestBody struct {

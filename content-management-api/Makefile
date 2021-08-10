@@ -28,6 +28,9 @@ fmt:
 .PHONY: test
 test:
 	$(GOTEST) -v ./...
+.PHONY: test-color
+test-color:
+	set -o pipefail; $(GOTEST) -v ./... | $(COLORIZE_PASS) | $(COLORIZE_FAIL)
 
 .PHONY: clean
 clean:

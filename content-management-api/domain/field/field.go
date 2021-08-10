@@ -1,5 +1,11 @@
 package field
 
+type ID string
+
+func (n ID) String() string {
+	return string(n)
+}
+
 type FieldModel struct {
 	Name     Name
 	Type     Type

@@ -4,6 +4,7 @@ import (
 	"content-management-api/domain"
 	"content-management-api/domain/field"
 	"content-management-api/usecase"
+	"content-management-api/usecase/read"
 	"content-management-api/usecase/write"
 	"context"
 	"errors"
@@ -24,9 +25,16 @@ func TestEntry(t *testing.T) {
 			ID:             domain.EntryId("id"),
 		}
 
-		entryItems := []field.HasValue{
-			field.TextValue{Value: "タイトル1"},
-			field.TextValue{Value: "タイトル2"},
+		entryItems := read.EntryItem{
+			Items: []read.Item{
+				{
+					Type:      field.Text,
+					FieldName: "fieldName1",
+					Value: field.TextValue{
+						Value: "タイトル1",
+					},
+				},
+			},
 		}
 
 		inputEntry := write.Entry{
@@ -35,13 +43,8 @@ func TestEntry(t *testing.T) {
 
 		inputEntryItems := []write.EntryItem{
 			{
+				Type:      field.Text,
 				FieldName: "fieldName1",
-				Value: field.TextValue{
-					Value: "タイトル1",
-				},
-			},
-			{
-				FieldName: "fieldName2",
 				Value: field.TextValue{
 					Value: "タイトル1",
 				},
@@ -51,15 +54,16 @@ func TestEntry(t *testing.T) {
 		model := domain.ContentModel{}
 
 		mockEntryPort.On("Create", inputEntry).Return(entry)
-		mockEntryPort.On("CreateItems", inputEntryItems).Return(entryItems, nil)
+		mockEntryPort.On("CreateItems", domain.EntryId("id"), inputEntryItems).Return(entryItems, nil)
 		mockContentModelPort.On("FindByID", modelID).Return(model, nil)
 
 		target.EntryPort = mockEntryPort
 		target.ContentModelPort = mockContentModelPort
 
-		expected := domain.Entry{
+		expected := read.Entry{
 			ID:             domain.EntryId("id"),
 			ContentModelID: domain.ContentModelID("modelId"),
+			EntryItems:     entryItems,
 		}
 		actual, err := target.Register(inputEntry, inputEntryItems)
 
@@ -150,9 +154,9 @@ type MockEntryPort struct {
 	mock.Mock
 }
 
-func (_m *MockEntryPort) CreateItems(ctx context.Context, entry []write.EntryItem) ([]field.HasValue, error) {
-	ret := _m.Called(entry)
-	return ret.Get(0).([]field.HasValue), nil
+func (_m *MockEntryPort) CreateItems(ctx context.Context, id domain.EntryId, entry []write.EntryItem) (read.EntryItem, error) {
+	ret := _m.Called(id, entry)
+	return ret.Get(0).(read.EntryItem), nil
 }
 
 func (_m *MockEntryPort) Create(ctx context.Context, entry write.Entry) (domain.Entry, error) {

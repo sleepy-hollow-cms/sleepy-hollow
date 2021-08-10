@@ -14,8 +14,3 @@ type Field struct {
 	Type     string
 	Required bool
 }
-
-type Entry struct {
-	ID      string
-	ModelID string
-}

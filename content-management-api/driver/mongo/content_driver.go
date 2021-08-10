@@ -24,6 +24,12 @@ type Field struct {
 	Required bool   `bson:"required"`
 }
 
+type Entry struct {
+	ID             primitive.ObjectID `bson:"_id,omitempty"`
+	ContentModelID string             `bson:"content_model_id"`
+	Items          []interface{}      `bson:"items"`
+}
+
 //ContentDriver ContentModel Collection on MongoDB
 type ContentDriver struct {
 	Client *Client
@@ -100,6 +106,41 @@ func (c ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
 	}
 
 	return &model.Entry{ID: result.InsertedID.(primitive.ObjectID).Hex()}, nil
+}
+
+func (c ContentDriver) CreateEntryItems(entryId model.EntryID, items []model.EntryItem) ([]model.EntryItem, error) {
+	client, err := c.Client.Get()
+
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("models").Collection("entry")
+
+	entryItems := make([]interface{}, len(items))
+	for i, v := range items {
+		entryItems[i] = v
+	}
+
+	ctx := context.Background()
+
+	objectId, err := primitive.ObjectIDFromHex(entryId.String())
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = collections.UpdateOne(ctx, bson.M{"_id": objectId}, bson.M{
+		"$set": bson.M{
+			"items": entryItems,
+		},
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return items, nil
 }
 
 func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {

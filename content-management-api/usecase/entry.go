@@ -1,12 +1,12 @@
 package usecase
 
 import (
-	"content-management-api/domain"
 	"content-management-api/port"
+	"content-management-api/usecase/read"
 	"content-management-api/usecase/write"
+	"content-management-api/util/log"
 	"context"
 	"errors"
-	"fmt"
 )
 
 type Entry struct {
@@ -24,26 +24,34 @@ func NewEntry(
 	}
 }
 
-func (e *Entry) Register(entry write.Entry, entryItems []write.EntryItem) (domain.Entry, error) {
+func (e *Entry) Register(entry write.Entry, entryItems []write.EntryItem) (read.Entry, error) {
 	todoCtx := context.TODO()
 
 	if _, err := e.ContentModelPort.FindByID(todoCtx, entry.ContentModelID); err != nil {
 		switch {
 		case errors.As(err, &ContentModelNotFoundError{}):
-			return domain.Entry{}, err
+			return read.Entry{}, err
 		default:
-			return domain.Entry{}, err
+			return read.Entry{}, err
 		}
 	}
 
 	createdEntry, err := e.EntryPort.Create(todoCtx, entry)
-	createdEntryItems, err := e.EntryPort.CreateItems(todoCtx, entryItems)
-
-	fmt.Println(createdEntryItems)
 
 	if err != nil {
-		return domain.Entry{}, err
+		return read.Entry{}, err
 	}
 
-	return createdEntry, nil
+	createdEntryItems, err := e.EntryPort.CreateItems(todoCtx, createdEntry.ID, entryItems)
+
+	if err != nil {
+		log.Logger.Warn(err)
+		return read.Entry{}, err
+	}
+
+	return read.Entry{
+		ID:             createdEntry.ID,
+		ContentModelID: createdEntry.ContentModelID,
+		EntryItems:     createdEntryItems,
+	}, nil
 }

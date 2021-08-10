@@ -17,8 +17,18 @@ func TestEntry(t *testing.T) {
 		assert.IsType(t, expected, actual)
 	})
 
-	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる", func(t *testing.T) {
+	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる valueが[]interface{}の場合", func(t *testing.T) {
 		actual := field.FactoryValue(field.MultipleText, interface{}([]interface{}{"1", "2"}))
+
+		expected := field.MultipleTextValue{
+			Value: []string{"1", "2"},
+		}
+
+		assert.IsType(t, expected, actual)
+	})
+
+	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる valueが[]stringの場合", func(t *testing.T) {
+		actual := field.FactoryValue(field.MultipleText, interface{}([]string{"1", "2"}))
 
 		expected := field.MultipleTextValue{
 			Value: []string{"1", "2"},

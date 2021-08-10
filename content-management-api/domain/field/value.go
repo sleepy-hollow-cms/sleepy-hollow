@@ -1,7 +1,6 @@
 package field
 
 type TextValue struct {
-	HasValue
 	Value string
 }
 
@@ -10,8 +9,11 @@ func (t TextValue) FieldValue() interface{} {
 }
 
 type MultipleTextValue struct {
-	HasValue
 	Value []string
+}
+
+func (m MultipleTextValue) FieldValue() interface{} {
+	return m.Value
 }
 
 type NumberValue uint64
@@ -31,13 +33,20 @@ func FactoryValue(typeName Type, value interface{}) HasValue {
 			Value: value.(string),
 		}
 	case MultipleText:
-		ir := value.([]interface{})
-		strings := make([]string, len(ir))
-		for i, v := range ir {
-			strings[i] = v.(string)
-		}
-		return MultipleTextValue{
-			Value: strings,
+		switch value.(type) {
+		case []string:
+			return MultipleTextValue{
+				Value: value.([]string),
+			}
+		default:
+			ir := value.([]interface{})
+			strings := make([]string, len(ir))
+			for i, v := range ir {
+				strings[i] = v.(string)
+			}
+			return MultipleTextValue{
+				Value: strings,
+			}
 		}
 	default:
 		return nil
