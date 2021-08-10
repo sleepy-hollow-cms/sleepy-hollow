@@ -1,0 +1,15 @@
+{
+  "name": "updated_name",
+  "fields": [
+    {
+      "type": "text",
+      "name": "updated_name1",
+      "required" : false
+    },
+    {
+      "type": "number",
+      "name": "updated_name2",
+      "required" : true
+    }
+  ]
+}

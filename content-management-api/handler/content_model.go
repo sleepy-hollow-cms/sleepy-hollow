@@ -32,7 +32,8 @@ func (r *ContentModelResource) Routing(e *echo.Echo) {
 	g.GET("/spaces/:spaceId/contentModels/:contentModelId", r.GetByID)
 	g.DELETE("/spaces/:spaceId/contentModels/:contentModelId", r.DeleteByID)
 	g.GET("/spaces/:spaceId/contentModels", r.GetBySpaceID)
-	g.POST("/spaces/:spaceId/contentModels", r.CreateContentModel)
+	g.POST("/spaces/:spaceId/contentModels", r.Create)
+	g.PUT("/spaces/:spaceId/contentModels/:contentModelId", r.Update)
 }
 
 func (r *ContentModelResource) GetByID(c echo.Context) error {
@@ -57,6 +58,7 @@ func (r *ContentModelResource) GetByID(c echo.Context) error {
 		ID:        contentModel.ID.String(),
 		Name:      contentModel.Name.String(),
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
+		UpdatedAt: contentModel.UpdatedAt.Time().Format(time.RFC3339),
 		Fields:    resFields,
 	})
 }
@@ -102,6 +104,7 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 			ID:        m.ID.String(),
 			Name:      m.Name.String(),
 			CreatedAt: m.CreatedAt.Time().Format(time.RFC3339),
+			UpdatedAt: m.UpdatedAt.Time().Format(time.RFC3339),
 			Fields:    resFields,
 		}
 	}
@@ -111,8 +114,8 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 	})
 }
 
-func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
-	m := ContentModelPostRequestBody{}
+func (r *ContentModelResource) Create(c echo.Context) error {
+	m := ContentModelRequestBody{}
 
 	if err := c.Bind(&m); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
@@ -124,9 +127,9 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		return err
 	}
 
-	fields := make(field.FieldModels, len(m.Fields))
+	fields := make(field.Fields, len(m.Fields))
 	for i, f := range m.Fields {
-		fields[i] = field.FieldModel{
+		fields[i] = field.Field{
 			Type:     field.Of(f.Type),
 			Required: field.Required(f.Required),
 			Name:     field.Name(f.Name),
@@ -137,11 +140,13 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
 		CreatedAt: domain.CreatedAt(time.Now()),
+		UpdatedAt: domain.UpdatedAt(time.Now()),
 	})
 
 	if err != nil {
 		println(err)
 		c.JSON(http.StatusInternalServerError, err.Error())
+		return err
 	}
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
@@ -157,6 +162,7 @@ func (r *ContentModelResource) CreateContentModel(c echo.Context) error {
 		Name:      contentModel.Name.String(),
 		Fields:    resFields,
 		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
+		UpdatedAt: contentModel.UpdatedAt.Time().Format(time.RFC3339),
 	})
 
 	return nil
@@ -171,9 +177,10 @@ type ContentModelResponseBody struct {
 	Name      string  `json:"name"`
 	Fields    []Field `json:"fields"`
 	CreatedAt string  `json:"created-at"`
+	UpdatedAt string  `json:"updated-at"`
 }
 
-type ContentModelPostRequestBody struct {
+type ContentModelRequestBody struct {
 	Name   string  `json:"name" validate:"required"`
 	Fields []Field `json:"fields" validate:"dive,required"`
 }
@@ -182,4 +189,60 @@ type Field struct {
 	Type     string `json:"type" validate:"required"`
 	Required bool   `json:"required"`
 	Name     string `json:"name"`
+}
+
+func (r *ContentModelResource) Update(c echo.Context) error {
+
+	contentModelId := c.Param("contentModelId")
+
+	m := ContentModelRequestBody{}
+
+	if err := c.Bind(&m); err != nil {
+		c.String(http.StatusBadRequest, "invalid request body")
+		return err
+	}
+
+	if err := c.Validate(m); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return err
+	}
+
+	fields := make(field.Fields, len(m.Fields))
+	for i, f := range m.Fields {
+		fields[i] = field.Field{
+			Type:     field.Of(f.Type),
+			Required: field.Required(f.Required),
+			Name:     field.Name(f.Name),
+		}
+	}
+
+	contentModel, err := r.ContentModelUseCase.Update(domain.ContentModelID(contentModelId), write.ContentModel{
+		Name:      domain.Name(m.Name),
+		Fields:    fields,
+		UpdatedAt: domain.UpdatedAt(time.Now()),
+	})
+
+	if err != nil {
+		println(err)
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return nil
+	}
+	resFields := make([]Field, len(contentModel.Fields))
+	for i, field := range contentModel.Fields {
+		resFields[i] = Field{
+			Name:     field.Name.String(),
+			Type:     field.Type.String(),
+			Required: bool(field.Required),
+		}
+	}
+
+	c.JSON(http.StatusOK, ContentModelResponseBody{
+		ID:        contentModel.ID.String(),
+		Name:      contentModel.Name.String(),
+		Fields:    resFields,
+		CreatedAt: contentModel.CreatedAt.Time().Format(time.RFC3339),
+		UpdatedAt: contentModel.UpdatedAt.Time().Format(time.RFC3339),
+	})
+
+	return nil
 }

@@ -6,7 +6,7 @@ func (n ID) String() string {
 	return string(n)
 }
 
-type FieldModel struct {
+type Field struct {
 	Name     Name
 	Type     Type
 	Required Required
@@ -20,4 +20,4 @@ func (n Name) String() string {
 
 type Required bool
 
-type FieldModels []FieldModel
+type Fields []Field

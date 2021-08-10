@@ -11,4 +11,5 @@ type ContentModel interface {
 	DeleteByID(ctx context.Context, id domain.ContentModelID) error
 	FindBySpaceID(ctx context.Context, id domain.SpaceID) (domain.ContentModels, error)
 	Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error)
+	Update(ctx context.Context, id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error)
 }

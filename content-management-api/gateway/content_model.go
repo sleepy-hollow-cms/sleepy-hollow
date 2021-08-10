@@ -40,6 +40,7 @@ func (c *ContentModel) FindByID(ctx context.Context, id domain.ContentModelID) (
 		ID:        domain.ContentModelID(contentModels.ID),
 		Name:      domain.Name(contentModels.Name),
 		CreatedAt: domain.CreatedAt(contentModels.CreatedAt),
+		UpdatedAt: domain.UpdatedAt(contentModels.UpdatedAt),
 		Fields:    newFields(contentModels.Fields),
 	}, nil
 }
@@ -78,6 +79,7 @@ func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (do
 			ID:        domain.ContentModelID(foundModel.ID),
 			Name:      domain.Name(foundModel.Name),
 			CreatedAt: domain.CreatedAt(foundModel.CreatedAt),
+			UpdatedAt: domain.UpdatedAt(foundModel.UpdatedAt),
 			Fields:    newFields(foundModel.Fields),
 		}
 	}
@@ -110,13 +112,47 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 		Name:      domain.Name(created.Name),
 		Fields:    newFields(created.Fields),
 		CreatedAt: domain.CreatedAt(created.CreatedAt),
+		UpdatedAt: domain.UpdatedAt(created.UpdatedAt),
 	}, nil
 }
 
-func newFields(modelFields []model.Field) []field.FieldModel {
-	fields := make(field.FieldModels, len(modelFields))
+func (c *ContentModel) Update(ctx context.Context, id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error) {
+	fields := make([]model.Field, len(contentModel.Fields))
+	for i, field := range contentModel.Fields {
+		fields[i] = model.Field{
+			Name:     field.Name.String(),
+			Type:     field.Type.String(),
+			Required: bool(field.Required),
+		}
+	}
+
+	updated, err := c.Driver.UpdateModel(
+		model.ContentModel{
+			ID:        id.String(),
+			Name:      contentModel.Name.String(),
+			CreatedAt: contentModel.CreatedAt.Time(),
+			UpdatedAt: contentModel.UpdatedAt.Time(),
+			Fields:    fields,
+		})
+
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return domain.ContentModel{}, err
+	}
+
+	return domain.ContentModel{
+		ID:        domain.ContentModelID(updated.ID),
+		Name:      domain.Name(updated.Name),
+		Fields:    newFields(updated.Fields),
+		CreatedAt: domain.CreatedAt(updated.CreatedAt),
+		UpdatedAt: domain.UpdatedAt(updated.UpdatedAt),
+	}, nil
+}
+
+func newFields(modelFields []model.Field) []field.Field {
+	fields := make(field.Fields, len(modelFields))
 	for i, getField := range modelFields {
-		fields[i] = field.FieldModel{
+		fields[i] = field.Field{
 			Name:     field.Name(getField.Name),
 			Type:     field.Of(getField.Type),
 			Required: field.Required(getField.Required),

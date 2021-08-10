@@ -22,11 +22,14 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelを登録できる", func(t *testing.T) {
 		createdAt := time.Now()
+
 		mockContentModelDriver := new(MockContentDriver)
+
 		contentModel := model.ContentModel{
 			ID:        "id",
 			Name:      "name",
 			CreatedAt: createdAt,
+			UpdatedAt: createdAt,
 			Fields: []model.Field{
 				{
 					Name:     "fname",
@@ -47,10 +50,11 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.On("CreateModel", "name", createdAt, fields).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
-		model := write.ContentModel{
+		createdModel := write.ContentModel{
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
-			Fields: field.FieldModels{
+			UpdatedAt: domain.UpdatedAt(createdAt),
+			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),
 					Type:     field.Text,
@@ -59,13 +63,74 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		actual, err := target.Create(context.TODO(), model)
+		actual, err := target.Create(context.TODO(), createdModel)
 
 		expected := domain.ContentModel{
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
-			Fields: field.FieldModels{
+			UpdatedAt: domain.UpdatedAt(createdAt),
+			Fields: field.Fields{
+				{
+					Name:     field.Name("fname"),
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+			},
+		}
+
+		mockContentModelDriver.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("ContentModelを更新できる", func(t *testing.T) {
+
+		createdAt := time.Now()
+		updatedAt := time.Now()
+
+		mockContentModelDriver := new(MockContentDriver)
+
+		id := domain.ContentModelID("id")
+
+		contentModel := model.ContentModel{
+			ID:        "id",
+			Name:      "name",
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []model.Field{
+				{
+					Name:     "fname",
+					Type:     "text",
+					Required: true,
+				},
+			},
+		}
+
+		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
+		target.Driver = mockContentModelDriver
+
+		model := write.ContentModel{
+			Name:      "name",
+			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(updatedAt),
+			Fields: field.Fields{
+				{
+					Name:     field.Name("fname"),
+					Type:     field.Text,
+					Required: field.Required(true),
+				},
+			},
+		}
+
+		actual, err := target.Update(context.TODO(), id, model)
+
+		expected := domain.ContentModel{
+			ID:        domain.ContentModelID("id"),
+			Name:      domain.Name("name"),
+			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(updatedAt),
+			Fields: field.Fields{
 				{
 					Name:     field.Name("fname"),
 					Type:     field.Text,
@@ -82,6 +147,7 @@ func TestContentModel(t *testing.T) {
 	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
 
 		createdAt := time.Now()
+		updatedAt := time.Now()
 
 		mockContentDriver := new(MockContentDriver)
 
@@ -90,6 +156,7 @@ func TestContentModel(t *testing.T) {
 			ID:        "id",
 			Name:      "name",
 			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
 			Fields: []model.Field{
 				{
 					Name:     "fname0",
@@ -111,7 +178,8 @@ func TestContentModel(t *testing.T) {
 			ID:        id,
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
-			Fields: field.FieldModels{
+			UpdatedAt: domain.UpdatedAt(updatedAt),
+			Fields: field.Fields{
 				{
 					Name:     field.Name("fname0"),
 					Type:     field.Text,
@@ -134,6 +202,7 @@ func TestContentModel(t *testing.T) {
 	t.Run("Spaceに紐づくContentModelを取得することができる", func(t *testing.T) {
 
 		createdAt := time.Now()
+		updatedAt := time.Now()
 		mockContentDriver := new(MockContentDriver)
 		id := domain.SpaceID("id")
 		models := []model.ContentModel{
@@ -141,6 +210,7 @@ func TestContentModel(t *testing.T) {
 				ID:        "id0",
 				Name:      "name0",
 				CreatedAt: createdAt,
+				UpdatedAt: updatedAt,
 				Fields: []model.Field{
 					{
 						Name:     "fname00",
@@ -158,6 +228,7 @@ func TestContentModel(t *testing.T) {
 				ID:        "id1",
 				Name:      "name1",
 				CreatedAt: createdAt,
+				UpdatedAt: updatedAt,
 				Fields: []model.Field{
 					{
 						Name:     "fname10",
@@ -184,7 +255,8 @@ func TestContentModel(t *testing.T) {
 					ID:        "id0",
 					Name:      domain.Name("name0"),
 					CreatedAt: domain.CreatedAt(createdAt),
-					Fields: field.FieldModels{
+					UpdatedAt: domain.UpdatedAt(updatedAt),
+					Fields: field.Fields{
 						{
 							Name:     field.Name("fname00"),
 							Type:     field.Text,
@@ -201,7 +273,8 @@ func TestContentModel(t *testing.T) {
 					ID:        "id1",
 					Name:      domain.Name("name1"),
 					CreatedAt: domain.CreatedAt(createdAt),
-					Fields: field.FieldModels{
+					UpdatedAt: domain.UpdatedAt(updatedAt),
+					Fields: field.Fields{
 						{
 							Name:     field.Name("fname10"),
 							Type:     field.Text,

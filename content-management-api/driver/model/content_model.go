@@ -6,6 +6,7 @@ type ContentModel struct {
 	ID        string
 	Name      string
 	CreatedAt time.Time
+	UpdatedAt time.Time
 	Fields    []Field
 }
 

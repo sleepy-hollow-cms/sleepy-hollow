@@ -81,7 +81,6 @@ func TestContentModel(t *testing.T) {
 	t.Run("存在しないContentModelのIDを削除した場合はContentModelNotFoundErrorを返す", func(t *testing.T) {
 		id := domain.ContentModelID("id")
 
-		// Mock setting
 		mockContentModelPort := new(MockContentModelPort)
 		modelID := domain.ContentModelID("id")
 
@@ -148,6 +147,83 @@ func TestContentModel(t *testing.T) {
 		assert.True(t, len(actual.Models) == 0)
 	})
 
+	t.Run("ContentModelを更新することができる", func(t *testing.T) {
+		rowCreatedTime := time.Now()
+		createdAt := domain.CreatedAt(rowCreatedTime)
+		currentUpdateAt := domain.UpdatedAt(rowCreatedTime)
+
+		updatedAt := domain.UpdatedAt(time.Now())
+
+		id := domain.ContentModelID("id")
+
+		foundContentModel := domain.ContentModel{
+			ID:        id,
+			Name:      domain.Name("name"),
+			CreatedAt: createdAt,
+			UpdatedAt: currentUpdateAt,
+			Fields: []field.Field{
+				{
+					Type:     field.Text,
+					Name:     field.Name("fieldName"),
+					Required: field.Required(true),
+				},
+			},
+		}
+
+		updatedContentModel := write.ContentModel{
+			Name:      domain.Name("updated_name"),
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []field.Field{
+				{
+					Type:     field.Number,
+					Name:     field.Name("number"),
+					Required: field.Required(false),
+				},
+			},
+		}
+
+		result := domain.ContentModel{
+			ID:        id,
+			Name:      domain.Name("updated_name"),
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []field.Field{
+				{
+					Type:     field.Number,
+					Name:     field.Name("number"),
+					Required: field.Required(false),
+				},
+			},
+		}
+
+		mockContentModelPort := new(MockContentModelPort)
+
+		mockContentModelPort.On("FindByID", id).Return(foundContentModel, nil)
+		mockContentModelPort.On("Update", id, updatedContentModel).Return(result, nil)
+		target.ContentModelPort = mockContentModelPort
+
+		actual, err := target.Update(id, updatedContentModel)
+
+		expected := domain.ContentModel{
+			ID:        id,
+			Name:      domain.Name("updated_name"),
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []field.Field{
+				{
+					Type:     field.Number,
+					Name:     field.Name("number"),
+					Required: field.Required(false),
+				},
+			},
+		}
+
+		mockContentModelPort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
 	t.Run("ContentModelを登録することができる", func(t *testing.T) {
 
 		createdAt := domain.CreatedAt(time.Now())
@@ -155,7 +231,7 @@ func TestContentModel(t *testing.T) {
 		contentModel := write.ContentModel{
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.FieldModel{
+			Fields: []field.Field{
 				{
 					Type:     field.Text,
 					Name:     field.Name("fieldName"),
@@ -168,7 +244,7 @@ func TestContentModel(t *testing.T) {
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.FieldModel{
+			Fields: []field.Field{
 				{
 					Type:     field.Text,
 					Name:     field.Name("fieldName"),
@@ -188,7 +264,7 @@ func TestContentModel(t *testing.T) {
 			ID:        domain.ContentModelID("id"),
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			Fields: []field.FieldModel{
+			Fields: []field.Field{
 				{
 					Type:     field.Text,
 					Name:     field.Name("fieldName"),
@@ -204,7 +280,7 @@ func TestContentModel(t *testing.T) {
 
 	t.Run("ContentModelを登録時に失敗した場合はContentModelCreateFailedErrorを返す", func(t *testing.T) {
 		contentModel := write.ContentModel{
-			Fields: []field.FieldModel{
+			Fields: []field.Field{
 				{Type: field.Text},
 			},
 		}
@@ -256,5 +332,10 @@ func (_m *MockContentModelPort) Save(ctx context.Context, contentModel domain.Co
 
 func (_m *MockContentModelPort) Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error) {
 	ret := _m.Called(contentModel)
+	return ret.Get(0).(domain.ContentModel), ret.Error(1)
+}
+
+func (_m *MockContentModelPort) Update(ctx context.Context, id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error) {
+	ret := _m.Called(id, contentModel)
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }

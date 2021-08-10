@@ -16,6 +16,7 @@ type ContentModel struct {
 	Fields    []Field            `bson:"fields"`
 	Name      string             `bson:"name"`
 	CreatedAt primitive.DateTime `bson:"created_at"`
+	UpdatedAt primitive.DateTime `bson:"updated_at"`
 }
 
 type Field struct {
@@ -62,6 +63,7 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 		Name:      name,
 		Fields:    fieldsModel,
 		CreatedAt: primitive.NewDateTimeFromTime(createdAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(createdAt),
 	}
 
 	result, err := collections.InsertOne(context.Background(), insert)
@@ -83,6 +85,64 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 		ID:        result.InsertedID.(primitive.ObjectID).Hex(),
 		Name:      insert.Name,
 		CreatedAt: createdAt,
+		UpdatedAt: createdAt,
+		Fields:    resultFields,
+	}, err
+}
+
+func (c ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.ContentModel, error) {
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("models").Collection("content_model")
+
+	fieldsModel := make([]Field, len(updatedModel.Fields))
+	for i, field := range updatedModel.Fields {
+		fieldsModel[i] = Field{
+			Name:     field.Name,
+			Type:     field.Type,
+			Required: field.Required,
+		}
+	}
+
+	objectId, err := primitive.ObjectIDFromHex(updatedModel.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	update := ContentModel{
+		Name:      updatedModel.Name,
+		Fields:    fieldsModel,
+		CreatedAt: primitive.NewDateTimeFromTime(updatedModel.CreatedAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(updatedModel.UpdatedAt),
+	}
+
+	_, errUpdate := collections.UpdateOne(
+		context.Background(),
+		bson.D{{"_id", objectId}},
+		bson.D{{"$set", update}},
+	)
+
+	if errUpdate != nil {
+		return nil, err
+	}
+
+	resultFields := make([]model.Field, len(update.Fields))
+	for i, field := range update.Fields {
+		resultFields[i] = model.Field{
+			Name:     field.Name,
+			Type:     field.Type,
+			Required: field.Required,
+		}
+	}
+
+	return &model.ContentModel{
+		ID:        updatedModel.ID,
+		Name:      update.Name,
+		CreatedAt: updatedModel.CreatedAt,
+		UpdatedAt: updatedModel.UpdatedAt,
 		Fields:    resultFields,
 	}, err
 }
@@ -179,9 +239,11 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	}
 
 	return &model.ContentModel{
-		ID:     contentModel.ID.Hex(),
-		Name:   contentModel.Name,
-		Fields: resultFields,
+		ID:        contentModel.ID.Hex(),
+		Name:      contentModel.Name,
+		CreatedAt: contentModel.CreatedAt.Time(),
+		UpdatedAt: contentModel.UpdatedAt.Time(),
+		Fields:    resultFields,
 	}, nil
 }
 
@@ -199,7 +261,9 @@ func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentMode
 		return nil, err
 	}
 	defer found.Close(context.Background())
+
 	contentModels := make([]ContentModel, found.RemainingBatchLength())
+
 	for i := 0; found.Next(context.Background()); i++ {
 		var contentModel ContentModel
 		err := found.Decode(&contentModel)
@@ -221,9 +285,11 @@ func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentMode
 			}
 		}
 		resultModels[i] = model.ContentModel{
-			ID:     contentModel.ID.Hex(),
-			Name:   contentModel.Name,
-			Fields: resultFields,
+			ID:        contentModel.ID.Hex(),
+			Name:      contentModel.Name,
+			CreatedAt: contentModel.CreatedAt.Time(),
+			UpdatedAt: contentModel.UpdatedAt.Time(),
+			Fields:    resultFields,
 		}
 	}
 

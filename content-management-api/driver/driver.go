@@ -8,6 +8,7 @@ import (
 // ContentDriver is data-store driver
 type ContentDriver interface {
 	CreateModel(string, time.Time, []model.Field) (*model.ContentModel, error)
+	UpdateModel(model.ContentModel) (*model.ContentModel, error)
 	CreateEntry(model.Entry) (*model.Entry, error)
 	CreateEntryItems(entryId model.EntryID, entryItems []model.EntryItem) ([]model.EntryItem, error)
 	FindContentModelByID(string) (*model.ContentModel, error)
