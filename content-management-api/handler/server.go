@@ -8,7 +8,6 @@ import (
 	"content-management-api/usecase"
 	"content-management-api/util/config"
 	"fmt"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -78,7 +77,6 @@ func NewServer(container cache.Cache) Server {
 	e.Validator = validator.NewValidator()
 
 	// Middleware
-	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	// Routes

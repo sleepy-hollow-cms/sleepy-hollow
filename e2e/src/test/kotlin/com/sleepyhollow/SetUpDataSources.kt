@@ -13,7 +13,7 @@ class SetUpDataSources {
         setUpMongoDb()
     }
 
-    @BeforeSpec(tags = ["default"])
+    @BeforeSpec(tags = ["default", "default-setup-data"])
     fun setUpDefault() {
         setUpMongoDb()
     }

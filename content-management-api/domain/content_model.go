@@ -8,19 +8,15 @@ import (
 type ContentModelID string
 type Name string
 
-
 func (n Name) String() string {
 	return string(n)
 }
 
-
 type CreatedAt time.Time
-
 
 func (d CreatedAt) Time() time.Time {
 	return time.Time(d)
 }
-
 
 type UpdatedAt time.Time
 
@@ -33,13 +29,12 @@ func (c ContentModelID) String() string {
 }
 
 type ContentModel struct {
-	ID     ContentModelID
-	Name   Name
-	Fields field.Fields
+	ID        ContentModelID
+	Name      Name
+	Fields    field.Fields
 	CreatedAt CreatedAt
 	UpdatedAt UpdatedAt
 }
-
 
 type ContentModels struct {
 	SpaceID SpaceID

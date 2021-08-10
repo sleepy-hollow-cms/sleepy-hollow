@@ -2,6 +2,7 @@ package handler
 
 import (
 	"content-management-api/domain"
+	"content-management-api/domain/field"
 	"content-management-api/usecase"
 	"content-management-api/usecase/write"
 	"content-management-api/util/log"
@@ -25,44 +26,75 @@ func (en *EntryResource) Routing(e *echo.Echo) {
 }
 
 func (en *EntryResource) CreateEntry(c echo.Context) error {
-	modelID := EntryPostRequestBody{}
+	requestBody := EntryPostRequestBody{}
 
-	if err := c.Bind(&modelID); err != nil {
+	if err := c.Bind(&requestBody); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
 		return err
 	}
 
-	entry := write.Entry{
-		ContentModelID: domain.ContentModelID(modelID.ContentModelID),
+	entryItems := make([]write.EntryItem, len(requestBody.Items))
+	for i, item := range requestBody.Items {
+		contentType := field.Of(item.ContentType)
+		entryItems[i] = write.EntryItem{
+			Type:      contentType,
+			FieldName: field.Name(item.Name),
+			Value:     field.FactoryValue(contentType, item.Value),
+		}
 	}
 
-	createdEntry, err := en.EntryUseCase.Create(entry)
+	entry := write.Entry{
+		ContentModelID: domain.ContentModelID(requestBody.ContentModelID),
+	}
+
+	createdEntry, err := en.EntryUseCase.Register(entry, entryItems)
 
 	if err != nil {
 		switch err := err.(type) {
 		case usecase.ContentModelNotFoundError:
-			log.Logger.Warnf("Entry cannot Found Becouse Content Model ID %s Not Found", modelID.ContentModelID)
+			log.Logger.Warnf("Entry cannot Register Becouse Content Model ID %s Not Found", requestBody.ContentModelID)
 			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
 		default:
-			log.Logger.Warnf("Something Happened: %s", modelID.ContentModelID)
+			log.Logger.Warnf("Something Happened: %s", requestBody.ContentModelID)
 			c.JSON(http.StatusInternalServerError, err.Error())
 		}
 		return nil
 	}
 
-	c.JSON(http.StatusCreated, EntryPostResponseBody{
+	items := make([]ItemsRequestBody, len(createdEntry.EntryItems.Items))
+	for i, entryItem := range createdEntry.EntryItems.Items {
+		items[i] = ItemsRequestBody{
+			ContentType: entryItem.Type.String(),
+			Name:        entryItem.FieldName.String(),
+			Value:       entryItem.Value,
+		}
+	}
+
+	responseBody := EntryPostResponseBody{
 		ID:             createdEntry.ID.String(),
-		ContentModelID: createdEntry.ContentModelID.String(),
-	})
+		ContentModelID: requestBody.ContentModelID,
+		EntryItemID:    createdEntry.EntryItems.ID.String(),
+		Items:          items,
+	}
+	c.JSON(http.StatusCreated, responseBody)
 
 	return nil
 }
 
 type EntryPostResponseBody struct {
-	ID             string `json:"id"`
-	ContentModelID string `json:"content-model-id"`
+	ID             string             `json:"id"`
+	ContentModelID string             `json:"content-model-id"`
+	EntryItemID    string             `json:"item-id"`
+	Items          []ItemsRequestBody `json:"items"`
 }
 
 type EntryPostRequestBody struct {
-	ContentModelID string `json:"content-model-id"`
+	ContentModelID string             `json:"content-model-id"`
+	Items          []ItemsRequestBody `json:"items"`
+}
+
+type ItemsRequestBody struct {
+	ContentType string      `json:"contentType"`
+	Name        string      `json:"name"`
+	Value       interface{} `json:"value"`
 }

@@ -105,7 +105,7 @@ class ContentManagementApiTest : TestBase {
     }
 
     @Step("MongoDBの<collection>に登録されている値のJsonPath<jsonPath>の値が<value>である")
-    fun verifyMongoDB(collection: String, jsonPath: String, value: String) {
+    fun verifyMongoDBValue(collection: String, jsonPath: String, value: String) {
         val body = SpecDataStore.get("body") as String
         val id = JsonPath.read<String>(body, "$.id")
         val data = findDattaFromMongo(collection, id)
