@@ -3,7 +3,6 @@ package usecase_test
 import (
 	"content-management-api/domain"
 	"content-management-api/usecase"
-	"content-management-api/usecase/write"
 	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
@@ -169,7 +168,8 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		updatedContentModel := write.ContentModel{
+		updatedContentModel := domain.ContentModel{
+			ID:        id,
 			Name:      domain.Name("updated_name"),
 			CreatedAt: createdAt,
 			UpdatedAt: updatedAt,
@@ -199,10 +199,10 @@ func TestContentModel(t *testing.T) {
 		mockContentModelPort := new(MockContentModelPort)
 
 		mockContentModelPort.On("FindByID", id).Return(foundContentModel, nil)
-		mockContentModelPort.On("Update", id, updatedContentModel).Return(result, nil)
+		mockContentModelPort.On("Update", updatedContentModel).Return(result, nil)
 		target.ContentModelPort = mockContentModelPort
 
-		actual, err := target.Update(id, updatedContentModel)
+		actual, err := target.Update(updatedContentModel)
 
 		expected := domain.ContentModel{
 			ID:        id,
@@ -227,7 +227,7 @@ func TestContentModel(t *testing.T) {
 
 		createdAt := domain.CreatedAt(time.Now())
 
-		contentModel := write.ContentModel{
+		contentModel := domain.ContentModel{
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
 			Fields: []domain.Field{
@@ -278,7 +278,7 @@ func TestContentModel(t *testing.T) {
 	})
 
 	t.Run("ContentModelを登録時に失敗した場合はContentModelCreateFailedErrorを返す", func(t *testing.T) {
-		contentModel := write.ContentModel{
+		contentModel := domain.ContentModel{
 			Fields: []domain.Field{
 				{Type: domain.Text},
 			},
@@ -329,12 +329,12 @@ func (_m *MockContentModelPort) Save(ctx context.Context, contentModel domain.Co
 	return ret.Error(1)
 }
 
-func (_m *MockContentModelPort) Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error) {
+func (_m *MockContentModelPort) Create(ctx context.Context, contentModel domain.ContentModel) (domain.ContentModel, error) {
 	ret := _m.Called(contentModel)
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }
 
-func (_m *MockContentModelPort) Update(ctx context.Context, id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error) {
-	ret := _m.Called(id, contentModel)
+func (_m *MockContentModelPort) Update(ctx context.Context, contentModel domain.ContentModel) (domain.ContentModel, error) {
+	ret := _m.Called(contentModel)
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }

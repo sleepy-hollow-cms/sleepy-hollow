@@ -3,7 +3,6 @@ package handler
 import (
 	"content-management-api/domain"
 	"content-management-api/usecase"
-	"content-management-api/usecase/write"
 	"content-management-api/util/log"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -32,21 +31,22 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 		return err
 	}
 
-	entryItems := make([]write.EntryItem, len(requestBody.Items))
+	entryItems := make([]domain.EntryItem, len(requestBody.Items))
 	for i, item := range requestBody.Items {
 		contentType := domain.Of(item.ContentType)
-		entryItems[i] = write.EntryItem{
+		entryItems[i] = domain.EntryItem{
 			Type:      contentType,
 			FieldName: domain.Name(item.Name),
 			Value:     domain.FactoryValue(contentType, item.Value),
 		}
 	}
 
-	entry := write.Entry{
+	entry := domain.Entry{
 		ContentModelID: domain.ContentModelID(requestBody.ContentModelID),
+		Items:          entryItems,
 	}
 
-	createdEntry, err := en.EntryUseCase.Register(entry, entryItems)
+	createdEntry, err := en.EntryUseCase.Register(entry)
 
 	if err != nil {
 		switch err := err.(type) {
@@ -60,8 +60,8 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 		return nil
 	}
 
-	items := make([]ItemsRequestBody, len(createdEntry.EntryItems.Items))
-	for i, entryItem := range createdEntry.EntryItems.Items {
+	items := make([]ItemsRequestBody, len(createdEntry.Items))
+	for i, entryItem := range createdEntry.Items {
 		items[i] = ItemsRequestBody{
 			ContentType: entryItem.Type.String(),
 			Name:        entryItem.FieldName.String(),
@@ -72,7 +72,6 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	responseBody := EntryPostResponseBody{
 		ID:             createdEntry.ID.String(),
 		ContentModelID: requestBody.ContentModelID,
-		EntryItemID:    createdEntry.EntryItems.ID.String(),
 		Items:          items,
 	}
 	c.JSON(http.StatusCreated, responseBody)
@@ -83,7 +82,6 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 type EntryPostResponseBody struct {
 	ID             string             `json:"id"`
 	ContentModelID string             `json:"content-model-id"`
-	EntryItemID    string             `json:"item-id"`
 	Items          []ItemsRequestBody `json:"items"`
 }
 

@@ -4,8 +4,6 @@ import (
 	"content-management-api/domain"
 	"content-management-api/driver/model"
 	"content-management-api/gateway"
-	"content-management-api/usecase/read"
-	"content-management-api/usecase/write"
 	"context"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -18,7 +16,7 @@ func TestEntry(t *testing.T) {
 	t.Run("Entryを登録しそのIDを返す", func(t *testing.T) {
 		mockEntryDriver := new(MockContentDriver)
 
-		inputEntry := write.Entry{
+		inputEntry := domain.Entry{
 			ContentModelID: "modelId",
 		}
 
@@ -46,7 +44,7 @@ func TestEntry(t *testing.T) {
 	})
 
 	t.Run("EntryItemsを登録する", func(t *testing.T) {
-		inputEntryItems := []write.EntryItem{
+		inputEntryItems := []domain.EntryItem{
 			{
 				Type:      domain.Text,
 				FieldName: "fieldName",
@@ -68,7 +66,7 @@ func TestEntry(t *testing.T) {
 
 		actual, err := target.CreateItems(context.TODO(), domain.EntryId("id"), inputEntryItems)
 
-		items := []read.Item{
+		expected := []domain.EntryItem{
 			{
 				FieldName: "fieldName",
 				Type:      domain.Text,
@@ -76,11 +74,6 @@ func TestEntry(t *testing.T) {
 					Value: "テキスト",
 				},
 			},
-		}
-
-		expected := read.EntryItem{
-			ID:    domain.ID("id"),
-			Items: items,
 		}
 
 		mockEntryDriver.AssertExpectations(t)
