@@ -25,20 +25,20 @@ type Config struct {
 }
 
 type Log struct {
-	Encoding string `yaml:"encoding" default:"json"`
-	Output   string `yaml:"output" default:"stdout"`
-	Level    string `yaml:"level" default:"debug"`
+	Encoding string `yaml:"encoding"`
+	Output   string `yaml:"output"`
+	Level    string `yaml:"level"`
 }
 
 type Server struct {
-	Port int `yaml:"port" default:"3000"`
+	Port int `yaml:"port"`
 }
 
 type MongoDB struct {
-	User     string `yaml:"user" default:"root"`
-	Password string `yaml:"password" default:"password"`
-	Host     string `yaml:"host" default:"localhost"`
-	Port     int    `yaml:"port" default:"27017"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
 }
 
 func init() {
