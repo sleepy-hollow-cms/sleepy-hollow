@@ -9,4 +9,9 @@ func (c EntryId) String() string {
 type Entry struct {
 	ID             EntryId
 	ContentModelID ContentModelID
+	Items          []EntryItem
+}
+
+func (e Entry) Validate(contentModel ContentModel) error {
+	panic("implemented me")
 }

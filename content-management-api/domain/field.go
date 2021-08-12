@@ -1,8 +1,8 @@
 package domain
 
-type ID string
+type FieldID string
 
-func (n ID) String() string {
+func (n FieldID) String() string {
 	return string(n)
 }
 

@@ -5,7 +5,6 @@ import (
 	"content-management-api/driver"
 	"content-management-api/driver/model"
 	"content-management-api/usecase"
-	"content-management-api/usecase/write"
 	"content-management-api/util/log"
 	"context"
 	"errors"
@@ -89,7 +88,7 @@ func (c *ContentModel) FindBySpaceID(ctx context.Context, id domain.SpaceID) (do
 	}, nil
 }
 
-func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentModel) (domain.ContentModel, error) {
+func (c *ContentModel) Create(ctx context.Context, contentModel domain.ContentModel) (domain.ContentModel, error) {
 	fields := make([]model.Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		fields[i] = model.Field{
@@ -115,7 +114,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel write.ContentMod
 	}, nil
 }
 
-func (c *ContentModel) Update(ctx context.Context, id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error) {
+func (c *ContentModel) Update(ctx context.Context, contentModel domain.ContentModel) (domain.ContentModel, error) {
 	fields := make([]model.Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		fields[i] = model.Field{
@@ -127,7 +126,7 @@ func (c *ContentModel) Update(ctx context.Context, id domain.ContentModelID, con
 
 	updated, err := c.Driver.UpdateModel(
 		model.ContentModel{
-			ID:        id.String(),
+			ID:        contentModel.ID.String(),
 			Name:      contentModel.Name.String(),
 			CreatedAt: contentModel.CreatedAt.Time(),
 			UpdatedAt: contentModel.UpdatedAt.Time(),

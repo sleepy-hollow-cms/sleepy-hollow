@@ -4,8 +4,6 @@ import (
 	"content-management-api/domain"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
-	"content-management-api/usecase/read"
-	"content-management-api/usecase/write"
 	"context"
 )
 
@@ -19,7 +17,7 @@ func NewEntry(driver driver.ContentDriver) *Entry {
 	}
 }
 
-func (e *Entry) Create(ctx context.Context, entry write.Entry) (domain.Entry, error) {
+func (e *Entry) Create(ctx context.Context, entry domain.Entry) (domain.Entry, error) {
 
 	create, err := e.Driver.CreateEntry(model.Entry{ModelID: entry.ContentModelID.String()})
 
@@ -33,7 +31,7 @@ func (e *Entry) Create(ctx context.Context, entry write.Entry) (domain.Entry, er
 	}, err
 }
 
-func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []write.EntryItem) (read.EntryItem, error) {
+func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []domain.EntryItem) ([]domain.EntryItem, error) {
 	entryItems := make([]model.EntryItem, len(items))
 	for i, item := range items {
 		entryItems[i] = model.EntryItem{
@@ -43,24 +41,11 @@ func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []writ
 		}
 	}
 
-	createEntryItems, err := e.Driver.CreateEntryItems(model.EntryID(id.String()), entryItems)
+	_, err := e.Driver.CreateEntryItems(model.EntryID(id.String()), entryItems)
 
 	if err != nil {
-		return read.EntryItem{}, err
+		return make([]domain.EntryItem, 0), err
 	}
 
-	readItems := make([]read.Item, len(createEntryItems))
-	for i, createEntryItem := range createEntryItems {
-		itemType := domain.Of(createEntryItem.Type)
-		readItems[i] = read.Item{
-			FieldName: domain.Name(createEntryItem.Name),
-			Type:      itemType,
-			Value:     domain.FactoryValue(itemType, createEntryItem.Value),
-		}
-	}
-
-	return read.EntryItem{
-		ID:    domain.ID(id),
-		Items: readItems,
-	}, nil
+	return items, nil
 }

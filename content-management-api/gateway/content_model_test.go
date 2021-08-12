@@ -6,7 +6,6 @@ import (
 	"content-management-api/driver/model"
 	"content-management-api/gateway"
 	"content-management-api/usecase"
-	"content-management-api/usecase/write"
 	"context"
 	"errors"
 	"testing"
@@ -25,7 +24,7 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver := new(MockContentDriver)
 
 		contentModel := model.ContentModel{
-			ID:        "id",
+			ID:        "contentmodelid",
 			Name:      "name",
 			CreatedAt: createdAt,
 			UpdatedAt: createdAt,
@@ -48,7 +47,8 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.On("CreateModel", "name", createdAt, fields).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
-		createdModel := write.ContentModel{
+		createdModel := domain.ContentModel{
+			ID:        domain.ContentModelID("contentmodelid"),
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(createdAt),
@@ -64,7 +64,7 @@ func TestContentModel(t *testing.T) {
 		actual, err := target.Create(context.TODO(), createdModel)
 
 		expected := domain.ContentModel{
-			ID:        domain.ContentModelID("id"),
+			ID:        domain.ContentModelID("contentmodelid"),
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(createdAt),
@@ -89,10 +89,8 @@ func TestContentModel(t *testing.T) {
 
 		mockContentModelDriver := new(MockContentDriver)
 
-		id := domain.ContentModelID("id")
-
 		contentModel := model.ContentModel{
-			ID:        "id",
+			ID:        "contentmodelid",
 			Name:      "name",
 			CreatedAt: createdAt,
 			UpdatedAt: updatedAt,
@@ -108,7 +106,8 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
-		model := write.ContentModel{
+		model := domain.ContentModel{
+			ID:        domain.ContentModelID("contentmodelid"),
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(updatedAt),
@@ -121,10 +120,10 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		actual, err := target.Update(context.TODO(), id, model)
+		actual, err := target.Update(context.TODO(), model)
 
 		expected := domain.ContentModel{
-			ID:        domain.ContentModelID("id"),
+			ID:        domain.ContentModelID("contentmodelid"),
 			Name:      domain.Name("name"),
 			CreatedAt: domain.CreatedAt(createdAt),
 			UpdatedAt: domain.UpdatedAt(updatedAt),

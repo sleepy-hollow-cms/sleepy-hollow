@@ -3,7 +3,6 @@ package usecase
 import (
 	"content-management-api/domain"
 	"content-management-api/port"
-	"content-management-api/usecase/write"
 	"content-management-api/util/log"
 	"context"
 )
@@ -51,7 +50,7 @@ func (c *ContentModel) FindContentModelBySpaceID(spaceID domain.SpaceID) (domain
 	return models, nil
 }
 
-func (c *ContentModel) Create(contentModel write.ContentModel) (domain.ContentModel, error) {
+func (c *ContentModel) Create(contentModel domain.ContentModel) (domain.ContentModel, error) {
 	result, err := c.ContentModelPort.Create(context.TODO(), contentModel)
 
 	if err != nil {
@@ -61,22 +60,23 @@ func (c *ContentModel) Create(contentModel write.ContentModel) (domain.ContentMo
 	return result, err
 }
 
-func (c *ContentModel) Update(id domain.ContentModelID, contentModel write.ContentModel) (domain.ContentModel, error) {
+func (c *ContentModel) Update(contentModel domain.ContentModel) (domain.ContentModel, error) {
 
-	found, err := c.ContentModelPort.FindByID(context.TODO(), id)
+	found, err := c.ContentModelPort.FindByID(context.TODO(), contentModel.ID)
 	if err != nil {
 		log.Logger.Warn(err.Error())
 		return domain.ContentModel{}, err
 	}
 
-	updated := write.ContentModel{
+	updated := domain.ContentModel{
+		ID:        contentModel.ID,
 		Name:      contentModel.Name,
 		CreatedAt: found.CreatedAt,
 		UpdatedAt: contentModel.UpdatedAt,
 		Fields:    contentModel.Fields,
 	}
 
-	result, err := c.ContentModelPort.Update(context.TODO(), id, updated)
+	result, err := c.ContentModelPort.Update(context.TODO(), updated)
 	if err != nil {
 		log.Logger.Warn(err.Error())
 		return domain.ContentModel{}, err

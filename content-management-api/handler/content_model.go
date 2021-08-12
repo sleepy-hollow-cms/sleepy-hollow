@@ -4,7 +4,6 @@ import (
 	"content-management-api/domain"
 	field "content-management-api/domain"
 	"content-management-api/usecase"
-	"content-management-api/usecase/write"
 	"errors"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -136,7 +135,7 @@ func (r *ContentModelResource) Create(c echo.Context) error {
 		}
 	}
 
-	contentModel, err := r.ContentModelUseCase.Create(write.ContentModel{
+	contentModel, err := r.ContentModelUseCase.Create(domain.ContentModel{
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
 		CreatedAt: domain.CreatedAt(time.Now()),
@@ -216,7 +215,8 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 		}
 	}
 
-	contentModel, err := r.ContentModelUseCase.Update(domain.ContentModelID(contentModelId), write.ContentModel{
+	contentModel, err := r.ContentModelUseCase.Update(domain.ContentModel{
+		ID:        domain.ContentModelID(contentModelId),
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
 		UpdatedAt: domain.UpdatedAt(time.Now()),
