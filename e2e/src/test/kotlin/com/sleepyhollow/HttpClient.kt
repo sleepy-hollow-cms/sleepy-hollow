@@ -1,12 +1,10 @@
 package com.sleepyhollow
 
-import com.sleepyhollow.HttpClient.Companion.toTriple
 import org.http4k.client.ApacheClient
 import org.http4k.core.Body
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.routing.header
 
 class HttpClient {
     companion object {

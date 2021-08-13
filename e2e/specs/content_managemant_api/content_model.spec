@@ -19,7 +19,7 @@
 * レスポンスボディのJsonPath"$.created-at"の日付がISO 8601形式でUTCである
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.created_at"に作成日時が保存されている
 * レスポンスボディのJsonPath"$.updated-at"の日付がISO 8601形式でUTCである
-* レプポンスボディのJsonPath"$.created-at"とJsonPath"$.updated-at"が同じ値である
+* レスポンスボディのJsonPath"$.created-at"とJsonPath"$.updated-at"が同じ値である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.updated_at"に作成日時が保存されている
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.updated_at"とJsonPathの"$.updated_at"が同じ値である
 

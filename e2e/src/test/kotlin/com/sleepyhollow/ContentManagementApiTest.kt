@@ -94,9 +94,7 @@ class ContentManagementApiTest : TestBase {
         regex.matches(date) shouldBeEqualTo true
     }
 
-    //レプポンスボディのJsonPath"$.created-at"とJsonPath"$.updated-at"が同じ値である
-
-    @Step("レプポンスボディのJsonPath<jsonPath1>とJsonPath<jsonPath2>が同じ値である")
+    @Step("レスポンスボディのJsonPath<jsonPath1>とJsonPath<jsonPath2>が同じ値である")
     fun verifyBodyTwoValueEqual(jsonPath1: String, jsonPath2: String) {
         val body = SpecDataStore.get("body") as String
         val value1 = JsonPath.read<String>(body, jsonPath1)
