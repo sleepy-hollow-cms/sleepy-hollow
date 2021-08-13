@@ -73,5 +73,7 @@ func init() {
 		panic(err)
 	}
 
-	Logger = &logger{l.Sugar()}
+	Logger = &logger{
+		SugaredLogger: l.Sugar(),
+	}
 }

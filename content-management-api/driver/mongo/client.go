@@ -115,7 +115,7 @@ func (c *Client) Watch(stopCh chan struct{}) error {
 			log.Println("stop watching mongo-client.")
 			return nil
 		case <-ticker.C:
-			err := c.Ping()
+			err := c.Ping(2 * time.Second)
 			if err != nil {
 				log.Println(err)
 			}
@@ -123,13 +123,13 @@ func (c *Client) Watch(stopCh chan struct{}) error {
 	}
 }
 
-func (c *Client) Ping() error {
+func (c *Client) Ping(duration time.Duration) error {
 	db, err := c.load()
 	if err != nil {
 		return errors.New("cant db db")
 	}
 
-	timeout, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	timeout, cancel := context.WithTimeout(context.Background(), duration)
 	defer cancel()
 
 	err = db.Ping(timeout, readpref.Primary())
