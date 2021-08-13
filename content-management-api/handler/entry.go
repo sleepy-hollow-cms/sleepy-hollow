@@ -22,7 +22,36 @@ func NewEntryResource(useCase *usecase.Entry) *EntryResource {
 
 func (en *EntryResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
-	g.POST("/specs/:spaceId/entries", en.CreateEntry)
+	g.POST("/spaces/:spaceId/entries", en.CreateEntry)
+	g.GET("/spaces/:spaceId/entries/:entryId", en.FindEntry)
+}
+
+func (en *EntryResource) FindEntry(c echo.Context) error {
+	entryId := c.Param("entryId")
+
+	findEntry, err := en.EntryUseCase.Find(domain.EntryId(entryId))
+
+	if err != nil {
+		// TODO error handle to 404 or 500
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	items := make([]ItemsRequestBody, len(findEntry.Items))
+	for i, item := range findEntry.Items {
+		items[i] = ItemsRequestBody{
+			ContentType: item.Type.String(),
+			Name:        item.FieldName.String(),
+			Value:       item.Value.FieldValue(),
+		}
+	}
+
+	responseBody := EntryPostResponseBody{
+		ID:             findEntry.ID.String(),
+		ContentModelID: findEntry.ContentModelID.String(),
+		Items:          items,
+	}
+
+	return c.JSON(http.StatusOK, responseBody)
 }
 
 func (en *EntryResource) CreateEntry(c echo.Context) error {

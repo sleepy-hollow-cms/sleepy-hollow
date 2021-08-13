@@ -145,6 +145,52 @@ func TestEntry(t *testing.T) {
 		assert.True(t, errors.As(err, &someError))
 		mockEntryPort.AssertNotCalled(t, "FindByID")
 	})
+
+	t.Run("EntryをID指定で取得することができる", func(t *testing.T) {
+		id := domain.EntryId("id")
+
+		mockEntryPort := new(MockEntryPort)
+
+		expected := domain.Entry{
+			ID:             domain.EntryId("entryId"),
+			ContentModelID: domain.ContentModelID("contentModelId"),
+			Items: []domain.EntryItem{
+				{
+					FieldName: "title",
+					Type:      domain.Text,
+					Value:     domain.TextValue{Value: "タイトル"},
+				},
+			},
+		}
+
+		mockEntryPort.On("FindById", id).Return(expected, nil)
+
+		target.EntryPort = mockEntryPort
+
+		actual, err := target.Find(id)
+
+		mockEntryPort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("EntryをID指定で取得できない場合EntryNotFoundErrorを返す", func(t *testing.T) {
+		id := domain.EntryId("id")
+
+		mockEntryPort := new(MockEntryPort)
+
+		mockEntryPort.On("FindById", id).Return(domain.Entry{}, errors.New("not found"))
+
+		target.EntryPort = mockEntryPort
+
+		_, err := target.Find(id)
+
+		notFoundError := usecase.NewEntryNotFoundError("error")
+
+		mockEntryPort.AssertExpectations(t)
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &notFoundError))
+	})
 }
 
 type MockEntryPort struct {
@@ -159,4 +205,9 @@ func (_m *MockEntryPort) CreateItems(ctx context.Context, id domain.EntryId, ent
 func (_m *MockEntryPort) Create(ctx context.Context, entry domain.Entry) (domain.Entry, error) {
 	ret := _m.Called(entry)
 	return ret.Get(0).(domain.Entry), nil
+}
+
+func (_m *MockEntryPort) FindById(ctx context.Context, id domain.EntryId) (domain.Entry, error) {
+	ret := _m.Called(id)
+	return ret.Get(0).(domain.Entry), ret.Error(1)
 }

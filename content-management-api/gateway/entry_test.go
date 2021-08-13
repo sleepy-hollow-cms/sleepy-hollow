@@ -81,4 +81,42 @@ func TestEntry(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
 	})
+
+	t.Run("Entryを取得する", func(t *testing.T) {
+
+		returnEntry := model.Entry{
+			ID:      "id",
+			ModelID: "modelId",
+			Items: []model.EntryItem{
+				{
+					Type:  "text",
+					Name:  "title",
+					Value: "タイトル",
+				},
+			},
+		}
+
+		mockEntryDriver := new(MockContentDriver)
+		mockEntryDriver.On("FindEntryByID", "id").Return(&returnEntry, nil)
+
+		target.Driver = mockEntryDriver
+
+		expected := domain.Entry{
+			ID:             domain.EntryId("id"),
+			ContentModelID: domain.ContentModelID("modelId"),
+			Items: []domain.EntryItem{
+				{
+					FieldName: "title",
+					Type:      domain.Text,
+					Value:     domain.TextValue{Value: "タイトル"},
+				},
+			},
+		}
+
+		id := domain.EntryId("id")
+		actual, err := target.FindById(context.TODO(), id)
+
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
 }

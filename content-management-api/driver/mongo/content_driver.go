@@ -321,3 +321,48 @@ func (c ContentDriver) DeleteContentModelByID(id string) error {
 
 	return nil
 }
+
+func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
+
+	client, err := c.Client.Get()
+
+	if err != nil {
+		return nil, err
+	}
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	collection := client.Database("models").Collection("entry")
+
+	findOne := collection.FindOne(context.Background(), bson.M{"_id": objectId})
+
+	entry := Entry{}
+	err = findOne.Decode(&entry)
+
+	if err != nil {
+		return nil, err
+	}
+
+	items := make([]model.EntryItem, len(entry.Items))
+	for i, item := range entry.Items {
+		d := item.(primitive.D)
+		mamp := map[string]interface{}{}
+		for _, e := range d {
+			mamp[e.Key] = e.Value
+		}
+		items[i] = model.EntryItem{
+			Type:  mamp["contentType"].(string),
+			Name:  mamp["name"].(string),
+			Value: mamp["value"].(interface{}),
+		}
+	}
+
+	return &model.Entry{
+		ID:      entry.ID.Hex(),
+		ModelID: entry.ContentModelID,
+		Items:   items,
+	}, nil
+}
