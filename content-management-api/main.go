@@ -18,7 +18,11 @@ func main() {
 	dbClient := mongo.NewClient()
 	_, err := dbClient.Connect()
 	if err != nil {
-		log.Logger.Fatalw("DB Connect Error", log.Logger.Error(err))
+		log.Logger.Fatalw("DB client error", log.Logger.Error(err))
+	}
+	if err := dbClient.Ping(5 * time.Second); err != nil {
+		log.Logger.Fatalw("DB Connecting PING Error", log.Logger.Error(err))
+		panic(err)
 	}
 
 	go dbClient.StartWatch()
