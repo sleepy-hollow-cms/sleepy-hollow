@@ -4,6 +4,7 @@ import (
 	"content-management-api/domain"
 	"content-management-api/driver"
 	"content-management-api/driver/model"
+	"content-management-api/util"
 	"context"
 )
 
@@ -15,6 +16,38 @@ func NewEntry(driver driver.ContentDriver) *Entry {
 	return &Entry{
 		Driver: driver,
 	}
+}
+
+func (e *Entry) FindById(ctx context.Context, entryId domain.EntryId) (domain.Entry, error) {
+
+	found, err := e.Driver.FindEntryByID(entryId.String())
+
+	if err != nil {
+		return domain.Entry{}, err
+	}
+
+	items := make([]domain.EntryItem, len(found.Items))
+	errs := new(util.ErrorCollector)
+	for i, item := range found.Items {
+		fieldType := domain.Of(item.Type)
+		v, err := domain.FactoryValue(fieldType, item.Value)
+
+		if err != nil {
+			errs.Collect(err)
+		}
+
+		items[i] = domain.EntryItem{
+			FieldName: domain.Name(item.Name),
+			Type:      domain.Of(item.Type),
+			Value:     v,
+		}
+	}
+
+	return domain.Entry{
+		ID:             domain.EntryId(found.ID),
+		ContentModelID: domain.ContentModelID(found.ModelID),
+		Items:          items,
+	}, nil
 }
 
 func (e *Entry) Create(ctx context.Context, entry domain.Entry) (domain.Entry, error) {

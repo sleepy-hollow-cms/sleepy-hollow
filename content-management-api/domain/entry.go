@@ -15,3 +15,5 @@ type Entry struct {
 func (e Entry) Validate(contentModel ContentModel) error {
 	panic("implemented me")
 }
+
+type EntryNotFound error

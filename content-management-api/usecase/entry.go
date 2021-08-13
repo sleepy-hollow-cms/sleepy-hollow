@@ -6,6 +6,7 @@ import (
 	"content-management-api/util/log"
 	"context"
 	"errors"
+	"fmt"
 )
 
 type Entry struct {
@@ -53,4 +54,20 @@ func (e *Entry) Register(entry domain.Entry) (domain.Entry, error) {
 		ContentModelID: createdEntry.ContentModelID,
 		Items:          createdEntryItems,
 	}, nil
+}
+
+func (e *Entry) Find(id domain.EntryId) (domain.Entry, error) {
+
+	result, err := e.EntryPort.FindById(context.TODO(), id)
+
+	if err != nil {
+		switch err.(type) {
+		case domain.EntryNotFound:
+			return domain.Entry{}, NewEntryNotFoundError(err.Error())
+		default:
+			return domain.Entry{}, fmt.Errorf("reason: %w", err)
+		}
+	}
+
+	return result, nil
 }
