@@ -28,3 +28,9 @@ tags: default-setup-data
 * MongoDBの"ENTRY"に登録されている値のJsonPath"$.items[0].value[0]"の値が"A"である
 * MongoDBの"ENTRY"に登録されている値のJsonPath"$.items[0].value[1]"の値が"B"である
 * MongoDBの"ENTRY"に登録されている値のJsonPath"$.items[0].value[2]"の値が"C"である
+
+## Entryのフィールドにマッチしないタイプと値を保存しようとすると400エラーを返す
+* "/v1/specs/spaceId/entries"にボディ"setup/request/entry_unmatch_typevalue_text.json"でPOSTリクエストを送る
+* "400"ステータスコードが返ってくる
+* "/v1/specs/spaceId/entries"にボディ"setup/request/entry_unmatch_typevalue_multipletext.json"でPOSTリクエストを送る
+* "400"ステータスコードが返ってくる

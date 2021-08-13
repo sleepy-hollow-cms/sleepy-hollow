@@ -3,7 +3,9 @@ package handler
 import (
 	"content-management-api/domain"
 	"content-management-api/usecase"
+	"content-management-api/util"
 	"content-management-api/util/log"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -32,21 +34,29 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	}
 
 	entryItems := make([]domain.EntryItem, len(requestBody.Items))
+	errStacks := new(util.ErrorCollector)
 	for i, item := range requestBody.Items {
 		contentType := domain.Of(item.ContentType)
+		value, err := domain.FactoryValue(contentType, item.Value)
+		if err != nil {
+			errStacks.Collect(err)
+		}
 		entryItems[i] = domain.EntryItem{
 			Type:      contentType,
 			FieldName: domain.Name(item.Name),
-			Value:     domain.FactoryValue(contentType, item.Value),
+			Value:     value,
 		}
 	}
 
-	entry := domain.Entry{
-		ContentModelID: domain.ContentModelID(requestBody.ContentModelID),
-		Items:          entryItems,
+	if errStacks.Size() != 0 {
+		c.String(http.StatusBadRequest, fmt.Sprintf("invalid request bod\n%s", errStacks.Error()))
+		return errStacks
 	}
 
-	createdEntry, err := en.EntryUseCase.Register(entry)
+	createdEntry, err := en.EntryUseCase.Register(domain.Entry{
+		ContentModelID: domain.ContentModelID(requestBody.ContentModelID),
+		Items:          entryItems,
+	})
 
 	if err != nil {
 		switch err := err.(type) {
@@ -74,6 +84,7 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 		ContentModelID: requestBody.ContentModelID,
 		Items:          items,
 	}
+
 	c.JSON(http.StatusCreated, responseBody)
 
 	return nil

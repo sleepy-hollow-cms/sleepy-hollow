@@ -44,11 +44,12 @@ func TestEntry(t *testing.T) {
 	})
 
 	t.Run("EntryItemsを登録する", func(t *testing.T) {
+		value, _ := domain.FactoryValue(domain.Text, "テキスト")
 		inputEntryItems := []domain.EntryItem{
 			{
 				Type:      domain.Text,
 				FieldName: "fieldName",
-				Value:     domain.FactoryValue(domain.Text, "テキスト"),
+				Value:     value,
 			},
 		}
 
