@@ -73,7 +73,7 @@
 * レスポンスボディのJsonPath"$.models[1].updated-at"の値が"2021-08-03T19:47:00Z"である
 * レスポンスボディのJsonPath"$.models[1].fields[0].name"の値が"name10"である
 * レスポンスボディのJsonPath"$.models[1].fields[0].required"の真偽値が"true"である
-* レスポンスボディのJsonPath"$.models[1].fields[0].type"の値が"text"である
+* レスポンスボディのJsonPath"$.models[1].fields[0].type"の値が"multiple-text"である
 * レスポンスボディのJsonPath"$.models[1].fields[1].name"の値が"name11"である
 * レスポンスボディのJsonPath"$.models[1].fields[1].type"の値が"text"である
 * レスポンスボディのJsonPath"$.models[1].fields[1].required"の真偽値が"false"である

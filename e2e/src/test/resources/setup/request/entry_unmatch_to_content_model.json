@@ -1,0 +1,10 @@
+{
+  "content-model-id": "5063114bd386d8fadbd6b003",
+  "items": [
+    {
+      "contentType": "multiple-text",
+      "name": "キーの名前",
+      "value": ["A","B","C"]
+    }
+  ]
+}
