@@ -24,7 +24,7 @@ jobs:
       - name: Login to GitHub Resistory
         uses: docker/login-action@v1
         with:
-          registry: docker.pkg.github.com
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name:
@@ -34,5 +34,5 @@ jobs:
           push: true
           context: ./content-management-api
           tags: |
-            docker.pkg.github.com/sleepy-hollow-cms/content-management-api:latest
-            docker.pkg.github.com/sleepy-hollow-cms/content-management-api:${{ github.sha }}
+            ghcr.io/${{ github.repository }}/content-management-api:latest
+            ghcr.io/${{ github.repository }}/content-management-api:${{ github.sha }}
