@@ -12,7 +12,7 @@ jobs:
       id: slack
       uses: ./.github/actions/slack-notify-action
       with:
-        json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#3F0F3F", "text": "Build Docker Image"} ] }'
+        json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#7209b7", "text": "The actions are executed by ${{ github.actor }}!!! Building Docker Images!!!"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
