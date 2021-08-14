@@ -47,7 +47,16 @@ func TestEntry(t *testing.T) {
 			Items:          inputEntryItems,
 		}
 
-		model := domain.ContentModel{}
+		model := domain.ContentModel{
+
+			Fields: domain.Fields{
+				{
+					Name: domain.Name("name"),
+					Type: domain.Text,
+					Required: domain.Required(true),
+				},
+			},
+		}
 
 		mockEntryPort.On("Create", inputEntry).Return(entry)
 		mockEntryPort.On("CreateItems", domain.EntryId("id"), inputEntryItems).Return(entryItems, nil)
@@ -106,6 +115,77 @@ func TestEntry(t *testing.T) {
 
 		assert.NotNil(t, err)
 		assert.True(t, errors.As(err, &contentModelNotFound))
+		mockEntryPort.AssertNotCalled(t, "FindByID")
+	})
+
+	t.Run("EntryがContentModelの形にあわない場合はErrorを返す", func(t *testing.T) {
+		mockEntryPort := new(MockEntryPort)
+		mockContentModelPort := new(MockContentModelPort)
+		modelID := domain.ContentModelID("modelId")
+		entry := domain.Entry{
+			ContentModelID: modelID,
+			ID:             domain.EntryId("id"),
+		}
+
+		entryItems := []domain.EntryItem{
+			{
+				Type:      domain.Text,
+				FieldName: "fieldName1",
+				Value: domain.TextValue{
+					Value: "タイトル1",
+				},
+			},
+		}
+
+		inputEntryItems := []domain.EntryItem{
+			{
+				Type:      domain.Text,
+				FieldName: "fieldName1",
+				Value: domain.TextValue{
+					Value: "タイトル1",
+				},
+			},
+			{
+				Type:      domain.MultipleText,
+				FieldName: "fieldName1",
+				Value: domain.MultipleTextValue{
+					Value: []string{
+						"text1",
+						"text2",
+					},
+				},
+			},
+		}
+
+		inputEntry := domain.Entry{
+			ContentModelID: domain.ContentModelID("modelId"),
+			Items:          inputEntryItems,
+		}
+
+		model := domain.ContentModel{
+			ID: modelID,
+			Fields: domain.Fields{
+				{
+					Name: domain.Name("name"),
+					Type: domain.Text,
+					Required: domain.Required(true),
+				},
+			},
+		}
+
+		mockEntryPort.On("Create", inputEntry).Return(entry)
+		mockEntryPort.On("CreateItems", domain.EntryId("id"), inputEntryItems).Return(entryItems, nil)
+		mockContentModelPort.On("FindByID", modelID).Return(model, nil)
+
+		target.EntryPort = mockEntryPort
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.Register(inputEntry)
+
+		entryValidationError := domain.NewEntryValidationError("test reason")
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &entryValidationError))
 		mockEntryPort.AssertNotCalled(t, "FindByID")
 	})
 

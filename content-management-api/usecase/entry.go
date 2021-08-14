@@ -27,7 +27,8 @@ func NewEntry(
 func (e *Entry) Register(entry domain.Entry) (domain.Entry, error) {
 	todoCtx := context.TODO()
 
-	if _, err := e.ContentModelPort.FindByID(todoCtx, entry.ContentModelID); err != nil {
+	contentModel, err := e.ContentModelPort.FindByID(todoCtx, entry.ContentModelID)
+	if err != nil {
 		switch {
 		case errors.As(err, &ContentModelNotFoundError{}):
 			return domain.Entry{}, err
@@ -36,8 +37,11 @@ func (e *Entry) Register(entry domain.Entry) (domain.Entry, error) {
 		}
 	}
 
-	createdEntry, err := e.EntryPort.Create(todoCtx, entry)
+	if err := entry.Validate(contentModel); err != nil {
+		return domain.Entry{}, err
+	}
 
+	createdEntry, err := e.EntryPort.Create(todoCtx, entry)
 	if err != nil {
 		return domain.Entry{}, err
 	}
