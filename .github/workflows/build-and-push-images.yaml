@@ -6,6 +6,8 @@ jobs:
   nodify-docker-build:
     runs-on: ubuntu-20.04
     steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
     - name: Post actions trigerd message
       id: slack
       uses: ./.github/actions/slack-notify-action
@@ -28,7 +30,7 @@ jobs:
       - name:
         uses: docker/build-push-action@v2
         with:
-          file: ./docker/Dockerfile
+          file: ./content-management-api/docker/Dockerfile
           push: true
           context: ./content-management-api
           tags: |
