@@ -36,15 +36,15 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/content-management-api:latest
             ghcr.io/${{ github.repository }}/content-management-api:${{ github.sha }}
-      - uses: ./.github/actions/slack-notify-action
-        with:
-          json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#2EB67D", "text": "Content Management API is built and pushed!!!"} ] }'
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        if: ${{ success() }}
-      - uses: ./.github/actions/slack-notify-action
-        with:
-          json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#E01E5A", "text": "Faied to build or push Content Management API!!!"} ] }'
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        if: ${{ failure() }}
+        - uses: ./.github/actions/slack-notify-action
+          with:
+            json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#2EB67D", "text": "Content Management API is built and pushed!!!"} ] }'
+          env:
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          if: ${{ success() }}
+        - uses: ./.github/actions/slack-notify-action
+          with:
+            json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#E01E5A", "text": "Faied to build or push Content Management API!!!"} ] }'
+          env:
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          if: ${{ failure() }}
