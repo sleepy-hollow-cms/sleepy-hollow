@@ -6,31 +6,45 @@ jobs:
   nodify-docker-build:
     runs-on: ubuntu-20.04
     steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
     - name: Post actions trigerd message
       id: slack
       uses: ./.github/actions/slack-notify-action
       with:
-        json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#3F0F3F", "text": "Build Docker Image"} ] }'
+        json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#7209b7", "text": "The actions are executed by ${{ github.actor }}!!! Building Docker Images!!!"} ] }'
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-  build-and-push-content-management-api:
-    name:
+  content-management-api:
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Login to GitHub Resistory
         uses: docker/login-action@v1
         with:
-          registry: docker.pkg.github.com
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name:
         uses: docker/build-push-action@v2
-        working-directory: ./content-management-api
         with:
-          file: ./docker/Dockerfile
+          file: ./content-management-api/docker/Dockerfile
           push: true
+          context: ./content-management-api
           tags: |
-            docker.pkg.github.com/sleepy-hollow-cms/content-management-api:latest
-            docker.pkg.github.com/sleepy-hollow-cms/content-management-api:${{ github.sha }}
+            ghcr.io/${{ github.repository }}/content-management-api:latest
+            ghcr.io/${{ github.repository }}/content-management-api:${{ github.sha }}
+        - uses: ./.github/actions/slack-notify-action
+          with:
+            json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#2EB67D", "text": "Content Management API is built and pushed!!!"} ] }'
+          env:
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          if: ${{ success() }}
+        - uses: ./.github/actions/slack-notify-action
+          with:
+            json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#E01E5A", "text": "Faied to build or push Content Management API!!!"} ] }'
+          env:
+            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          if: ${{ failure() }}
