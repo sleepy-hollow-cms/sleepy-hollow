@@ -14,7 +14,7 @@ jobs:
       env:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-  build-and-push-content-management-api:
+  content-management-api:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out the repo
@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name:
         uses: docker/build-push-action@v2
-        working-directory: ./content-management-api
+        context: ./content-management-api
         with:
           file: ./docker/Dockerfile
           push: true
