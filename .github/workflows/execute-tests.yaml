@@ -1,4 +1,4 @@
-name: sleepy-hollow-actions
+name: execute tests
 on: 
   pull_request:
     branches:
