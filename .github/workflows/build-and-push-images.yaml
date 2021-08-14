@@ -8,7 +8,7 @@ jobs:
     steps:
     - name: Post actions trigerd message
       id: slack
-    - uses: ./.github/actions/slack-notify-action
+      uses: ./.github/actions/slack-notify-action
       with:
         json-payload: '{"channel": "C0254UUPR0E", "attachments": [  {"color": "#3F0F3F", "text": "Build Docker Image"} ] }'
       env:
