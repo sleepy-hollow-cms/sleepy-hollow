@@ -27,10 +27,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name:
         uses: docker/build-push-action@v2
-        context: ./content-management-api
         with:
           file: ./docker/Dockerfile
           push: true
+          context: ./content-management-api
           tags: |
             docker.pkg.github.com/sleepy-hollow-cms/content-management-api:latest
             docker.pkg.github.com/sleepy-hollow-cms/content-management-api:${{ github.sha }}
