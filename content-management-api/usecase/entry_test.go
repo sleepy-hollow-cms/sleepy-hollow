@@ -24,21 +24,13 @@ func TestEntry(t *testing.T) {
 
 		entryItems := []domain.EntryItem{
 			{
-				Type:      domain.Text,
-				FieldName: "fieldName1",
-				Value: domain.TextValue{
-					Value: "タイトル1",
-				},
+				Value: "タイトル1",
 			},
 		}
 
 		inputEntryItems := []domain.EntryItem{
 			{
-				Type:      domain.Text,
-				FieldName: "fieldName1",
-				Value: domain.TextValue{
-					Value: "タイトル1",
-				},
+				Value: "タイトル1",
 			},
 		}
 
@@ -48,11 +40,10 @@ func TestEntry(t *testing.T) {
 		}
 
 		model := domain.ContentModel{
-
 			Fields: domain.Fields{
 				{
-					Name: domain.Name("name"),
-					Type: domain.Text,
+					Name:     domain.Name("name"),
+					Type:     domain.Text,
 					Required: domain.Required(true),
 				},
 			},
@@ -87,13 +78,11 @@ func TestEntry(t *testing.T) {
 
 		inputEntryItems := []domain.EntryItem{
 			{
-				FieldName: "fieldName1",
 				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},
 			{
-				FieldName: "fieldName2",
 				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
@@ -129,8 +118,6 @@ func TestEntry(t *testing.T) {
 
 		entryItems := []domain.EntryItem{
 			{
-				Type:      domain.Text,
-				FieldName: "fieldName1",
 				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
@@ -139,15 +126,11 @@ func TestEntry(t *testing.T) {
 
 		inputEntryItems := []domain.EntryItem{
 			{
-				Type:      domain.Text,
-				FieldName: "fieldName1",
 				Value: domain.TextValue{
 					Value: "タイトル1",
 				},
 			},
 			{
-				Type:      domain.MultipleText,
-				FieldName: "fieldName1",
 				Value: domain.MultipleTextValue{
 					Value: []string{
 						"text1",
@@ -166,8 +149,8 @@ func TestEntry(t *testing.T) {
 			ID: modelID,
 			Fields: domain.Fields{
 				{
-					Name: domain.Name("name"),
-					Type: domain.Text,
+					Name:     domain.Name("name"),
+					Type:     domain.Text,
 					Required: domain.Required(true),
 				},
 			},
@@ -199,13 +182,11 @@ func TestEntry(t *testing.T) {
 			ContentModelID: id,
 			Items: []domain.EntryItem{
 				{
-					FieldName: "fieldName1",
 					Value: domain.TextValue{
 						Value: "タイトル1",
 					},
 				},
 				{
-					FieldName: "fieldName2",
 					Value: domain.TextValue{
 						Value: "タイトル1",
 					},
@@ -236,9 +217,7 @@ func TestEntry(t *testing.T) {
 			ContentModelID: domain.ContentModelID("contentModelId"),
 			Items: []domain.EntryItem{
 				{
-					FieldName: "title",
-					Type:      domain.Text,
-					Value:     domain.TextValue{Value: "タイトル"},
+					Value: domain.TextValue{Value: "タイトル"},
 				},
 			},
 		}

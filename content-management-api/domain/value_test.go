@@ -9,9 +9,7 @@ import (
 
 func TestTextValue(t *testing.T) {
 	t.Run("stringを渡せばTextValueを生成できる", func(t *testing.T) {
-
 		actual, err := domain.NewTextValue("test")
-
 		expected := domain.TextValue{Value: "test"}
 
 		assert.Nil(t, err)
@@ -64,9 +62,32 @@ func TestMultipleTextValue(t *testing.T) {
 	})
 }
 
+func TestNumberValue(t *testing.T) {
+	t.Run("float64", func(t *testing.T) {
+		var float64Value = float64(100.0)
+		_, err := domain.NewNumberValue(float64Value)
+		assert.Nil(t, err)
+	})
+	t.Run("int", func(t *testing.T) {
+		var intValue = int(100)
+		_, err := domain.NewNumberValue(intValue)
+		assert.Nil(t, err)
+	})
+	t.Run("int64", func(t *testing.T) {
+		var intValue = int64(100)
+		_, err := domain.NewNumberValue(intValue)
+		assert.Nil(t, err)
+	})
+	t.Run("float32", func(t *testing.T) {
+		var float32Value = float32(100)
+		_, err := domain.NewNumberValue(float32Value)
+		assert.Nil(t, err)
+	})
+}
+
 func TestFactoryValue(t *testing.T) {
 	t.Run("type textを渡すとTextValueを生成することができる", func(t *testing.T) {
-		actual, _ := domain.FactoryValue(domain.Text, "てきすとです")
+		actual, _ := domain.SupportValue(domain.Text, "てきすとです")
 
 		expected := domain.TextValue{
 			Value: "this is text",
@@ -76,7 +97,7 @@ func TestFactoryValue(t *testing.T) {
 	})
 
 	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる valueが[]interface{}の場合", func(t *testing.T) {
-		actual, _ := domain.FactoryValue(domain.MultipleText, interface{}([]interface{}{"1", "2"}))
+		actual, _ := domain.SupportValue(domain.MultipleText, interface{}([]interface{}{"1", "2"}))
 
 		expected := domain.MultipleTextValue{
 			Value: []string{"1", "2"},
@@ -86,7 +107,7 @@ func TestFactoryValue(t *testing.T) {
 	})
 
 	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる valueが[]stringの場合", func(t *testing.T) {
-		actual, _ := domain.FactoryValue(domain.MultipleText, interface{}([]string{"1", "2"}))
+		actual, _ := domain.SupportValue(domain.MultipleText, interface{}([]string{"1", "2"}))
 
 		expected := domain.MultipleTextValue{
 			Value: []string{"1", "2"},

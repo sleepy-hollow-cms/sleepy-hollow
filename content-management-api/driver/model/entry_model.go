@@ -13,7 +13,5 @@ func (e EntryID) String() string {
 }
 
 type EntryItem struct {
-	Type  string
-	Name  string
 	Value interface{}
 }

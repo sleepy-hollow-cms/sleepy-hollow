@@ -65,9 +65,9 @@ class ContentManagementApiTest : TestBase {
     }
 
     @Step("<statusCode>ステータスコードが返ってくる")
-    fun verifyStatusCode(statusCode: Int) =
+    fun verifyStatusCode(statusCode: Int) {
         SpecDataStore.get("statusCode") shouldBeEqualTo statusCode
-
+    }
 
     @Step("レスポンスボディのJsonPath<jsonPath>の値が<value>である")
     fun verifyBody(jsonPath: String, value: String) {
@@ -110,7 +110,6 @@ class ContentManagementApiTest : TestBase {
         JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
     }
 
-
     @Step("MongoDBの<collection>にID<id>で登録されている値のJsonPath<jsonPath>の値が<value>である")
     fun verifyMongoDBByID(collection: String, id: String, jsonPath: String, value: String) {
         val data = findDattaFromMongo(collection, id)
@@ -134,7 +133,15 @@ class ContentManagementApiTest : TestBase {
         value1 shouldNotBe value2
     }
 
-
+    @Step("MongoDBの<collection>に登録されている値のJsonPath<jsonPath>の数値が<value>である")
+    fun verifyMongoDBValueNumber(collection: String, jsonPath: String, value: Int) {
+        val body = SpecDataStore.get("body") as String
+        val id = JsonPath.read<String>(body, "$.id")
+        val data = findDattaFromMongo(collection, id)
+        val read: Int = JsonPath.read(data, jsonPath)
+        read shouldBeEqualTo value
+    }
+    
     @Step("MongoDBの<collection>にID<id>で登録されている値のJsonPath<jsonPath>の真偽値が<value>である")
     fun verifyMongoDBBooleanByID(collection: String, id: String, jsonPath: String, value: Boolean) {
         val data = findDattaFromMongo(collection, id)

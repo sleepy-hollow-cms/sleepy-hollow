@@ -37,7 +37,7 @@ func (e *Entry) Register(entry domain.Entry) (domain.Entry, error) {
 		}
 	}
 
-	if err := entry.Validate(contentModel); err != nil {
+	if err := entry.CompareToModel(contentModel); err != nil {
 		return domain.Entry{}, err
 	}
 
