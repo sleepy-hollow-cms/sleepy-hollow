@@ -6,7 +6,7 @@ Hello, everyone who wants to create Content as a Service.
 The feature of Sleepy-Hollow CMS is that all content and its model can be represented entirely in HTTP protocol communication and JSON.
 
 #### content-management-api
-![e2e-test](https://github.com/sleepy-hollow-cms/sleepy-hollow/actions/workflows/e2e-test.yaml/badge.svg
+![e2e-test](https://github.com/sleepy-hollow-cms/sleepy-hollow/actions/workflows/execute-tests.yaml/badge.svg
 )
 ![code-analysis](https://github.com/sleepy-hollow-cms/sleepy-hollow/actions/workflows/codeql-analysis.yml/badge.svg)
 
