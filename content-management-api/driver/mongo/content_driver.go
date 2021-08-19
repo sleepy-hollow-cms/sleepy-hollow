@@ -354,8 +354,6 @@ func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 			mamp[e.Key] = e.Value
 		}
 		items[i] = model.EntryItem{
-			Type:  mamp["contentType"].(string),
-			Name:  mamp["name"].(string),
 			Value: mamp["value"].(interface{}),
 		}
 	}

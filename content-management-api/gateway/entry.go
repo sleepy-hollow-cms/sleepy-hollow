@@ -29,17 +29,14 @@ func (e *Entry) FindById(ctx context.Context, entryId domain.EntryId) (domain.En
 	items := make([]domain.EntryItem, len(found.Items))
 	errs := new(util.ErrorCollector)
 	for i, item := range found.Items {
-		fieldType := domain.Of(item.Type)
-		v, err := domain.FactoryValue(fieldType, item.Value)
+		v, err := domain.FactoryValue(item.Value)
 
 		if err != nil {
 			errs.Collect(err)
 		}
 
 		items[i] = domain.EntryItem{
-			FieldName: domain.Name(item.Name),
-			Type:      domain.Of(item.Type),
-			Value:     v,
+			Value: v,
 		}
 	}
 
@@ -68,9 +65,7 @@ func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []doma
 	entryItems := make([]model.EntryItem, len(items))
 	for i, item := range items {
 		entryItems[i] = model.EntryItem{
-			Type:  item.Type.String(),
-			Name:  item.FieldName.String(),
-			Value: item.Value.FieldValue(),
+			Value: item.Value,
 		}
 	}
 

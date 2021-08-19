@@ -39,9 +39,7 @@ func (en *EntryResource) FindEntry(c echo.Context) error {
 	items := make([]ItemsRequestBody, len(findEntry.Items))
 	for i, item := range findEntry.Items {
 		items[i] = ItemsRequestBody{
-			ContentType: item.Type.String(),
-			Name:        item.FieldName.String(),
-			Value:       item.Value.FieldValue(),
+			Value: item.Value,
 		}
 	}
 
@@ -65,15 +63,12 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	entryItems := make([]domain.EntryItem, len(requestBody.Items))
 	errStacks := new(util.ErrorCollector)
 	for i, item := range requestBody.Items {
-		contentType := domain.Of(item.ContentType)
-		value, err := domain.FactoryValue(contentType, item.Value)
+		value, err := domain.FactoryValue(item.Value)
 		if err != nil {
 			errStacks.Collect(err)
 		}
 		entryItems[i] = domain.EntryItem{
-			Type:      contentType,
-			FieldName: domain.Name(item.Name),
-			Value:     value,
+			Value: value,
 		}
 	}
 
@@ -105,9 +100,7 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	items := make([]ItemsRequestBody, len(createdEntry.Items))
 	for i, entryItem := range createdEntry.Items {
 		items[i] = ItemsRequestBody{
-			ContentType: entryItem.Type.String(),
-			Name:        entryItem.FieldName.String(),
-			Value:       entryItem.Value,
+			Value: entryItem.Value,
 		}
 	}
 

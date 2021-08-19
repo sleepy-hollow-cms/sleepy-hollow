@@ -5,17 +5,10 @@ import (
 	"fmt"
 )
 
-type TextValue struct {
-	Value string
-}
-
-func (t TextValue) FieldValue() interface{} {
-	return t.Value
-}
-
-type MultipleTextValue struct {
-	Value []string
-}
+type Value interface{}
+type TextValue struct{ Value string }
+type MultipleTextValue struct{ Value []string }
+type NumberValue uint64
 
 func NewMultipleTextValue(value interface{}) (MultipleTextValue, error) {
 	if value == nil {
@@ -59,26 +52,35 @@ func NewTextValue(value interface{}) (TextValue, error) {
 	}
 }
 
-func (m MultipleTextValue) FieldValue() interface{} {
-	return m.Value
+func NewNumberValue(value interface{}) (NumberValue, error) {
+	switch valueType := value.(type) {
+	case int:
+		return NumberValue(value.(int)), nil
+	case int64:
+		return NumberValue(value.(int64)), nil
+	case int32:
+		return NumberValue(value.(int32)), nil
+	case float32:
+		return NumberValue(value.(float32)), nil
+	case float64:
+		return NumberValue(value.(float64)), nil
+	default:
+		return NumberValue(0), fmt.Errorf("Type mismatch error. Only int are allowed. arg: %T ", valueType)
+	}
 }
 
-type NumberValue uint64
-
-type Value interface {
-	FieldValue() interface{}
+func FactoryValue(value interface{}) (Value, error) {
+	return value, nil
 }
 
-type HasName interface {
-	FieldName() string
-}
-
-func FactoryValue(typeName Type, value interface{}) (Value, error) {
+func SupportValue(typeName Type, value interface{}) (Value, error) {
 	switch typeName {
 	case Text:
 		return NewTextValue(value)
 	case MultipleText:
 		return NewMultipleTextValue(value)
+	case Number:
+		return NewNumberValue(value)
 	default:
 		return nil, fmt.Errorf("type not supported arg: %T:%v ", typeName, typeName)
 	}

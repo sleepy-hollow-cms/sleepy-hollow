@@ -44,19 +44,15 @@ func TestEntry(t *testing.T) {
 	})
 
 	t.Run("EntryItemsを登録する", func(t *testing.T) {
-		value, _ := domain.FactoryValue(domain.Text, "テキスト")
+		value, _ := domain.FactoryValue("テキスト")
 		inputEntryItems := []domain.EntryItem{
 			{
-				Type:      domain.Text,
-				FieldName: "fieldName",
-				Value:     value,
+				Value: value,
 			},
 		}
 
 		entryItems := []model.EntryItem{
 			{
-				Type:  "text",
-				Name:  "fieldName",
 				Value: "テキスト",
 			},
 		}
@@ -69,11 +65,7 @@ func TestEntry(t *testing.T) {
 
 		expected := []domain.EntryItem{
 			{
-				FieldName: "fieldName",
-				Type:      domain.Text,
-				Value: domain.TextValue{
-					Value: "テキスト",
-				},
+				Value: "テキスト",
 			},
 		}
 
@@ -89,8 +81,6 @@ func TestEntry(t *testing.T) {
 			ModelID: "modelId",
 			Items: []model.EntryItem{
 				{
-					Type:  "text",
-					Name:  "title",
 					Value: "タイトル",
 				},
 			},
@@ -106,9 +96,7 @@ func TestEntry(t *testing.T) {
 			ContentModelID: domain.ContentModelID("modelId"),
 			Items: []domain.EntryItem{
 				{
-					FieldName: "title",
-					Type:      domain.Text,
-					Value:     domain.TextValue{Value: "タイトル"},
+					Value: "タイトル",
 				},
 			},
 		}
