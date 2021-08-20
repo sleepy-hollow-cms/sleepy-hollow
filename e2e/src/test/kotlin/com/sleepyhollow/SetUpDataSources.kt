@@ -123,6 +123,19 @@ class SetUpDataSources {
                     "updated_at" to LocalDateTime.of(2021, 8, 3, 19, 47),
                     "fields" to listOf(
                         mapOf("field_type" to "date", "required" to true, "name" to "value")))))
+
+        MongoClient.CONTENT_MODEL.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("5063114bd386d8fadbd6b009"),
+                    "space_id" to "5063114bd386d8fadbd6b007",
+                    "name" to "name1",
+                    "created_at" to LocalDateTime.of(2021, 8, 3, 19, 46),
+                    "updated_at" to LocalDateTime.of(2021, 8, 3, 19, 47),
+                    "fields" to listOf(
+                        mapOf("field_type" to "bool", "required" to true, "name" to "value1"),
+                        mapOf("field_type" to "bool", "required" to true, "name" to "value2")
+                    ))))
         
         MongoClient.ENTRY.getCollection().insertOne(
             Document(
