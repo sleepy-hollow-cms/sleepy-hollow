@@ -1,5 +1,7 @@
 package domain
 
+import "fmt"
+
 type EntryId string
 
 func (c EntryId) String() string {
@@ -24,11 +26,9 @@ func (e Entry) CompareToModel(contentModel ContentModel) error {
 		if !field.Required && e.Items[i].Value == nil {
 			continue
 		}
-
-		// 変換ができた場合はContentModelと合っている
 		_, err := SupportValue(field.Type, e.Items[i].Value)
 		if err != nil {
-			return NewEntryValidationError("EntryItem does not match ContentModel")
+			return NewEntryValidationError(fmt.Sprintf("EntryItem does not match ContentModel\n %s", err.Error()))
 		}
 	}
 

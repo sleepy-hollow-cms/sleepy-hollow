@@ -3,12 +3,15 @@ package domain
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 type Value interface{}
 type TextValue struct{ Value string }
 type MultipleTextValue struct{ Value []string }
 type NumberValue uint64
+type DateValue struct{ Value time.Time }
+type BoolValue struct{ Value bool }
 
 func NewMultipleTextValue(value interface{}) (MultipleTextValue, error) {
 	if value == nil {
@@ -69,6 +72,30 @@ func NewNumberValue(value interface{}) (NumberValue, error) {
 	}
 }
 
+func NewBoolValue(value interface{}) (BoolValue, error) {
+	switch valueType := value.(type) {
+	case bool:
+		return BoolValue{
+			Value: value.(bool),
+		}, nil
+	default:
+		return BoolValue{}, fmt.Errorf("Type mismatch error. Only bool are allowed. arg: %T ", valueType)
+	}
+}
+
+func NewDateValue(value interface{}) (DateValue, error) {
+	switch valueType := value.(type) {
+	case string:
+		parse, err := time.Parse(time.RFC3339, value.(string))
+		if err != nil {
+			return DateValue{}, err
+		}
+		return DateValue{Value: parse}, nil
+	default:
+		return DateValue{}, fmt.Errorf("Type mismatch error. Only date format are allowed. arg: %T ", valueType)
+	}
+}
+
 func FactoryValue(value interface{}) (Value, error) {
 	return value, nil
 }
@@ -81,6 +108,10 @@ func SupportValue(typeName Type, value interface{}) (Value, error) {
 		return NewMultipleTextValue(value)
 	case Number:
 		return NewNumberValue(value)
+	case Date:
+		return NewDateValue(value)
+	case Bool:
+		return NewBoolValue(value)
 	default:
 		return nil, fmt.Errorf("type not supported arg: %T:%v ", typeName, typeName)
 	}

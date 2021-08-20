@@ -88,7 +88,7 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 			log.Logger.Warnf("Entry cannot register becouse Content Model ID %s not found", requestBody.ContentModelID)
 			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
 		case domain.EntryValidationError:
-			log.Logger.Warnf("Entry cannot register becouse shape of Entry dose not match to Content Model")
+			log.Logger.Warnf("Entry cannot register becouse shape of Entry dose not match to Content Model.\nCause: %s", err.Error())
 			c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
 		default:
 			log.Logger.Warnf("Something Happened: %s", requestBody.ContentModelID)

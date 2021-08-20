@@ -8,6 +8,9 @@ import org.http4k.core.Response
 
 class HttpClient {
     companion object {
+        const val CONTENT_TYPE = "Content-Type"
+        const val APPLICATION_JSON = "application/json"
+        
         private val client = ApacheClient()
 
         fun getRequest(url: String): Triple<Int, String, List<Pair<String, String?>>> =
