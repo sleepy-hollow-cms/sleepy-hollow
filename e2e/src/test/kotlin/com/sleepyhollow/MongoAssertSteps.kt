@@ -42,7 +42,14 @@ class MongoAssertSteps {
         JsonPath.read<String>(data, jsonPath) shouldBeEqualTo value
     }
 
-    @Step("MongoDBの<collection>にID<id>で登録されてい<jsonPath>の日時が<value>でない")
+    @Step("MongoDBの<collection>にID<id>で登録されている<jsonPath>の日時が<value>である")
+    fun verifyMongoDBByIDEqualTo(collection: String, id: String, jsonPath: String, value: String) {
+        val data = findJsonFromMongo(collection, id)
+        val date = JsonPath.read<HashMap<String, String>>(data, jsonPath)
+        date["\$date"].toString() shouldBeEqualTo value
+    }
+
+    @Step("MongoDBの<collection>にID<id>で登録されている<jsonPath>の日時が<value>でない")
     fun verifyMongoDBByIDNotEqualTo(collection: String, id: String, jsonPath: String, value: String) {
         val data = findJsonFromMongo(collection, id)
         val date = JsonPath.read<HashMap<String, String>>(data, jsonPath)

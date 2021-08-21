@@ -1,0 +1,16 @@
+{
+  "name": "updated_name",
+  "updated-at": "2021-08-02T19:47:00Z",
+  "fields": [
+    {
+      "type": "text",
+      "name": "updated_name1",
+      "required" : false
+    },
+    {
+      "type": "number",
+      "name": "updated_name2",
+      "required" : true
+    }
+  ]
+}

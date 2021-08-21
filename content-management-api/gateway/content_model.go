@@ -8,6 +8,7 @@ import (
 	"content-management-api/util/log"
 	"context"
 	"errors"
+	"time"
 )
 
 type ContentModel struct {
@@ -115,12 +116,12 @@ func (c *ContentModel) Create(ctx context.Context, contentModel domain.ContentMo
 }
 
 func (c *ContentModel) Update(ctx context.Context, foundContentModel domain.ContentModel, updatedContentModel domain.ContentModel) (domain.ContentModel, error) {
-	if foundContentModel.UpdatedAt != updatedContentModel.UpdatedAt {
+	if !foundContentModel.UpdatedAt.Time().Equal(updatedContentModel.UpdatedAt.Time()) {
 		return domain.ContentModel{}, usecase.NewContentModelUpdateFailedError("Content Model Update conflicted")
 	}
 
-	fields := make([]model.Field, len(foundContentModel.Fields))
-	for i, field := range foundContentModel.Fields {
+	fields := make([]model.Field, len(updatedContentModel.Fields))
+	for i, field := range updatedContentModel.Fields {
 		fields[i] = model.Field{
 			Name:     field.Name.String(),
 			Type:     field.Type.String(),
@@ -130,10 +131,10 @@ func (c *ContentModel) Update(ctx context.Context, foundContentModel domain.Cont
 
 	updated, err := c.Driver.UpdateModel(
 		model.ContentModel{
-			ID:        foundContentModel.ID.String(),
-			Name:      foundContentModel.Name.String(),
-			CreatedAt: foundContentModel.CreatedAt.Time(),
-			UpdatedAt: foundContentModel.UpdatedAt.Time(),
+			ID:        updatedContentModel.ID.String(),
+			Name:      updatedContentModel.Name.String(),
+			CreatedAt: updatedContentModel.CreatedAt.Time(),
+			UpdatedAt: time.Now(),
 			Fields:    fields,
 		})
 

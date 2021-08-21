@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestContentModel(t *testing.T) {
@@ -103,7 +104,7 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
+		mockContentModelDriver.On("UpdateModel", mock.AnythingOfType("model.ContentModel")).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
 		foundModel := domain.ContentModel{
@@ -177,7 +178,7 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
+		mockContentModelDriver.On("UpdateModel", mock.AnythingOfType("model.ContentModel")).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
 		foundModel := domain.ContentModel{
