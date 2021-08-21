@@ -5,9 +5,10 @@ import (
 	field "content-management-api/domain"
 	"content-management-api/usecase"
 	"errors"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"
+
+	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -114,7 +115,7 @@ func (r *ContentModelResource) GetBySpaceID(c echo.Context) error {
 }
 
 func (r *ContentModelResource) Create(c echo.Context) error {
-	m := ContentModelRequestBody{}
+	m := ContentModelCreateRequestBody{}
 
 	if err := c.Bind(&m); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
@@ -179,9 +180,15 @@ type ContentModelResponseBody struct {
 	UpdatedAt string  `json:"updated-at"`
 }
 
-type ContentModelRequestBody struct {
+type ContentModelCreateRequestBody struct {
 	Name   string  `json:"name" validate:"required"`
 	Fields []Field `json:"fields" validate:"dive,required"`
+}
+
+type ContentModelUpdateRequestBody struct {
+	Name      string  `json:"name" validate:"required"`
+	Fields    []Field `json:"fields" validate:"dive,required"`
+	UpdatedAt string  `json:"updated-at" validate:"required"`
 }
 
 type Field struct {
@@ -194,7 +201,7 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 
 	contentModelId := c.Param("contentModelId")
 
-	m := ContentModelRequestBody{}
+	m := ContentModelUpdateRequestBody{}
 
 	if err := c.Bind(&m); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
@@ -202,6 +209,12 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 	}
 
 	if err := c.Validate(m); err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return err
+	}
+
+	t, err := time.Parse(time.RFC3339, m.UpdatedAt)
+	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return err
 	}
@@ -219,14 +232,20 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 		ID:        domain.ContentModelID(contentModelId),
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
-		UpdatedAt: domain.UpdatedAt(time.Now()),
+		UpdatedAt: domain.UpdatedAt(t),
 	})
 
 	if err != nil {
 		println(err)
-		c.JSON(http.StatusInternalServerError, err.Error())
+		switch {
+		case errors.As(err, &usecase.ContentModelUpdateFailedError{}):
+			c.JSON(http.StatusConflict, err.Error())
+		default:
+			c.JSON(http.StatusInternalServerError, err.Error())
+		}
 		return nil
 	}
+
 	resFields := make([]Field, len(contentModel.Fields))
 	for i, field := range contentModel.Fields {
 		resFields[i] = Field{

@@ -5,10 +5,12 @@ import (
 	"content-management-api/port"
 	"content-management-api/util/log"
 	"context"
+	"sync"
 )
 
 type ContentModel struct {
 	ContentModelPort port.ContentModel
+	mux              sync.Mutex
 }
 
 func NewContentModel(
@@ -61,6 +63,8 @@ func (c *ContentModel) Create(contentModel domain.ContentModel) (domain.ContentM
 }
 
 func (c *ContentModel) Update(contentModel domain.ContentModel) (domain.ContentModel, error) {
+	c.mux.Lock()
+	defer c.mux.Unlock()
 
 	found, err := c.ContentModelPort.FindByID(context.TODO(), contentModel.ID)
 	if err != nil {
@@ -76,7 +80,7 @@ func (c *ContentModel) Update(contentModel domain.ContentModel) (domain.ContentM
 		Fields:    contentModel.Fields,
 	}
 
-	result, err := c.ContentModelPort.Update(context.TODO(), updated)
+	result, err := c.ContentModelPort.Update(context.TODO(), found, updated)
 	if err != nil {
 		log.Logger.Warn(err.Error())
 		return domain.ContentModel{}, err

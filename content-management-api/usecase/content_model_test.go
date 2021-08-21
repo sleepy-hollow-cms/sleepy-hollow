@@ -5,10 +5,11 @@ import (
 	"content-management-api/usecase"
 	"context"
 	"errors"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestContentModel(t *testing.T) {
@@ -145,12 +146,10 @@ func TestContentModel(t *testing.T) {
 		assert.True(t, len(actual.Models) == 0)
 	})
 
-	t.Run("ContentModelを更新することができる", func(t *testing.T) {
+	t.Run("UpdatedAtが一致している時ContentModelを更新することができる", func(t *testing.T) {
 		rowCreatedTime := time.Now()
 		createdAt := domain.CreatedAt(rowCreatedTime)
-		currentUpdateAt := domain.UpdatedAt(rowCreatedTime)
-
-		updatedAt := domain.UpdatedAt(time.Now())
+		updatedAt := domain.UpdatedAt(rowCreatedTime)
 
 		id := domain.ContentModelID("id")
 
@@ -158,7 +157,7 @@ func TestContentModel(t *testing.T) {
 			ID:        id,
 			Name:      domain.Name("name"),
 			CreatedAt: createdAt,
-			UpdatedAt: currentUpdateAt,
+			UpdatedAt: updatedAt,
 			Fields: []domain.Field{
 				{
 					Type:     domain.Text,
@@ -199,7 +198,7 @@ func TestContentModel(t *testing.T) {
 		mockContentModelPort := new(MockContentModelPort)
 
 		mockContentModelPort.On("FindByID", id).Return(foundContentModel, nil)
-		mockContentModelPort.On("Update", updatedContentModel).Return(result, nil)
+		mockContentModelPort.On("Update", foundContentModel, updatedContentModel).Return(result, nil)
 		target.ContentModelPort = mockContentModelPort
 
 		actual, err := target.Update(updatedContentModel)
@@ -221,6 +220,59 @@ func TestContentModel(t *testing.T) {
 		mockContentModelPort.AssertExpectations(t)
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("UpdatedAtが一致していない時ContentModelを更新することができずErrorを返す", func(t *testing.T) {
+		rowCreatedTime := time.Now()
+		createdAt := domain.CreatedAt(rowCreatedTime)
+		currentUpdateAt := domain.UpdatedAt(rowCreatedTime)
+
+		updatedAt := domain.UpdatedAt(time.Now())
+
+		id := domain.ContentModelID("id")
+
+		foundContentModel := domain.ContentModel{
+			ID:        id,
+			Name:      domain.Name("name"),
+			CreatedAt: createdAt,
+			UpdatedAt: currentUpdateAt,
+			Fields: []domain.Field{
+				{
+					Type:     domain.Text,
+					Name:     domain.Name("fieldName"),
+					Required: domain.Required(true),
+				},
+			},
+		}
+
+		updatedContentModel := domain.ContentModel{
+			ID:        id,
+			Name:      domain.Name("updated_name"),
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []domain.Field{
+				{
+					Type:     domain.Number,
+					Name:     domain.Name("number"),
+					Required: domain.Required(false),
+				},
+			},
+		}
+
+		result := domain.ContentModel{}
+
+		mockContentModelPort := new(MockContentModelPort)
+
+		mockContentModelPort.On("FindByID", id).Return(foundContentModel, nil)
+		mockContentModelPort.On("Update", foundContentModel, updatedContentModel).Return(result, usecase.NewContentModelUpdateFailedError("Content Model Update conflicted"))
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.Update(updatedContentModel)
+
+		expected := usecase.NewContentModelUpdateFailedError("Content Model Update conflicted")
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &expected))
 	})
 
 	t.Run("ContentModelを登録することができる", func(t *testing.T) {
@@ -334,7 +386,7 @@ func (_m *MockContentModelPort) Create(ctx context.Context, contentModel domain.
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }
 
-func (_m *MockContentModelPort) Update(ctx context.Context, contentModel domain.ContentModel) (domain.ContentModel, error) {
-	ret := _m.Called(contentModel)
+func (_m *MockContentModelPort) Update(ctx context.Context, foundContentModel domain.ContentModel, updatedContentModel domain.ContentModel) (domain.ContentModel, error) {
+	ret := _m.Called(foundContentModel, updatedContentModel)
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }

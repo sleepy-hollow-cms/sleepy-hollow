@@ -33,20 +33,26 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].name"の値が"fieldName"である
 
-## ContentModelを更新することができるすることができる
+  ## UpdatedAtが一致する時ContentModelを更新することができる
 tags: default
-* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update.json"でPUTリクエストを送る
+* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update_success.json"でPUTリクエストを送る
 * "200"ステータスコードが返ってくる
 * ContentModelの更新でレスポンスボディが正しい形である
 * ContentModelの更新でDBにID"5063114bd386d8fadbd6b004"で登録されている値が正しい値に変更されている
 
 ## ContentModelの更新日時が保存されている
 tags: default
-* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update.json"でPUTリクエストを送る
+* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update_success.json"でPUTリクエストを送る
 * "200"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.updated-at"の日付がISO 8601形式でUTCである
-* レスポンスボディのJsonPath"$.updated-at"の値が"2021-08-02T19:46:00.000Z"でない
-* MongoDBの"CONTENT_MODEL"にID"5063114bd386d8fadbd6b004"で登録されてい"$.updated_at"の日時が"2021-08-02T19:46:00.000Z"でない
+* レスポンスボディのJsonPath"$.updated-at"の値が"2021-08-02T19:47:00.000Z"でない
+* MongoDBの"CONTENT_MODEL"にID"5063114bd386d8fadbd6b004"で登録されている"$.updated_at"の日時が"2021-08-02T19:47:00.00Z"でない
+
+## UpdatedAtが一致しない時ContentModelを更新することができない
+tags: default
+* "/v1/spaces/space1/contentModels/5063114bd386d8fadbd6b004"にボディ"setup/request/content_model_update_failed.json"でPUTリクエストを送る
+* "409"ステータスコードが返ってくる
+* MongoDBの"CONTENT_MODEL"にID"5063114bd386d8fadbd6b004"で登録されている"$.updated_at"の日時が"2021-08-02T19:47:00Z"である
 
 ## ID指定でContentModelを取得できる
 tags: default
