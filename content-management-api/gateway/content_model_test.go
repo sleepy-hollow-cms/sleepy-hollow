@@ -82,7 +82,7 @@ func TestContentModel(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
-	t.Run("ContentModelを更新できる", func(t *testing.T) {
+	t.Run("UpdatedAtが一致している時ContentModelを更新できる", func(t *testing.T) {
 
 		createdAt := time.Now()
 		updatedAt := time.Now()
@@ -106,7 +106,7 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
-		model := domain.ContentModel{
+		foundModel := domain.ContentModel{
 			ID:        domain.ContentModelID("contentmodelid"),
 			Name:      "name",
 			CreatedAt: domain.CreatedAt(createdAt),
@@ -120,7 +120,21 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		actual, err := target.Update(context.TODO(), model)
+		updatedModel := domain.ContentModel{
+			ID:        domain.ContentModelID("contentmodelid"),
+			Name:      "name",
+			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(updatedAt),
+			Fields: domain.Fields{
+				{
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
+				},
+			},
+		}
+
+		actual, err := target.Update(context.TODO(), foundModel, updatedModel)
 
 		expected := domain.ContentModel{
 			ID:        domain.ContentModelID("contentmodelid"),
@@ -139,6 +153,67 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.AssertExpectations(t)
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("UpdatedAtが一致していない時ContentModelの更新ができずErrorが返る", func(t *testing.T) {
+
+		createdAt := time.Now()
+		updatedAt := time.Now()
+		requestUpdatedAt := updatedAt.Add(time.Duration(1) * time.Second)
+
+		mockContentModelDriver := new(MockContentDriver)
+
+		contentModel := model.ContentModel{
+			ID:        "contentmodelid",
+			Name:      "name",
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []model.Field{
+				{
+					Name:     "fname",
+					Type:     "text",
+					Required: true,
+				},
+			},
+		}
+
+		mockContentModelDriver.On("UpdateModel", contentModel).Return(&contentModel, nil)
+		target.Driver = mockContentModelDriver
+
+		foundModel := domain.ContentModel{
+			ID:        domain.ContentModelID("contentmodelid"),
+			Name:      "name",
+			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(updatedAt),
+			Fields: domain.Fields{
+				{
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
+				},
+			},
+		}
+
+		updatedModel := domain.ContentModel{
+			ID:        domain.ContentModelID("contentmodelid"),
+			Name:      "name",
+			CreatedAt: domain.CreatedAt(createdAt),
+			UpdatedAt: domain.UpdatedAt(requestUpdatedAt),
+			Fields: domain.Fields{
+				{
+					Name:     domain.Name("fname"),
+					Type:     domain.Text,
+					Required: domain.Required(true),
+				},
+			},
+		}
+
+		_, err := target.Update(context.TODO(), foundModel, updatedModel)
+
+		expected := usecase.NewContentModelUpdateFailedError("Content Model Update conflicted")
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &expected))
 	})
 
 	t.Run("ContentModelをID指定で取得することができる", func(t *testing.T) {
