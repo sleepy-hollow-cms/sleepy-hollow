@@ -186,9 +186,9 @@ type ContentModelCreateRequestBody struct {
 }
 
 type ContentModelUpdateRequestBody struct {
-	Name      string    `json:"name" validate:"required"`
-	Fields    []Field   `json:"fields" validate:"dive,required"`
-	UpdatedAt time.Time `json:"updated-at" validate:"required"`
+	Name      string  `json:"name" validate:"required"`
+	Fields    []Field `json:"fields" validate:"dive,required"`
+	UpdatedAt string  `json:"updated-at" validate:"required"`
 }
 
 type Field struct {
@@ -213,6 +213,12 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 		return err
 	}
 
+	t, err := time.Parse(time.RFC3339, m.UpdatedAt)
+	if err != nil {
+		c.String(http.StatusBadRequest, err.Error())
+		return err
+	}
+
 	fields := make(field.Fields, len(m.Fields))
 	for i, f := range m.Fields {
 		fields[i] = field.Field{
@@ -226,7 +232,7 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 		ID:        domain.ContentModelID(contentModelId),
 		Name:      domain.Name(m.Name),
 		Fields:    fields,
-		UpdatedAt: domain.UpdatedAt(m.UpdatedAt),
+		UpdatedAt: domain.UpdatedAt(t),
 	})
 
 	if err != nil {
