@@ -99,20 +99,3 @@ func NewDateValue(value interface{}) (DateValue, error) {
 func FactoryValue(value interface{}) (Value, error) {
 	return value, nil
 }
-
-func SupportValue(typeName Type, value interface{}) (Value, error) {
-	switch typeName {
-	case Text:
-		return NewTextValue(value)
-	case MultipleText:
-		return NewMultipleTextValue(value)
-	case Number:
-		return NewNumberValue(value)
-	case Date:
-		return NewDateValue(value)
-	case Bool:
-		return NewBoolValue(value)
-	default:
-		return nil, fmt.Errorf("type not supported arg: %T:%v ", typeName, typeName)
-	}
-}

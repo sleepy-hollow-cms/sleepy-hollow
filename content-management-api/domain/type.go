@@ -1,5 +1,7 @@
 package domain
 
+import "fmt"
+
 type Type int
 
 const (
@@ -10,6 +12,23 @@ const (
 	Bool
 	Reference
 )
+
+func (t Type) Validate(value interface{}) (Value, error) {
+	switch t {
+	case Text:
+		return NewTextValue(value)
+	case MultipleText:
+		return NewMultipleTextValue(value)
+	case Number:
+		return NewNumberValue(value)
+	case Date:
+		return NewDateValue(value)
+	case Bool:
+		return NewBoolValue(value)
+	default:
+		return nil, fmt.Errorf("type not supported arg: %T:%v", t.String(), t)
+	}
+}
 
 func Of(value string) Type {
 	switch value {
@@ -30,8 +49,8 @@ func Of(value string) Type {
 	}
 }
 
-func (c Type) String() string {
-	switch c {
+func (t Type) String() string {
+	switch t {
 	case Text:
 		return "text"
 	case MultipleText:
