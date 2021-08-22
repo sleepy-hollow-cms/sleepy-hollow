@@ -26,7 +26,7 @@ func (e Entry) CompareToModel(contentModel ContentModel) error {
 		if !field.Required && e.Items[i].Value == nil {
 			continue
 		}
-		_, err := SupportValue(field.Type, e.Items[i].Value)
+		_, err := field.Type.Validate(e.Items[i].Value)
 		if err != nil {
 			return NewEntryValidationError(fmt.Sprintf("EntryItem does not match ContentModel\n %s", err.Error()))
 		}

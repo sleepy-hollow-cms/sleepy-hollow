@@ -84,35 +84,3 @@ func TestNumberValue(t *testing.T) {
 		assert.Nil(t, err)
 	})
 }
-
-func TestFactoryValue(t *testing.T) {
-	t.Run("type textを渡すとTextValueを生成することができる", func(t *testing.T) {
-		actual, _ := domain.SupportValue(domain.Text, "てきすとです")
-
-		expected := domain.TextValue{
-			Value: "this is text",
-		}
-
-		assert.IsType(t, expected, actual)
-	})
-
-	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる valueが[]interface{}の場合", func(t *testing.T) {
-		actual, _ := domain.SupportValue(domain.MultipleText, interface{}([]interface{}{"1", "2"}))
-
-		expected := domain.MultipleTextValue{
-			Value: []string{"1", "2"},
-		}
-
-		assert.IsType(t, expected, actual)
-	})
-
-	t.Run("type multiple-textを渡すとMultipleTextValueを生成することができる valueが[]stringの場合", func(t *testing.T) {
-		actual, _ := domain.SupportValue(domain.MultipleText, interface{}([]string{"1", "2"}))
-
-		expected := domain.MultipleTextValue{
-			Value: []string{"1", "2"},
-		}
-
-		assert.IsType(t, expected, actual)
-	})
-}
