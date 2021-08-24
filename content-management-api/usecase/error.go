@@ -12,6 +12,9 @@ type (
 	EntryNotFoundError struct {
 		NotFoundError
 	}
+	SpaceCreateFailedError struct {
+		Reason string
+	}
 	ContentModelCreateFailedError struct {
 		Reason string
 	}
@@ -20,8 +23,16 @@ type (
 	}
 )
 
+func NewSpaceCreateFailedError(reason string) SpaceCreateFailedError {
+	return SpaceCreateFailedError{Reason: reason}
+}
+
 type NotFoundError struct {
 	Reason string
+}
+
+func (c SpaceCreateFailedError) Error() string {
+	return fmt.Sprintf("Register Failed. %s", c.Reason)
 }
 
 func (c ContentModelCreateFailedError) Error() string {

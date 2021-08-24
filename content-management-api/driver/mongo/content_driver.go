@@ -11,6 +11,11 @@ import (
 	"time"
 )
 
+type Space struct {
+	ID   primitive.ObjectID `bson:"_id,omitempty"`
+	Name string             `bson:"name"`
+}
+
 type ContentModel struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty"`
 	Fields    []Field            `bson:"fields"`
@@ -40,6 +45,30 @@ func NewContentDriver(client *Client) driver.ContentDriver {
 	return &ContentDriver{
 		Client: client,
 	}
+}
+
+func (c ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("space").Collection("space")
+
+	insert := Space{
+		Name: space.Name,
+	}
+
+	result, err := collections.InsertOne(context.Background(), insert)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Space{
+		ID:   result.InsertedID.(primitive.ObjectID).Hex(),
+		Name: insert.Name,
+	}, nil
 }
 
 func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {

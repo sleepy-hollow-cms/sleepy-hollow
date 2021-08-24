@@ -26,3 +26,13 @@ func (s *Space) FindByID(id domain.SpaceID) (domain.Space, error) {
 
 	return space, nil
 }
+
+func (s *Space) Register(space domain.Space) (domain.Space, error) {
+	space, err := s.SpacePort.Register(context.TODO(), space)
+
+	if err != nil {
+		return domain.Space{}, NewSpaceCreateFailedError(err.Error())
+	}
+
+	return space, nil
+}

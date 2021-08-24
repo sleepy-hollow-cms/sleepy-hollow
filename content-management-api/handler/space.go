@@ -9,7 +9,8 @@ import (
 
 type (
 	Space struct {
-		ID string `json:"id"`
+		ID   string `json:"id"`
+		Name string `json:"name"`
 	}
 )
 
@@ -26,6 +27,7 @@ func NewSpaceResource(useCase *usecase.Space) *SpaceResource {
 func (r *SpaceResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.GET("/spaces/:spaceId", r.GetByID)
+	g.POST("/spaces", r.Register)
 }
 
 func (r *SpaceResource) GetByID(c echo.Context) error {
@@ -39,5 +41,27 @@ func (r *SpaceResource) GetByID(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, &Space{
 		ID: space.ID.String(),
+	})
+}
+
+func (r *SpaceResource) Register(c echo.Context) error {
+	s := Space{}
+
+	if err := c.Bind(&s); err != nil {
+		c.String(http.StatusBadRequest, "invalid request body")
+		return err
+	}
+
+	space, err := r.SpaceUseCase.Register(domain.Space{
+		Name: domain.Name(s.Name),
+	})
+
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, &Space{
+		ID:   space.ID.String(),
+		Name: space.Name.String(),
 	})
 }
