@@ -7,6 +7,7 @@ import (
 
 // ContentDriver is data-store driver
 type ContentDriver interface {
+	FindSpaceByID(id string) (*model.Space, error)
 	CreateSpace(space model.Space) (*model.Space, error)
 	// CreateModel ContentModel driver interfaces
 	CreateModel(string, time.Time, []model.Field) (*model.ContentModel, error)

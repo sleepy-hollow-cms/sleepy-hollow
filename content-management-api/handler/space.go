@@ -40,7 +40,8 @@ func (r *SpaceResource) GetByID(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, &Space{
-		ID: space.ID.String(),
+		ID:   space.ID.String(),
+		Name: space.Name.String(),
 	})
 }
 
