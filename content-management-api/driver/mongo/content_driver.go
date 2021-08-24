@@ -47,6 +47,36 @@ func NewContentDriver(client *Client) driver.ContentDriver {
 	}
 }
 
+func (c ContentDriver) FindSpaceByID(id string) (*model.Space, error) {
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("space").Collection("space")
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	findOne := collections.FindOne(context.Background(), bson.M{"_id": objectId})
+
+	space := Space{}
+	err = findOne.Decode(&space)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Space{
+		ID:   space.ID.Hex(),
+		Name: space.Name,
+	}, nil
+
+}
+
 func (c ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
 	client, err := c.Client.Get()
 	if err != nil {

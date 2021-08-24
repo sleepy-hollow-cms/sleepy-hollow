@@ -21,6 +21,15 @@ class SetUpDataSources {
     private fun setUpMongoDb() {
         MongoClient.drop()
         
+        MongoClient.SPACE.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("5063114bd386d8fadbd6b007"),
+                    "name" to "spaceName",
+                )
+            )
+        )
+        
         MongoClient.CONTENT_MODEL.getCollection().insertOne(
             Document(
                 mapOf(

@@ -18,7 +18,16 @@ func NewSpace(driver driver.ContentDriver) *Space {
 }
 
 func (s *Space) FindByID(ctx context.Context, id domain.SpaceID) (domain.Space, error) {
-	panic("implement me")
+	found, err := s.Driver.FindSpaceByID(id.String())
+
+	if err != nil {
+		return domain.Space{}, err
+	}
+
+	return domain.Space{
+		ID:   domain.SpaceID(found.ID),
+		Name: domain.Name(found.Name),
+	}, nil
 }
 
 func (s *Space) Register(ctx context.Context, space domain.Space) (domain.Space, error) {
