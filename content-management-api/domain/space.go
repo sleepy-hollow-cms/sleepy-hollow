@@ -7,5 +7,6 @@ func (i SpaceID) String() string {
 }
 
 type Space struct {
-	ID SpaceID
+	ID   SpaceID
+	Name Name
 }

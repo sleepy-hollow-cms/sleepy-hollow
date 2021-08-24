@@ -55,6 +55,32 @@ func TestSpace(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.True(t, errors.As(err, &spaceNotFoundError))
 	})
+
+	t.Run("Spaceの登録をすることができる", func(t *testing.T) {
+		mockSpacePort := new(MockSpacePort)
+		space := domain.Space{
+			Name: domain.Name("name"),
+		}
+
+		mockSpacePort.On("Register", space).Return(domain.Space{
+			ID:   domain.SpaceID("spaceid"),
+			Name: domain.Name("name"),
+		}, nil)
+		target.SpacePort = mockSpacePort
+
+		actual, err := target.Register(domain.Space{
+			Name: "name",
+		})
+
+		expected := domain.Space{
+			ID:   domain.SpaceID("spaceid"),
+			Name: domain.Name("name"),
+		}
+
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
 }
 
 type MockSpacePort struct {
@@ -63,5 +89,10 @@ type MockSpacePort struct {
 
 func (_m *MockSpacePort) FindByID(ctx context.Context, id domain.SpaceID) (domain.Space, error) {
 	ret := _m.Called(id)
+	return ret.Get(0).(domain.Space), ret.Error(1)
+}
+
+func (_m *MockSpacePort) Register(ctx context.Context, space domain.Space) (domain.Space, error) {
+	ret := _m.Called(space)
 	return ret.Get(0).(domain.Space), ret.Error(1)
 }
