@@ -11,6 +11,7 @@ const (
 	Number
 	Bool
 	Reference
+	RichText
 )
 
 func (t Type) Validate(value interface{}) (Value, error) {
@@ -25,6 +26,9 @@ func (t Type) Validate(value interface{}) (Value, error) {
 		return NewDateValue(value)
 	case Bool:
 		return NewBoolValue(value)
+	case RichText:
+		// TODO
+		return nil, nil
 	default:
 		return nil, fmt.Errorf("type not supported arg: %T:%v", t.String(), t)
 	}
@@ -44,6 +48,8 @@ func Of(value string) Type {
 		return Bool
 	case Reference.String():
 		return Reference
+	case RichText.String():
+		return RichText
 	default:
 		return -1
 	}
@@ -63,6 +69,8 @@ func (t Type) String() string {
 		return "bool"
 	case Reference:
 		return "reference"
+	case RichText:
+		return "rich-text"
 	default:
 		return "Unknown"
 	}
