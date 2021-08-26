@@ -1,0 +1,42 @@
+{
+  "content-model-id": "2063114bd386d8fadbd6b000",
+  "items": [
+    {
+      "value": [
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "段落テキスト"
+            },
+            {
+              "type": "bold",
+              "value": "太字"
+            },
+            {
+              "type": "underline",
+              "value": "下線"
+            },
+            {
+              "type": "strike",
+              "value": "打ち消し線"
+            },
+            {
+              "type": "italics",
+              "value": "斜体"
+            },
+            {
+              "type": "code",
+              "value": "コード"
+            },
+            {
+              "type": "blockquote",
+              "value": "引用"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
