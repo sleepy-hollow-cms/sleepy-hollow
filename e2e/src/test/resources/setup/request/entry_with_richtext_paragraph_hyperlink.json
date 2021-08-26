@@ -1,0 +1,41 @@
+{
+  "content-model-id": "2063114bd386d8fadbd6b000",
+  "items": [
+    {
+      "value": [
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "hyperlink",
+              "value": {
+                "link-target": "https://sleepy-hollow.io/",
+                "link-text": "リンク文字"
+              }
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "left-text"
+            },
+            {
+              "type": "hyperlink",
+              "value": {
+                "link-target": "https://sleepy-hollow.io/",
+                "link-text": "リンク文字"
+              }
+            },
+            {
+              "type": "text",
+              "value": "right-text"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

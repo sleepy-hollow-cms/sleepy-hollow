@@ -1,0 +1,27 @@
+{
+  "content-model-id": "2063114bd386d8fadbd6b000",
+  "items": [
+    {
+      "value": [
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "1段落目"
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "value": [
+            {
+              "type": "text",
+              "value": "2段落目"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

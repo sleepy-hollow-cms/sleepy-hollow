@@ -1,10 +1,6 @@
-# Entry
+# Entry register
 
 tags: default
-
-## ContentModel IDが登録されてないものであった場合失敗エラーを返す
-* "/v1/spaces/spaceId/entries"にボディ"setup/request/entry_create_with_dummy_model_id.json"でPOSTリクエストを送る
-* "400"ステータスコードが返ってくる
 
 ## Entryのフィールドにテキストを保存することができる
 * "/v1/spaces/spaceId/entries"にボディ"setup/request/entry_with_text.json"でPOSTリクエストを送る
@@ -38,10 +34,6 @@ tags: default
 * MongoDBの"ENTRY"に登録されている値のJsonPath"$.content_model_id"の値が"5063114bd386d8fadbd6b009"である
 * MongoDBの"ENTRY"に登録されている値のJsonPath"$.items[0].value"の真偽値が"true"である
 * MongoDBの"ENTRY"に登録されている値のJsonPath"$.items[1].value"の真偽値が"false"である
-
-## EntryがContentModelの形に沿っていない場合は400エラーを返す
-* "/v1/spaces/spaceId/entries"にボディ"setup/request/entry_unmatch_to_content_model.json"でPOSTリクエストを送る
-* "400"ステータスコードが返ってくる
 
 ## IDを指定してEntryを取得できる
 * "/v1/spaces/spaceId/entries/1063114bd386d8fadbd6b004"にGETリクエストを送る

@@ -1,0 +1,48 @@
+{
+  "content-model-id": "2063114bd386d8fadbd6b000",
+  "items": [
+    {
+      "value": [
+        {
+          "type": "list",
+          "value": [
+            {
+              "type": "list-item",
+              "value": {
+                "type": "text",
+                "value": "リスト1"
+              }
+            },
+            {
+              "type": "list-item",
+              "value": {
+                "type": "text",
+                "value": "リスト2"
+              }
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "value": [
+            {
+              "type": "list-item",
+              "value": {
+                "type": "list",
+                "value": [
+                  {
+                    "type": "list-item",
+                    "value": {
+                      "type": "text",
+                      "value": "子リスト1"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -32,8 +32,12 @@ func (en *EntryResource) FindEntry(c echo.Context) error {
 	findEntry, err := en.EntryUseCase.Find(domain.EntryId(entryId))
 
 	if err != nil {
-		// TODO error handle to 404 or 500
-		return c.String(http.StatusInternalServerError, err.Error())
+		switch err.(type) {
+		case usecase.EntryNotFoundError:
+			return c.String(http.StatusNotFound, err.Error())
+		default:
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
 	}
 
 	items := make([]ItemsRequestBody, len(findEntry.Items))
