@@ -1,0 +1,9 @@
+{
+  "name": "name",
+  "fields": [
+    {
+      "type": "rich-text",
+      "required" : true
+    }
+  ]
+}
