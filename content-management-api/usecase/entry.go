@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
-	"github.com/sleepy-hollow-cms/content-management-api/port"
-	"github.com/sleepy-hollow-cms/content-management-api/util/log"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/port"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/log"
 )
 
 type Entry struct {

@@ -6,9 +6,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
-	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
-	"github.com/sleepy-hollow-cms/content-management-api/gateway"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/gateway"
 )
 
 func TestEntry(t *testing.T) {

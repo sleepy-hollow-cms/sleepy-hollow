@@ -9,8 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/sleepy-hollow-cms/content-management-api/driver"
-	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
 )
 
 type Space struct {

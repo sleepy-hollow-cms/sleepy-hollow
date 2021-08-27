@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/sleepy-hollow-cms/content-management-api/util/config"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/config"
 
 	"github.com/Flaque/filet"
 	"github.com/stretchr/testify/assert"

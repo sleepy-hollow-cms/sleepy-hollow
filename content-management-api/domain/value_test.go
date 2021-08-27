@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 )
 
 func TestTextValue(t *testing.T) {

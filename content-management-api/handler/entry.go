@@ -6,10 +6,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
-	"github.com/sleepy-hollow-cms/content-management-api/usecase"
-	"github.com/sleepy-hollow-cms/content-management-api/util"
-	"github.com/sleepy-hollow-cms/content-management-api/util/log"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/usecase"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/log"
 )
 
 type EntryResource struct {
