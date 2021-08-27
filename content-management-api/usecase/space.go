@@ -46,3 +46,25 @@ func (s *Space) Register(space domain.Space) (domain.Space, error) {
 
 	return space, nil
 }
+
+func (s *Space) Update(space domain.Space) (domain.Space, error) {
+
+	found, err := s.SpacePort.FindByID(context.TODO(), space.ID)
+
+	if err != nil {
+		return domain.Space{}, NewSpaceNotFoundError(err.Error())
+	}
+
+	updatedSpace, err := s.SpacePort.Update(context.TODO(), domain.Space{
+		ID:        space.ID,
+		Name:      space.Name,
+		CreatedAt: found.CreatedAt,
+		UpdatedAt: space.UpdatedAt,
+	})
+
+	if err != nil {
+		return domain.Space{}, NewSpaceUpdateFailedError(err.Error())
+	}
+
+	return updatedSpace, nil
+}

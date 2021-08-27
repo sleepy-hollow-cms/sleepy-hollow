@@ -159,3 +159,8 @@ func (_m *MockSpacePort) Register(ctx context.Context, space domain.Space) (doma
 	ret := _m.Called(space)
 	return ret.Get(0).(domain.Space), ret.Error(1)
 }
+
+func (_m *MockSpacePort) Update(ctx context.Context, space domain.Space) (domain.Space, error) {
+	ret := _m.Called(space)
+	return ret.Get(0).(domain.Space), ret.Error(1)
+}
