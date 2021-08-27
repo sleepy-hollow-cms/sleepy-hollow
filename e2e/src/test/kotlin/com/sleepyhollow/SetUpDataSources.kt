@@ -37,6 +37,20 @@ class SetUpDataSources {
         )
     }
 
+    @BeforeScenario(tags = ["Space更新用データの設定"])
+    fun setupSpaceForUpdate() {
+        MongoClient.SPACE.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("1063114bd386d8fadbd6b010"),
+                    "name" to "spaceName_before",
+                    "created_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
+                    "updated_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
+                )
+            )
+        )
+    }
+
     @BeforeScenario(tags = ["Spaceデータの設定"])
     fun setupSpace() {
         MongoClient.SPACE.getCollection().insertOne(
@@ -44,6 +58,8 @@ class SetUpDataSources {
                 mapOf(
                     "_id" to ObjectId("1063114bd386d8fadbd6b000"),
                     "name" to "spaceName1",
+                    "created_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
+                    "updated_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
                 )
             )
         )
@@ -52,6 +68,8 @@ class SetUpDataSources {
                 mapOf(
                     "_id" to ObjectId("1063114bd386d8fadbd6b001"),
                     "name" to "spaceName2",
+                    "created_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
+                    "updated_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
                 )
             )
         )
@@ -60,6 +78,8 @@ class SetUpDataSources {
                 mapOf(
                     "_id" to ObjectId("5063114bd386d8fadbd6b007"),
                     "name" to "spaceName",
+                    "created_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
+                    "updated_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
                 )
             )
         )

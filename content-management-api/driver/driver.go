@@ -10,6 +10,7 @@ type ContentDriver interface {
 	FindSpace() ([]model.Space, error)
 	FindSpaceByID(id string) (*model.Space, error)
 	CreateSpace(space model.Space) (*model.Space, error)
+	UpdateSpace(space model.Space) (*model.Space, error)
 	// CreateModel ContentModel driver interfaces
 	CreateModel(string, time.Time, []model.Field) (*model.ContentModel, error)
 	UpdateModel(model.ContentModel) (*model.ContentModel, error)

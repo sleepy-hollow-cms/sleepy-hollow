@@ -12,8 +12,10 @@ import (
 )
 
 type Space struct {
-	ID   primitive.ObjectID `bson:"_id,omitempty"`
-	Name string             `bson:"name"`
+	ID        primitive.ObjectID `bson:"_id,omitempty"`
+	Name      string             `bson:"name"`
+	CreatedAt primitive.DateTime `bson:"created_at"`
+	UpdatedAt primitive.DateTime `bson:"updated_at"`
 }
 
 type ContentModel struct {
@@ -76,8 +78,10 @@ func (c ContentDriver) FindSpace() ([]model.Space, error) {
 
 	for i, space := range spaces {
 		result[i] = model.Space{
-			ID:   space.ID.Hex(),
-			Name: space.Name,
+			ID:        space.ID.Hex(),
+			Name:      space.Name,
+			CreatedAt: space.CreatedAt.Time(),
+			UpdatedAt: space.UpdatedAt.Time(),
 		}
 	}
 
@@ -108,8 +112,10 @@ func (c ContentDriver) FindSpaceByID(id string) (*model.Space, error) {
 	}
 
 	return &model.Space{
-		ID:   space.ID.Hex(),
-		Name: space.Name,
+		ID:        space.ID.Hex(),
+		Name:      space.Name,
+		CreatedAt: space.CreatedAt.Time(),
+		UpdatedAt: space.UpdatedAt.Time(),
 	}, nil
 
 }
@@ -123,7 +129,9 @@ func (c ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
 	collections := client.Database("space").Collection("space")
 
 	insert := Space{
-		Name: space.Name,
+		Name:      space.Name,
+		CreatedAt: primitive.NewDateTimeFromTime(space.CreatedAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(space.UpdatedAt),
 	}
 
 	result, err := collections.InsertOne(context.Background(), insert)
@@ -133,9 +141,48 @@ func (c ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
 	}
 
 	return &model.Space{
-		ID:   result.InsertedID.(primitive.ObjectID).Hex(),
-		Name: insert.Name,
+		ID:        result.InsertedID.(primitive.ObjectID).Hex(),
+		Name:      insert.Name,
+		CreatedAt: insert.CreatedAt.Time(),
+		UpdatedAt: insert.UpdatedAt.Time(),
 	}, nil
+}
+
+func (c ContentDriver) UpdateSpace(space model.Space) (*model.Space, error) {
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("space").Collection("space")
+
+	objectId, err := primitive.ObjectIDFromHex(space.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	update := Space{
+		Name:      space.Name,
+		CreatedAt: primitive.NewDateTimeFromTime(space.CreatedAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(space.UpdatedAt),
+	}
+
+	_, errUpdate := collections.UpdateOne(
+		context.Background(),
+		bson.D{{"_id", objectId}},
+		bson.D{{"$set", update}},
+	)
+
+	if errUpdate != nil {
+		return nil, err
+	}
+
+	return &model.Space{
+		ID:        space.ID,
+		Name:      update.Name,
+		CreatedAt: space.CreatedAt,
+		UpdatedAt: space.UpdatedAt,
+	}, err
 }
 
 func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {

@@ -25,6 +25,11 @@ func (_m *MockContentDriver) CreateSpace(space model.Space) (*model.Space, error
 	return ret.Get(0).(*model.Space), ret.Error(1)
 }
 
+func (_m *MockContentDriver) UpdateSpace(space model.Space) (*model.Space, error) {
+	ret := _m.Called(space)
+	return ret.Get(0).(*model.Space), ret.Error(1)
+}
+
 func (_m *MockContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {
 	ret := _m.Called(name, createdAt, fields)
 	return ret.Get(0).(*model.ContentModel), ret.Error(1)
