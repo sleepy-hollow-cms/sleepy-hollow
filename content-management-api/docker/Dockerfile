@@ -9,7 +9,7 @@ COPY . .
 RUN go build -o content-management-api main.go
 
 # runtime image
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 
 COPY --from=buildImage /usr/src/content-management-api /
 COPY --from=buildImage /usr/src/conf/config.yaml /etc/sleepy-hollow/
