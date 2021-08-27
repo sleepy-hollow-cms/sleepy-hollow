@@ -47,6 +47,43 @@ func NewContentDriver(client *Client) driver.ContentDriver {
 	}
 }
 
+func (c ContentDriver) FindSpace() ([]model.Space, error) {
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collections := client.Database("space").Collection("space")
+
+	found, err := collections.Find(context.Background(), bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer found.Close(context.Background())
+
+	spaces := make([]Space, found.RemainingBatchLength())
+
+	for i := 0; found.Next(context.Background()); i++ {
+		var space Space
+		err := found.Decode(&space)
+		if err != nil {
+			return nil, err
+		}
+		spaces[i] = space
+	}
+
+	result := make([]model.Space, len(spaces))
+
+	for i, space := range spaces {
+		result[i] = model.Space{
+			ID:   space.ID.Hex(),
+			Name: space.Name,
+		}
+	}
+
+	return result, nil
+}
+
 func (c ContentDriver) FindSpaceByID(id string) (*model.Space, error) {
 	client, err := c.Client.Get()
 	if err != nil {

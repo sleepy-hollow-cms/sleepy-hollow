@@ -16,6 +16,16 @@ func NewSpace(spacePort port.Space) *Space {
 	}
 }
 
+func (s *Space) Find() (domain.Spaces, error) {
+	spaces, err := s.SpacePort.Find(context.TODO())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return spaces, nil
+}
+
 func (s *Space) FindByID(id domain.SpaceID) (domain.Space, error) {
 
 	space, err := s.SpacePort.FindByID(context.TODO(), id)
