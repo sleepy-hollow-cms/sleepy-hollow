@@ -10,3 +10,5 @@ type Space struct {
 	ID   SpaceID
 	Name Name
 }
+
+type Spaces []Space

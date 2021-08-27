@@ -14,6 +14,59 @@ func TestSpace(t *testing.T) {
 
 	var target = usecase.Space{}
 
+	t.Run("Spaceを全て取得することができる", func(t *testing.T) {
+		// Mock setting
+		mockSpacePort := new(MockSpacePort)
+		spaces := domain.Spaces{
+			{ID: domain.SpaceID("id1"), Name: domain.Name("name1")},
+			{ID: domain.SpaceID("id2"), Name: domain.Name("name2")},
+		}
+		mockSpacePort.On("Find").Return(spaces, nil)
+		target.SpacePort = mockSpacePort
+
+		expected := domain.Spaces{
+			{ID: domain.SpaceID("id1"), Name: domain.Name("name1")},
+			{ID: domain.SpaceID("id2"), Name: domain.Name("name2")},
+		}
+
+		actual, err := target.Find()
+
+		mockSpacePort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("Spaceを取得したときSpaceが一つも取れなかった場合は空配列", func(t *testing.T) {
+		// Mock setting
+		mockSpacePort := new(MockSpacePort)
+		spaces := make(domain.Spaces, 0)
+		mockSpacePort.On("Find").Return(spaces, nil)
+		target.SpacePort = mockSpacePort
+
+		expected := make(domain.Spaces, 0)
+
+		actual, err := target.Find()
+
+		mockSpacePort.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("Spaceを取得したときエラーが発生した場合はエラーをそのまま返す", func(t *testing.T) {
+		// Mock setting
+		mockSpacePort := new(MockSpacePort)
+		somethingError := errors.New("something error")
+		mockSpacePort.On("Find").Return(nil, somethingError)
+		target.SpacePort = mockSpacePort
+
+		result, err := target.Find()
+
+		mockSpacePort.AssertExpectations(t)
+		assert.NotNil(t, err)
+		assert.Nil(t, result)
+		assert.Equal(t, somethingError, err)
+	})
+
 	t.Run("SpaceをIDで取得することができる", func(t *testing.T) {
 		id := domain.SpaceID("id")
 
@@ -85,6 +138,16 @@ func TestSpace(t *testing.T) {
 
 type MockSpacePort struct {
 	mock.Mock
+}
+
+func (_m *MockSpacePort) Find(ctx context.Context) (domain.Spaces, error) {
+	ret := _m.Called()
+
+	if ret.Get(0) == nil {
+		return nil, ret.Error(1)
+	}
+
+	return ret.Get(0).(domain.Spaces), ret.Error(1)
 }
 
 func (_m *MockSpacePort) FindByID(ctx context.Context, id domain.SpaceID) (domain.Space, error) {

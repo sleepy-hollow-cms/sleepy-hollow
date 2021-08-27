@@ -17,6 +17,21 @@ func NewSpace(driver driver.ContentDriver) *Space {
 	}
 }
 
+func (s *Space) Find(ctx context.Context) (domain.Spaces, error) {
+	modelSpaces, err := s.Driver.FindSpace()
+	if err != nil {
+		return nil, err
+	}
+	spaces := make(domain.Spaces, len(modelSpaces))
+	for i, modelSpace := range modelSpaces {
+		spaces[i] = domain.Space{
+			ID:   domain.SpaceID(modelSpace.ID),
+			Name: domain.Name(modelSpace.Name),
+		}
+	}
+	return spaces, nil
+}
+
 func (s *Space) FindByID(ctx context.Context, id domain.SpaceID) (domain.Space, error) {
 	found, err := s.Driver.FindSpaceByID(id.String())
 

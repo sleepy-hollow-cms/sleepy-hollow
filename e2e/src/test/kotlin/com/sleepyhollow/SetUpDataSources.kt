@@ -36,11 +36,25 @@ class SetUpDataSources {
             )
         )
     }
-    
 
-    private fun setUpMongoDb() {
-        MongoClient.drop()
-        
+    @BeforeScenario(tags = ["Spaceデータの設定"])
+    fun setupSpace() {
+        MongoClient.SPACE.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("1063114bd386d8fadbd6b000"),
+                    "name" to "spaceName1",
+                )
+            )
+        )
+        MongoClient.SPACE.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("1063114bd386d8fadbd6b001"),
+                    "name" to "spaceName2",
+                )
+            )
+        )
         MongoClient.SPACE.getCollection().insertOne(
             Document(
                 mapOf(
@@ -49,6 +63,10 @@ class SetUpDataSources {
                 )
             )
         )
+    }
+
+    private fun setUpMongoDb() {
+        MongoClient.drop()
         
         MongoClient.CONTENT_MODEL.getCollection().insertOne(
             Document(

@@ -28,6 +28,25 @@ func (r *SpaceResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.GET("/spaces/:spaceId", r.GetByID)
 	g.POST("/spaces", r.Register)
+	g.GET("/spaces", r.Get)
+}
+
+func (r *SpaceResource) Get(c echo.Context) error {
+	spaces, err := r.SpaceUseCase.Find()
+
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	resultSpaces := make([]Space, len(spaces))
+	for i, space := range spaces {
+		resultSpaces[i] = Space{
+			ID:   space.ID.String(),
+			Name: space.Name.String(),
+		}
+	}
+
+	return c.JSON(http.StatusOK, resultSpaces)
 }
 
 func (r *SpaceResource) GetByID(c echo.Context) error {

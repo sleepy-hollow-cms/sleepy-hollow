@@ -12,6 +12,25 @@ import (
 func TestSpaceGateway(t *testing.T) {
 	target := gateway.Space{}
 
+	t.Run("Spaceを全て取得する", func(t *testing.T) {
+		mockContentModelDriver := new(MockContentDriver)
+		spaceModel := []model.Space{
+			{ID: "spaceId", Name: "spaceName"},
+		}
+		mockContentModelDriver.On("FindSpace").Return(spaceModel, nil)
+		target.Driver = mockContentModelDriver
+
+		actual, err := target.Find(context.TODO())
+
+		expected := domain.Spaces{
+			{ID: domain.SpaceID("spaceId"), Name: domain.Name("spaceName")},
+		}
+
+		mockContentModelDriver.AssertExpectations(t)
+		assert.Nil(t, err)
+		assert.Equal(t, expected, actual)
+	})
+
 	t.Run("IDを指定してSpaceを取得する", func(t *testing.T) {
 		id := domain.SpaceID("spaceId")
 

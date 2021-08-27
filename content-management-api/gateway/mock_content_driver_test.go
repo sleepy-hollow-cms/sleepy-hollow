@@ -10,6 +10,11 @@ type MockContentDriver struct {
 	mock.Mock
 }
 
+func (_m *MockContentDriver) FindSpace() ([]model.Space, error) {
+	ret := _m.Called()
+	return ret.Get(0).([]model.Space), ret.Error(1)
+}
+
 func (_m *MockContentDriver) FindSpaceByID(spaceId string) (*model.Space, error) {
 	ret := _m.Called(spaceId)
 	return ret.Get(0).(*model.Space), ret.Error(1)
