@@ -1,14 +1,15 @@
 package mongo
 
 import (
-	"content-management-api/driver"
-	"content-management-api/util/config"
 	"context"
 	"errors"
 	"fmt"
 	"log"
 	"sync"
 	"time"
+
+	"github.com/sleepy-hollow-cms/content-management-api/driver"
+	"github.com/sleepy-hollow-cms/content-management-api/util/config"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

@@ -1,10 +1,11 @@
 package gateway
 
 import (
-	"content-management-api/domain"
-	"content-management-api/driver"
-	"content-management-api/driver/model"
 	"context"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/driver"
+	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
 )
 
 type Space struct {

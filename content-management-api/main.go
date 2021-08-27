@@ -1,11 +1,12 @@
 package main
 
 import (
-	"content-management-api/cache"
-	"content-management-api/driver/mongo"
-	"content-management-api/handler"
-	"content-management-api/util/log"
 	"time"
+
+	"github.com/sleepy-hollow-cms/content-management-api/cache"
+	"github.com/sleepy-hollow-cms/content-management-api/driver/mongo"
+	"github.com/sleepy-hollow-cms/content-management-api/handler"
+	"github.com/sleepy-hollow-cms/content-management-api/util/log"
 )
 
 func main() {

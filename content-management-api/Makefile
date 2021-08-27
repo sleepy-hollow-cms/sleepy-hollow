@@ -21,8 +21,12 @@ all: clean install fmt test build
 build:
 	$(GOBUILD) -o $(DISTDIR)/$(BINARY_NAME) -v
 
+.PHONY: fmt-imports
+fmt-imports:
+	find . -print | grep --regex '.*\.go' | xargs goimports -w -local "github.com/sleepy-hollow-cms/content-management-api"
+
 .PHONY: fmt
-fmt:
+fmt: fmt-imports
 	$(GOFMT) ./...
 
 .PHONY: test

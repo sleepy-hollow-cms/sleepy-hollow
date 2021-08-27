@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"content-management-api/domain"
-	field "content-management-api/domain"
-	"content-management-api/usecase"
 	"errors"
 	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/usecase"
 )
 
 type (
@@ -127,12 +127,12 @@ func (r *ContentModelResource) Create(c echo.Context) error {
 		return err
 	}
 
-	fields := make(field.Fields, len(m.Fields))
+	fields := make(domain.Fields, len(m.Fields))
 	for i, f := range m.Fields {
-		fields[i] = field.Field{
-			Type:     field.Of(f.Type),
-			Required: field.Required(f.Required),
-			Name:     field.Name(f.Name),
+		fields[i] = domain.Field{
+			Type:     domain.Of(f.Type),
+			Required: domain.Required(f.Required),
+			Name:     domain.Name(f.Name),
 		}
 	}
 
@@ -219,12 +219,12 @@ func (r *ContentModelResource) Update(c echo.Context) error {
 		return err
 	}
 
-	fields := make(field.Fields, len(m.Fields))
+	fields := make(domain.Fields, len(m.Fields))
 	for i, f := range m.Fields {
-		fields[i] = field.Field{
-			Type:     field.Of(f.Type),
-			Required: field.Required(f.Required),
-			Name:     field.Name(f.Name),
+		fields[i] = domain.Field{
+			Type:     domain.Of(f.Type),
+			Required: domain.Required(f.Required),
+			Name:     domain.Name(f.Name),
 		}
 	}
 

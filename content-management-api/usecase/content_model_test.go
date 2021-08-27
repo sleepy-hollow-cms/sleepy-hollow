@@ -1,12 +1,13 @@
 package usecase_test
 
 import (
-	"content-management-api/domain"
-	"content-management-api/usecase"
 	"context"
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/usecase"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

@@ -1,9 +1,11 @@
 package gateway_test
 
 import (
-	"content-management-api/driver/model"
-	"github.com/stretchr/testify/mock"
 	"time"
+
+	"github.com/stretchr/testify/mock"
+
+	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
 )
 
 type MockContentDriver struct {

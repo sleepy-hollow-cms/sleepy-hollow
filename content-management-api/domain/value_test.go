@@ -1,10 +1,12 @@
 package domain_test
 
 import (
-	"content-management-api/domain"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
 )
 
 func TestTextValue(t *testing.T) {

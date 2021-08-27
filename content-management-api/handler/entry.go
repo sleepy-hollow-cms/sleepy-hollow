@@ -1,13 +1,15 @@
 package handler
 
 import (
-	"content-management-api/domain"
-	"content-management-api/usecase"
-	"content-management-api/util"
-	"content-management-api/util/log"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/usecase"
+	"github.com/sleepy-hollow-cms/content-management-api/util"
+	"github.com/sleepy-hollow-cms/content-management-api/util/log"
 )
 
 type EntryResource struct {

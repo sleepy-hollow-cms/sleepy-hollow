@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"content-management-api/cache"
-	"content-management-api/driver/mongo"
-	"content-management-api/gateway"
-	"content-management-api/handler/validator"
-	"content-management-api/usecase"
-	"content-management-api/util/config"
 	"fmt"
+
+	"github.com/sleepy-hollow-cms/content-management-api/cache"
+	"github.com/sleepy-hollow-cms/content-management-api/driver/mongo"
+	"github.com/sleepy-hollow-cms/content-management-api/gateway"
+	"github.com/sleepy-hollow-cms/content-management-api/handler/validator"
+	"github.com/sleepy-hollow-cms/content-management-api/usecase"
+	"github.com/sleepy-hollow-cms/content-management-api/util/config"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

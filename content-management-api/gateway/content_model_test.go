@@ -1,15 +1,16 @@
 package gateway_test
 
 import (
-	"content-management-api/domain"
-	"content-management-api/driver"
-	"content-management-api/driver/model"
-	"content-management-api/gateway"
-	"content-management-api/usecase"
 	"context"
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/driver"
+	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/content-management-api/gateway"
+	"github.com/sleepy-hollow-cms/content-management-api/usecase"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
