@@ -3,12 +3,12 @@ package handler
 import (
 	"fmt"
 
-	"github.com/sleepy-hollow-cms/content-management-api/cache"
-	"github.com/sleepy-hollow-cms/content-management-api/driver/mongo"
-	"github.com/sleepy-hollow-cms/content-management-api/gateway"
-	"github.com/sleepy-hollow-cms/content-management-api/handler/validator"
-	"github.com/sleepy-hollow-cms/content-management-api/usecase"
-	"github.com/sleepy-hollow-cms/content-management-api/util/config"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/cache"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/mongo"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/gateway"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/handler/validator"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/usecase"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/config"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

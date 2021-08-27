@@ -1,4 +1,4 @@
-module github.com/sleepy-hollow-cms/content-management-api
+module github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api
 
 go 1.16
 

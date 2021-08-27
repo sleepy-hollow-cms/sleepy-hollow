@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
-	"github.com/sleepy-hollow-cms/content-management-api/usecase"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/usecase"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

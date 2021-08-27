@@ -3,10 +3,10 @@ package main
 import (
 	"time"
 
-	"github.com/sleepy-hollow-cms/content-management-api/cache"
-	"github.com/sleepy-hollow-cms/content-management-api/driver/mongo"
-	"github.com/sleepy-hollow-cms/content-management-api/handler"
-	"github.com/sleepy-hollow-cms/content-management-api/util/log"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/cache"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/mongo"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/handler"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/log"
 )
 
 func main() {

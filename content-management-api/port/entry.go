@@ -3,7 +3,7 @@ package port
 import (
 	"context"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 )
 
 type Entry interface {

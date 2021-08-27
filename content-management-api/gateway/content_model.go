@@ -5,11 +5,11 @@ import (
 	"errors"
 	"time"
 
-	"github.com/sleepy-hollow-cms/content-management-api/domain"
-	"github.com/sleepy-hollow-cms/content-management-api/driver"
-	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
-	"github.com/sleepy-hollow-cms/content-management-api/usecase"
-	"github.com/sleepy-hollow-cms/content-management-api/util/log"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/usecase"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/log"
 )
 
 type ContentModel struct {

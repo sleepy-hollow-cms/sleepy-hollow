@@ -23,7 +23,7 @@ build:
 
 .PHONY: fmt-imports
 fmt-imports:
-	find . -print | grep --regex '.*\.go' | xargs goimports -w -local "github.com/sleepy-hollow-cms/content-management-api"
+	find . -print | grep --regex '.*\.go' | xargs goimports -w -local "github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api"
 
 .PHONY: fmt
 fmt: fmt-imports

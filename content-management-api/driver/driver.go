@@ -3,7 +3,7 @@ package driver
 import (
 	"time"
 
-	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
 )
 
 // ContentDriver is data-store driver
