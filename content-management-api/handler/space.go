@@ -1,11 +1,13 @@
 package handler
 
 import (
-	"content-management-api/domain"
-	"content-management-api/usecase"
-	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"
+
+	"github.com/labstack/echo/v4"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/usecase"
 )
 
 type (

@@ -1,9 +1,10 @@
 package config_test
 
 import (
-	"content-management-api/util/config"
 	"os"
 	"testing"
+
+	"github.com/sleepy-hollow-cms/content-management-api/util/config"
 
 	"github.com/Flaque/filet"
 	"github.com/stretchr/testify/assert"

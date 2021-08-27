@@ -1,12 +1,13 @@
 package usecase
 
 import (
-	"content-management-api/domain"
-	"content-management-api/port"
-	"content-management-api/util/log"
 	"context"
 	"errors"
 	"fmt"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/port"
+	"github.com/sleepy-hollow-cms/content-management-api/util/log"
 )
 
 type Entry struct {

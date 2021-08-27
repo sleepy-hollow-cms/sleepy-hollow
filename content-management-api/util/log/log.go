@@ -1,7 +1,7 @@
 package log
 
 import (
-	"content-management-api/util/config"
+	"github.com/sleepy-hollow-cms/content-management-api/util/config"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

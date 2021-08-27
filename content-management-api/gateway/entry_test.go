@@ -1,12 +1,14 @@
 package gateway_test
 
 import (
-	"content-management-api/domain"
-	"content-management-api/driver/model"
-	"content-management-api/gateway"
 	"context"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/content-management-api/gateway"
 )
 
 func TestEntry(t *testing.T) {

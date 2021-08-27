@@ -1,11 +1,12 @@
 package gateway
 
 import (
-	"content-management-api/domain"
-	"content-management-api/driver"
-	"content-management-api/driver/model"
-	"content-management-api/util"
 	"context"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/driver"
+	"github.com/sleepy-hollow-cms/content-management-api/driver/model"
+	"github.com/sleepy-hollow-cms/content-management-api/util"
 )
 
 type Entry struct {

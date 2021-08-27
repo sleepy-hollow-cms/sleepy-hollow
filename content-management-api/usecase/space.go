@@ -1,9 +1,10 @@
 package usecase
 
 import (
-	"content-management-api/domain"
-	"content-management-api/port"
 	"context"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
+	"github.com/sleepy-hollow-cms/content-management-api/port"
 )
 
 type Space struct {

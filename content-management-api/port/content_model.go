@@ -1,8 +1,9 @@
 package port
 
 import (
-	"content-management-api/domain"
 	"context"
+
+	"github.com/sleepy-hollow-cms/content-management-api/domain"
 )
 
 type ContentModel interface {
