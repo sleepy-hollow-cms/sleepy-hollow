@@ -1,8 +1,8 @@
 # Sleepy-Hollow Content-Management-API
 
-![e2e-test](https://github.com/sleepy-hollow-cms/sleepy-hollow/actions/workflows/execute-tests.yaml/badge.svg
-)
+![e2e-test](https://github.com/sleepy-hollow-cms/sleepy-hollow/actions/workflows/execute-tests.yaml/badge.svg)
 ![code-analysis](https://github.com/sleepy-hollow-cms/sleepy-hollow/actions/workflows/codeql-analysis.yml/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sleepy-hollow-cms/sleepy-hollow)](https://goreportcard.com/report/github.com/sleepy-hollow-cms/sleepy-hollow)
 
 ----
 
