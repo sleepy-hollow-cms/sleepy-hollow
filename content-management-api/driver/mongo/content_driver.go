@@ -261,17 +261,26 @@ func (c ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.Cont
 		Name:      updatedModel.Name,
 		Fields:    fieldsModel,
 		CreatedAt: primitive.NewDateTimeFromTime(updatedModel.CreatedAt),
-		UpdatedAt: primitive.NewDateTimeFromTime(updatedModel.UpdatedAt),
+		UpdatedAt: primitive.NewDateTimeFromTime(time.Now()),
 	}
 
-	_, errUpdate := collections.UpdateOne(
+	updateResult, errUpdate := collections.UpdateOne(
 		context.Background(),
-		bson.D{{"_id", objectId}},
+		bson.M{
+			"$and": []bson.M{
+				{"_id": objectId},
+				{"updated_at": primitive.NewDateTimeFromTime(updatedModel.UpdatedAt)},
+			},
+		},
 		bson.D{{"$set", update}},
 	)
 
 	if errUpdate != nil {
 		return nil, err
+	}
+
+	if updateResult.MatchedCount == 0 {
+		return nil, driver.NewContentModelCannotUpdateError()
 	}
 
 	resultFields := make([]model.Field, len(update.Fields))

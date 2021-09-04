@@ -3,7 +3,6 @@ package gateway
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver"
@@ -116,11 +115,7 @@ func (c *ContentModel) Create(ctx context.Context, contentModel domain.ContentMo
 	}, nil
 }
 
-func (c *ContentModel) Update(ctx context.Context, foundContentModel domain.ContentModel, updatedContentModel domain.ContentModel) (domain.ContentModel, error) {
-	if !foundContentModel.UpdatedAt.Time().Equal(updatedContentModel.UpdatedAt.Time()) {
-		return domain.ContentModel{}, usecase.NewContentModelUpdateFailedError("Content Model Update conflicted")
-	}
-
+func (c *ContentModel) Update(ctx context.Context, updatedContentModel domain.ContentModel) (domain.ContentModel, error) {
 	fields := make([]model.Field, len(updatedContentModel.Fields))
 	for i, field := range updatedContentModel.Fields {
 		fields[i] = model.Field{
@@ -135,13 +130,18 @@ func (c *ContentModel) Update(ctx context.Context, foundContentModel domain.Cont
 			ID:        updatedContentModel.ID.String(),
 			Name:      updatedContentModel.Name.String(),
 			CreatedAt: updatedContentModel.CreatedAt.Time(),
-			UpdatedAt: time.Now(),
+			UpdatedAt: updatedContentModel.UpdatedAt.Time(),
 			Fields:    fields,
 		})
 
 	if err != nil {
 		log.Logger.Warn(err.Error())
-		return domain.ContentModel{}, err
+		switch {
+		case errors.As(err, &driver.ContentModelCannotUpdateError{}):
+			return domain.ContentModel{}, usecase.NewContentModelUpdateFailedError("Content Model Update conflicted")
+		default:
+			return domain.ContentModel{}, err
+		}
 	}
 
 	return domain.ContentModel{

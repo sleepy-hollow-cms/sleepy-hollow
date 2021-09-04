@@ -108,20 +108,6 @@ func TestContentModel(t *testing.T) {
 		mockContentModelDriver.On("UpdateModel", mock.AnythingOfType("model.ContentModel")).Return(&contentModel, nil)
 		target.Driver = mockContentModelDriver
 
-		foundModel := domain.ContentModel{
-			ID:        domain.ContentModelID("contentmodelid"),
-			Name:      "name",
-			CreatedAt: domain.CreatedAt(createdAt),
-			UpdatedAt: domain.UpdatedAt(updatedAt),
-			Fields: domain.Fields{
-				{
-					Name:     domain.Name("fname"),
-					Type:     domain.Text,
-					Required: domain.Required(true),
-				},
-			},
-		}
-
 		updatedModel := domain.ContentModel{
 			ID:        domain.ContentModelID("contentmodelid"),
 			Name:      "name",
@@ -136,7 +122,7 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		actual, err := target.Update(context.TODO(), foundModel, updatedModel)
+		actual, err := target.Update(context.TODO(), updatedModel)
 
 		expected := domain.ContentModel{
 			ID:        domain.ContentModelID("contentmodelid"),
@@ -165,36 +151,8 @@ func TestContentModel(t *testing.T) {
 
 		mockContentModelDriver := new(MockContentDriver)
 
-		contentModel := model.ContentModel{
-			ID:        "contentmodelid",
-			Name:      "name",
-			CreatedAt: createdAt,
-			UpdatedAt: updatedAt,
-			Fields: []model.Field{
-				{
-					Name:     "fname",
-					Type:     "text",
-					Required: true,
-				},
-			},
-		}
-
-		mockContentModelDriver.On("UpdateModel", mock.AnythingOfType("model.ContentModel")).Return(&contentModel, nil)
+		mockContentModelDriver.On("UpdateModel", mock.AnythingOfType("model.ContentModel")).Return(&model.ContentModel{}, driver.NewContentModelCannotUpdateError())
 		target.Driver = mockContentModelDriver
-
-		foundModel := domain.ContentModel{
-			ID:        domain.ContentModelID("contentmodelid"),
-			Name:      "name",
-			CreatedAt: domain.CreatedAt(createdAt),
-			UpdatedAt: domain.UpdatedAt(updatedAt),
-			Fields: domain.Fields{
-				{
-					Name:     domain.Name("fname"),
-					Type:     domain.Text,
-					Required: domain.Required(true),
-				},
-			},
-		}
 
 		updatedModel := domain.ContentModel{
 			ID:        domain.ContentModelID("contentmodelid"),
@@ -210,7 +168,7 @@ func TestContentModel(t *testing.T) {
 			},
 		}
 
-		_, err := target.Update(context.TODO(), foundModel, updatedModel)
+		_, err := target.Update(context.TODO(), updatedModel)
 
 		expected := usecase.NewContentModelUpdateFailedError("Content Model Update conflicted")
 

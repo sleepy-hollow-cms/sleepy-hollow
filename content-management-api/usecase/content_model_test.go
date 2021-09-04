@@ -199,7 +199,7 @@ func TestContentModel(t *testing.T) {
 		mockContentModelPort := new(MockContentModelPort)
 
 		mockContentModelPort.On("FindByID", id).Return(foundContentModel, nil)
-		mockContentModelPort.On("Update", foundContentModel, updatedContentModel).Return(result, nil)
+		mockContentModelPort.On("Update", updatedContentModel).Return(result, nil)
 		target.ContentModelPort = mockContentModelPort
 
 		actual, err := target.Update(updatedContentModel)
@@ -221,6 +221,40 @@ func TestContentModel(t *testing.T) {
 		mockContentModelPort.AssertExpectations(t)
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("指定したIDが存在しない時ContentModelを更新することができずErrorを返す", func(t *testing.T) {
+		rowCreatedTime := time.Now()
+		createdAt := domain.CreatedAt(rowCreatedTime)
+		updatedAt := domain.UpdatedAt(rowCreatedTime)
+
+		id := domain.ContentModelID("id")
+
+		updatedContentModel := domain.ContentModel{
+			ID:        id,
+			Name:      domain.Name("updated_name"),
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+			Fields: []domain.Field{
+				{
+					Type:     domain.Number,
+					Name:     domain.Name("number"),
+					Required: domain.Required(false),
+				},
+			},
+		}
+
+		mockContentModelPort := new(MockContentModelPort)
+
+		mockContentModelPort.On("FindByID", id).Return(domain.ContentModel{}, usecase.NewContentModelNotFoundError("Content Model Not Found"))
+		target.ContentModelPort = mockContentModelPort
+
+		_, err := target.Update(updatedContentModel)
+
+		expected := usecase.NewContentModelNotFoundError("Content Model Not Found")
+
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &expected))
 	})
 
 	t.Run("UpdatedAtが一致していない時ContentModelを更新することができずErrorを返す", func(t *testing.T) {
@@ -265,7 +299,7 @@ func TestContentModel(t *testing.T) {
 		mockContentModelPort := new(MockContentModelPort)
 
 		mockContentModelPort.On("FindByID", id).Return(foundContentModel, nil)
-		mockContentModelPort.On("Update", foundContentModel, updatedContentModel).Return(result, usecase.NewContentModelUpdateFailedError("Content Model Update conflicted"))
+		mockContentModelPort.On("Update", updatedContentModel).Return(result, usecase.NewContentModelUpdateFailedError("Content Model Update conflicted"))
 		target.ContentModelPort = mockContentModelPort
 
 		_, err := target.Update(updatedContentModel)
@@ -387,7 +421,7 @@ func (_m *MockContentModelPort) Create(ctx context.Context, contentModel domain.
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }
 
-func (_m *MockContentModelPort) Update(ctx context.Context, foundContentModel domain.ContentModel, updatedContentModel domain.ContentModel) (domain.ContentModel, error) {
-	ret := _m.Called(foundContentModel, updatedContentModel)
+func (_m *MockContentModelPort) Update(ctx context.Context, updatedContentModel domain.ContentModel) (domain.ContentModel, error) {
+	ret := _m.Called(updatedContentModel)
 	return ret.Get(0).(domain.ContentModel), ret.Error(1)
 }

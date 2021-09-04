@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"sync"
 
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/port"
@@ -11,7 +10,6 @@ import (
 
 type ContentModel struct {
 	ContentModelPort port.ContentModel
-	mux              sync.Mutex
 }
 
 func NewContentModel(
@@ -64,9 +62,6 @@ func (c *ContentModel) Create(contentModel domain.ContentModel) (domain.ContentM
 }
 
 func (c *ContentModel) Update(contentModel domain.ContentModel) (domain.ContentModel, error) {
-	c.mux.Lock()
-	defer c.mux.Unlock()
-
 	found, err := c.ContentModelPort.FindByID(context.TODO(), contentModel.ID)
 	if err != nil {
 		log.Logger.Warn(err.Error())
@@ -81,7 +76,7 @@ func (c *ContentModel) Update(contentModel domain.ContentModel) (domain.ContentM
 		Fields:    contentModel.Fields,
 	}
 
-	result, err := c.ContentModelPort.Update(context.TODO(), found, updated)
+	result, err := c.ContentModelPort.Update(context.TODO(), updated)
 	if err != nil {
 		log.Logger.Warn(err.Error())
 		return domain.ContentModel{}, err
