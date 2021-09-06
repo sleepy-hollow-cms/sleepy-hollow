@@ -476,6 +476,44 @@ func (c ContentDriver) DeleteContentModelByID(id string) error {
 	return nil
 }
 
+func (c ContentDriver) FindEntry() ([]model.Entry, error) {
+	client, err := c.Client.Get()
+
+	if err != nil {
+		return nil, err
+	}
+
+	collection := client.Database("models").Collection("entry")
+
+	foundEntries, err := collection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		return nil, err
+	}
+
+	entries := make([]Entry, foundEntries.RemainingBatchLength())
+
+	for i := 0; foundEntries.Next(context.Background()); i++ {
+		var entry Entry
+		err := foundEntries.Decode(&entry)
+		if err != nil {
+			return nil, err
+		}
+		entries[i] = entry
+	}
+
+	result := make([]model.Entry, len(entries))
+	for i, entry := range entries {
+		result[i] = model.Entry{
+			ID:      entry.ID.Hex(),
+			ModelID: entry.ContentModelID,
+			Items:   createEntryItems(entry),
+		}
+	}
+
+	return result, nil
+}
+
 func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 
 	client, err := c.Client.Get()
@@ -500,6 +538,16 @@ func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 		return nil, err
 	}
 
+	entryItems := createEntryItems(entry)
+
+	return &model.Entry{
+		ID:      entry.ID.Hex(),
+		ModelID: entry.ContentModelID,
+		Items:   entryItems,
+	}, nil
+}
+
+func createEntryItems(entry Entry) []model.EntryItem {
 	items := make([]model.EntryItem, len(entry.Items))
 	for i, item := range entry.Items {
 		d := item.(primitive.D)
@@ -511,10 +559,5 @@ func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 			Value: mamp["value"].(interface{}),
 		}
 	}
-
-	return &model.Entry{
-		ID:      entry.ID.Hex(),
-		ModelID: entry.ContentModelID,
-		Items:   items,
-	}, nil
+	return items
 }

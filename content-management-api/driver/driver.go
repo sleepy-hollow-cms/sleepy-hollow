@@ -20,5 +20,6 @@ type ContentDriver interface {
 	DeleteContentModelByID(string) error
 	CreateEntry(model.Entry) (*model.Entry, error)
 	CreateEntryItems(model.EntryID, []model.EntryItem) ([]model.EntryItem, error)
+	FindEntry() ([]model.Entry, error)
 	FindEntryByID(string) (*model.Entry, error)
 }

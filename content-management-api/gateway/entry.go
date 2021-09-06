@@ -19,6 +19,31 @@ func NewEntry(driver driver.ContentDriver) *Entry {
 	}
 }
 
+func (e *Entry) Find(ctx context.Context) (domain.Entries, error) {
+	entries, err := e.Driver.FindEntry()
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := make(domain.Entries, len(entries))
+	for i, entry := range entries {
+
+		items := make([]domain.EntryItem, len(entry.Items))
+		for j, item := range entry.Items {
+			items[j] = domain.EntryItem{Value: item}
+		}
+
+		result[i] = domain.Entry{
+			ID:             domain.EntryId(entry.ID),
+			ContentModelID: domain.ContentModelID(entry.ModelID),
+			Items:          items,
+		}
+	}
+
+	return result, nil
+}
+
 func (e *Entry) FindById(ctx context.Context, entryId domain.EntryId) (domain.Entry, error) {
 
 	found, err := e.Driver.FindEntryByID(entryId.String())

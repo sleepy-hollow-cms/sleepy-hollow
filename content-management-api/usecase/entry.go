@@ -61,7 +61,20 @@ func (e *Entry) Register(entry domain.Entry) (domain.Entry, error) {
 	}, nil
 }
 
-func (e *Entry) Find(id domain.EntryId) (domain.Entry, error) {
+func (e *Entry) Find() (domain.Entries, error) {
+	result, err := e.EntryPort.Find(context.TODO())
+
+	if err != nil {
+		switch err.(type) {
+		default:
+			return nil, fmt.Errorf("reason: %w", err)
+		}
+	}
+
+	return result, nil
+}
+
+func (e *Entry) FindByID(id domain.EntryId) (domain.Entry, error) {
 
 	result, err := e.EntryPort.FindById(context.TODO(), id)
 

@@ -228,7 +228,7 @@ func TestEntry(t *testing.T) {
 
 		target.EntryPort = mockEntryPort
 
-		actual, err := target.Find(id)
+		actual, err := target.FindByID(id)
 
 		mockEntryPort.AssertExpectations(t)
 		assert.Nil(t, err)
@@ -244,7 +244,7 @@ func TestEntry(t *testing.T) {
 
 		target.EntryPort = mockEntryPort
 
-		_, err := target.Find(id)
+		_, err := target.FindByID(id)
 
 		notFoundError := usecase.NewEntryNotFoundError("error")
 
@@ -271,4 +271,9 @@ func (_m *MockEntryPort) Create(ctx context.Context, entry domain.Entry) (domain
 func (_m *MockEntryPort) FindById(ctx context.Context, id domain.EntryId) (domain.Entry, error) {
 	ret := _m.Called(id)
 	return ret.Get(0).(domain.Entry), ret.Error(1)
+}
+
+func (_m *MockEntryPort) Find(ctx context.Context) (domain.Entries, error) {
+	ret := _m.Called()
+	return ret.Get(0).(domain.Entries), ret.Error(1)
 }
