@@ -14,6 +14,8 @@ type Entry struct {
 	Items          []EntryItem
 }
 
+type Entries []Entry
+
 func (e Entry) CompareToModel(contentModel ContentModel) error {
 	if len(e.Items) != len(contentModel.Fields) {
 		return NewEntryValidationError("Number of fields not match")

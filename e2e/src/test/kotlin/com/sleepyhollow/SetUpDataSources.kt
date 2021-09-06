@@ -18,6 +18,11 @@ class SetUpDataSources {
     fun setUpDefault() {
         setUpMongoDb()
     }
+
+    @BeforeScenario(tags = ["Entryデータセット"])
+    fun setUpEntryDataset() {
+        
+    }
     
     @Step("ContentModelにID<id>、field_typeが<fieldType>のデータを投入する")
     fun setupMongoData(id: String, fieldType: String) {
@@ -139,14 +144,6 @@ class SetUpDataSources {
                         mapOf("field_type" to "text", "required" to true, "name" to "value"),
                         mapOf("field_type" to "multiple-text", "required" to true, "name" to "value")))))
         
-        MongoClient.ENTRY.getCollection().insertOne(
-            Document(
-                mapOf(
-                    "_id" to ObjectId("1063114bd386d8fadbd6b004"),
-                    "content_model_id" to ObjectId("5063114bd386d8fadbd6b002"),
-                    "items" to listOf(
-                        mapOf("value" to "タイトル")))))
-        
         MongoClient.CONTENT_MODEL.getCollection().insertOne(
             Document(
                 mapOf(
@@ -203,7 +200,15 @@ class SetUpDataSources {
                         mapOf("field_type" to "bool", "required" to true, "name" to "value1"),
                         mapOf("field_type" to "bool", "required" to true, "name" to "value2")
                     ))))
-        
+
+        MongoClient.ENTRY.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("1063114bd386d8fadbd6b004"),
+                    "content_model_id" to ObjectId("5063114bd386d8fadbd6b002"),
+                    "items" to listOf(
+                        mapOf("value" to "タイトル")))))
+
         MongoClient.ENTRY.getCollection().insertOne(
             Document(
                 mapOf(

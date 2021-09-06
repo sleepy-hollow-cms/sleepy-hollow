@@ -71,3 +71,8 @@ func (_m MockContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 	ret := _m.Called(id)
 	return ret.Get(0).(*model.Entry), ret.Error(1)
 }
+
+func (_m MockContentDriver) FindEntry() ([]model.Entry, error) {
+	ret := _m.Called()
+	return ret.Get(0).([]model.Entry), ret.Error(1)
+}

@@ -25,13 +25,48 @@ func NewEntryResource(useCase *usecase.Entry) *EntryResource {
 func (en *EntryResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.POST("/spaces/:spaceId/entries", en.CreateEntry)
+	g.GET("/spaces/:spaceId/entries", en.FindEntries)
 	g.GET("/spaces/:spaceId/entries/:entryId", en.FindEntry)
+}
+
+func (en *EntryResource) FindEntries(c echo.Context) error {
+	_ = c.QueryParam("contentModelId")
+
+	entries, err := en.EntryUseCase.Find()
+
+	if err != nil {
+		switch err.(type) {
+		case usecase.EntryNotFoundError:
+			return c.String(http.StatusNotFound, err.Error())
+		default:
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
+	}
+
+	response := make([]EntryPostResponseBody, len(entries))
+	for i, entry := range entries {
+
+		itemsResponse := make([]ItemsRequestBody, len(entry.Items))
+		for j, item := range entry.Items {
+			itemsResponse[j] = ItemsRequestBody{
+				Value: item.Value,
+			}
+		}
+
+		response[i] = EntryPostResponseBody{
+			ID:             entry.ID.String(),
+			ContentModelID: entry.ContentModelID.String(),
+			Items:          itemsResponse,
+		}
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func (en *EntryResource) FindEntry(c echo.Context) error {
 	entryId := c.Param("entryId")
 
-	findEntry, err := en.EntryUseCase.Find(domain.EntryId(entryId))
+	findEntry, err := en.EntryUseCase.FindByID(domain.EntryId(entryId))
 
 	if err != nil {
 		switch err.(type) {
