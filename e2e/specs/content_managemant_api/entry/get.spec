@@ -18,3 +18,10 @@ tags: Entryデータセット
 * "200"ステータスコードが返ってくる
 * レスポンスボディのJsonPath"$.[0].id"の値が"1063114bd386d8fadbd6b004"である
 * レスポンスボディのJsonPath"$.[1].id"の値が"1063114bd386d8fadbd6b006"である
+
+## ContentModelIDを指定してEntryを取得できる
+tags: Entryデータセット
+* "/v1/spaces/spaceId/entries?contentModelId=5063114bd386d8fadbd6b003"にGETリクエストを送る
+* "200"ステータスコードが返ってくる
+* レスポンスボディのJsonPath"$.[0].id"の値が"1063114bd386d8fadbd6b007"である
+* レスポンスボディのJsonPath"$.[1].id"の値が"1063114bd386d8fadbd6b008"である

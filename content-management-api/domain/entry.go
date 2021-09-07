@@ -16,6 +16,15 @@ type Entry struct {
 
 type Entries []Entry
 
+func (e Entries) Filter(fn func(Entry) bool) (result Entries) {
+	for _, v := range e {
+		if fn(v) {
+			result = append(result, v)
+		}
+	}
+	return result
+}
+
 func (e Entry) CompareToModel(contentModel ContentModel) error {
 	if len(e.Items) != len(contentModel.Fields) {
 		return NewEntryValidationError("Number of fields not match")

@@ -30,9 +30,9 @@ func (en *EntryResource) Routing(e *echo.Echo) {
 }
 
 func (en *EntryResource) FindEntries(c echo.Context) error {
-	_ = c.QueryParam("contentModelId")
+	queryContentModelID := c.QueryParam("contentModelId")
 
-	entries, err := en.EntryUseCase.Find()
+	entries, err := en.EntryUseCase.Find(domain.ContentModelID(queryContentModelID))
 
 	if err != nil {
 		switch err.(type) {
@@ -45,7 +45,6 @@ func (en *EntryResource) FindEntries(c echo.Context) error {
 
 	response := make([]EntryPostResponseBody, len(entries))
 	for i, entry := range entries {
-
 		itemsResponse := make([]ItemsRequestBody, len(entry.Items))
 		for j, item := range entry.Items {
 			itemsResponse[j] = ItemsRequestBody{

@@ -27,6 +27,17 @@ func (c ContentModelID) String() string {
 	return string(c)
 }
 
+func (c ContentModelID) IsEmpty() bool {
+	return IsEmpty(c.String())
+}
+
+func IsEmpty(s string) bool {
+	if s == "" {
+		return true
+	}
+	return false
+}
+
 type ContentModel struct {
 	ID        ContentModelID
 	Name      Name
