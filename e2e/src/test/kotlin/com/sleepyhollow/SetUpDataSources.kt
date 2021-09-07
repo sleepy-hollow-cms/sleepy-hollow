@@ -216,5 +216,21 @@ class SetUpDataSources {
                     "content_model_id" to ObjectId("5063114bd386d8fadbd6b002"),
                     "items" to listOf(
                         mapOf("value" to "2021-08-02T19:46:00Z")))))
+
+        MongoClient.ENTRY.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("1063114bd386d8fadbd6b007"),
+                    "content_model_id" to ObjectId("5063114bd386d8fadbd6b003"),
+                    "items" to listOf(
+                        mapOf("value" to "2021-08-02T19:46:00Z")))))
+
+        MongoClient.ENTRY.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("1063114bd386d8fadbd6b008"),
+                    "content_model_id" to ObjectId("5063114bd386d8fadbd6b003"),
+                    "items" to listOf(
+                        mapOf("value" to "2021-08-02T19:46:00Z")))))
     }
 }

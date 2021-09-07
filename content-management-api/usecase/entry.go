@@ -61,8 +61,15 @@ func (e *Entry) Register(entry domain.Entry) (domain.Entry, error) {
 	}, nil
 }
 
-func (e *Entry) Find() (domain.Entries, error) {
-	result, err := e.EntryPort.Find(context.TODO())
+func (e *Entry) Find(contentModelId domain.ContentModelID) (domain.Entries, error) {
+	entries, err := e.EntryPort.Find(context.TODO())
+
+	filter := entries.Filter(func(entry domain.Entry) bool {
+		if contentModelId.IsEmpty() {
+			return true
+		}
+		return entry.ContentModelID.String() == contentModelId.String()
+	})
 
 	if err != nil {
 		switch err.(type) {
@@ -71,7 +78,7 @@ func (e *Entry) Find() (domain.Entries, error) {
 		}
 	}
 
-	return result, nil
+	return filter, nil
 }
 
 func (e *Entry) FindByID(id domain.EntryId) (domain.Entry, error) {
