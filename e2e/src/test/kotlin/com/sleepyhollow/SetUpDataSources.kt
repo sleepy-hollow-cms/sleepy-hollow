@@ -24,6 +24,39 @@ class SetUpDataSources {
         
     }
     
+    @Step("SETUP: ContentModel削除データ準備")
+    fun setUpContentModelDelete() {
+        run {
+            var contentModelId = "2263114bd386d8fadbd6b004"
+            MongoClient.CONTENT_MODEL.getCollection().insertOne(
+                Document(
+                    mapOf(
+                        "_id" to ObjectId(contentModelId),
+                        "space_id" to "5063114bd386d8fadbd6b007",
+                        "name" to "name0",
+                        "created_at" to LocalDateTime.of(2021, 8, 2, 19, 46),
+                        "updated_at" to LocalDateTime.of(2021, 8, 2, 19, 47),
+                        "fields" to listOf(
+                            mapOf("field_type" to "text", "required" to true, "name" to "name01")
+                        )
+                    )
+                )
+            )
+
+            MongoClient.ENTRY.getCollection().insertOne(
+                Document(
+                    mapOf(
+                        "_id" to ObjectId("1063114bd386d8fadbd6b009"),
+                        "content_model_id" to ObjectId(contentModelId),
+                        "items" to listOf(
+                            mapOf("value" to "for delete")
+                        )
+                    )
+                )
+            )
+        }
+    }
+    
     @Step("ContentModelにID<id>、field_typeが<fieldType>のデータを投入する")
     fun setupMongoData(id: String, fieldType: String) {
         MongoClient.CONTENT_MODEL.getCollection().insertOne(

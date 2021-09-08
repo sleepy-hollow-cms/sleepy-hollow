@@ -72,6 +72,8 @@ func (r *ContentModelResource) DeleteByID(c echo.Context) error {
 		switch {
 		case errors.As(err, &usecase.ContentModelNotFoundError{}):
 			return c.String(http.StatusNotFound, err.Error())
+		case errors.As(err, &usecase.ReferenceByEntryError{}):
+			return c.String(http.StatusUnprocessableEntity, err.Error())
 		default:
 			return c.String(http.StatusInternalServerError, err.Error())
 		}

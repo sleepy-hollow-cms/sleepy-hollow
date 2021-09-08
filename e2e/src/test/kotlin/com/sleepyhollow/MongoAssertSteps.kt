@@ -5,6 +5,7 @@ import com.thoughtworks.gauge.Step
 import com.thoughtworks.gauge.datastore.SpecDataStore
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBe
+import org.amshove.kluent.shouldNotBeEqualTo
 import org.bson.types.ObjectId
 import org.litote.kmongo.findOneById
 
@@ -84,6 +85,10 @@ class MongoAssertSteps {
     @Step("MongoDBの<collection>に<id>のIDでデータが登録されていない")
     fun verifyMongoDBNotExist(collection: String, id: String) =
         findJsonFromMongo(collection, id) shouldBeEqualTo null
+
+    @Step("MongoDBの<collection>に<id>のIDでデータが登録されている")
+    fun verifyMongoDBExist(collection: String, id: String) =
+        findJsonFromMongo(collection, id) shouldNotBeEqualTo null
 
     private fun findJsonFromMongo(collection: String, id: String) =
         MongoClient.valueOf(collection)
