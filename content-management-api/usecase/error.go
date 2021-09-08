@@ -24,7 +24,14 @@ type (
 	ContentModelUpdateFailedError struct {
 		Reason string
 	}
+	ReferenceByEntryError struct {
+		Reason string
+	}
 )
+
+func (u ReferenceByEntryError) Error() string {
+	return fmt.Sprintf("Delete Failed : %s", u.Reason)
+}
 
 func NewSpaceCreateFailedError(reason string) SpaceCreateFailedError {
 	return SpaceCreateFailedError{Reason: reason}

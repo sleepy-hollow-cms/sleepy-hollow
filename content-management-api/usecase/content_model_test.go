@@ -66,16 +66,44 @@ func TestContentModel(t *testing.T) {
 		id := domain.ContentModelID("id")
 
 		// Mock setting
-		mockContentModelPort := new(MockContentModelPort)
 		modelID := domain.ContentModelID("id")
-
+		mockContentModelPort := new(MockContentModelPort)
 		mockContentModelPort.On("DeleteByID", modelID).Return(nil)
 		target.ContentModelPort = mockContentModelPort
+
+		mockEntryPort := new(MockEntryPort)
+		mockEntryPort.On("Find").Return(domain.Entries{}, nil)
+		target.EntryPort = mockEntryPort
 
 		err := target.DeleteContentModelByID(id)
 
 		mockContentModelPort.AssertExpectations(t)
 		assert.Nil(t, err)
+	})
+
+	t.Run("ContentModelをIDを使ってEntryが存在する場合はReferenceByEntryErrorを返す", func(t *testing.T) {
+		id := domain.ContentModelID("id")
+
+		// Mock setting
+		modelID := domain.ContentModelID("id")
+		mockContentModelPort := new(MockContentModelPort)
+		mockContentModelPort.On("DeleteByID", modelID).Return(nil)
+		target.ContentModelPort = mockContentModelPort
+
+		mockEntryPort := new(MockEntryPort)
+		mockEntryPort.On("Find").Return(domain.Entries{
+			{
+				ContentModelID: domain.ContentModelID("id"),
+			},
+		}, nil)
+		target.EntryPort = mockEntryPort
+
+		err := target.DeleteContentModelByID(id)
+
+		mockContentModelPort.AssertNotCalled(t, "DeleteByID")
+		mockEntryPort.AssertExpectations(t)
+		assert.NotNil(t, err)
+		assert.True(t, errors.As(err, &usecase.ReferenceByEntryError{}))
 	})
 
 	t.Run("存在しないContentModelのIDを削除した場合はContentModelNotFoundErrorを返す", func(t *testing.T) {
@@ -88,6 +116,10 @@ func TestContentModel(t *testing.T) {
 
 		mockContentModelPort.On("DeleteByID", modelID).Return(contentModelNotFoundError)
 		target.ContentModelPort = mockContentModelPort
+
+		mockEntryPort := new(MockEntryPort)
+		mockEntryPort.On("Find").Return(domain.Entries{}, nil)
+		target.EntryPort = mockEntryPort
 
 		err := target.DeleteContentModelByID(id)
 

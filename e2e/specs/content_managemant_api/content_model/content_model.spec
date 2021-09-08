@@ -87,3 +87,9 @@ tags: default
 * "/v1/spaces/spaceId/contentModels/5063114bd386d8fadbd6b001"にDELETEリクエストを送る
 * "204"ステータスコードが返ってくる
 * MongoDBの"CONTENT_MODEL"に"5063114bd386d8fadbd6b001"のIDでデータが登録されていない
+
+## ID指定でContentModelを削除する場合にEntryに既に該当のIDが利用されている場合は削除できない
+* SETUP: ContentModel削除データ準備
+* "/v1/spaces/spaceId/contentModels/2263114bd386d8fadbd6b004"にDELETEリクエストを送る
+* "422"ステータスコードが返ってくる
+* MongoDBの"CONTENT_MODEL"に"2263114bd386d8fadbd6b004"のIDでデータが登録されている

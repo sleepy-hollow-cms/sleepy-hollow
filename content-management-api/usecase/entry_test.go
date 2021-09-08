@@ -239,7 +239,6 @@ func TestEntry(t *testing.T) {
 		id := domain.EntryId("id")
 
 		mockEntryPort := new(MockEntryPort)
-
 		mockEntryPort.On("FindById", id).Return(domain.Entry{}, errors.New("not found"))
 
 		target.EntryPort = mockEntryPort

@@ -10,13 +10,16 @@ import (
 
 type ContentModel struct {
 	ContentModelPort port.ContentModel
+	EntryPort        port.Entry
 }
 
 func NewContentModel(
 	contentModelPort port.ContentModel,
+	entryPort port.Entry,
 ) *ContentModel {
 	return &ContentModel{
 		ContentModelPort: contentModelPort,
+		EntryPort:        entryPort,
 	}
 }
 
@@ -32,7 +35,25 @@ func (c *ContentModel) FindByID(id domain.ContentModelID) (domain.ContentModel, 
 }
 
 func (c *ContentModel) DeleteContentModelByID(id domain.ContentModelID) error {
-	err := c.ContentModelPort.DeleteByID(context.TODO(), id)
+	contextTodo := context.TODO()
+
+	find, err := c.EntryPort.Find(contextTodo)
+
+	referEntries := find.Filter(func(entry domain.Entry) bool {
+		return entry.ContentModelID == id
+	})
+
+	if len(referEntries) != 0 {
+		return ReferenceByEntryError{
+			Reason: "This ContentModel is referenced by Entry and cannot be deleted",
+		}
+	}
+
+	if err != nil {
+		return err
+	}
+
+	err = c.ContentModelPort.DeleteByID(contextTodo, id)
 
 	if err != nil {
 		log.Logger.Warn(err.Error())
