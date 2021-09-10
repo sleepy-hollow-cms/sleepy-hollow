@@ -80,6 +80,7 @@ func NewServer(container cache.Cache) Server {
 
 	// Middleware
 	e.Use(middleware.Recover())
+	e.Use(middleware.Gzip())
 
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: `${time_rfc3339_nano} ${host} ${method} ${uri} ${status} ${error}` + "\n",

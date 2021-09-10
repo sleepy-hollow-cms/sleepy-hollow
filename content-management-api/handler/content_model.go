@@ -28,12 +28,12 @@ func NewContentModelResource(useCase *usecase.ContentModel) *ContentModelResourc
 }
 
 func (r *ContentModelResource) Routing(e *echo.Echo) {
-	g := e.Group("/v1")
-	g.GET("/spaces/:spaceId/contentModels/:contentModelId", r.GetByID)
-	g.DELETE("/spaces/:spaceId/contentModels/:contentModelId", r.DeleteByID)
-	g.GET("/spaces/:spaceId/contentModels", r.GetBySpaceID)
-	g.POST("/spaces/:spaceId/contentModels", r.Create)
-	g.PUT("/spaces/:spaceId/contentModels/:contentModelId", r.Update)
+	g := e.Group("/v1/spaces/:spaceId/contentModels")
+	g.GET("/:contentModelId", r.GetByID)
+	g.DELETE("/:contentModelId", r.DeleteByID)
+	g.GET("", r.GetBySpaceID)
+	g.POST("", r.Create)
+	g.PUT("/:contentModelId", r.Update)
 }
 
 func (r *ContentModelResource) GetByID(c echo.Context) error {
