@@ -20,6 +20,13 @@
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].field_type"の値が"rich-text"である
 * MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
 
+## ContentModelにマークダウンのフィールドを含めて保存できる
+* "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_with_markdown.json"でPOSTリクエストを送る
+* "201"ステータスコードが返ってくる
+* レスポンスボディのJsonPath"$.fields[0].type"の値が"markdown"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].field_type"の値が"markdown"である
+* MongoDBの"CONTENT_MODEL"に登録されている値のJsonPath"$.fields[0].required"の真偽値が"true"である
+
 ## ContentModelの作成で作成日時と更新日時が保存されている
 * "/v1/spaces/space1/contentModels"にボディ"setup/request/content_model_with_number.json"でPOSTリクエストを送る
 * "201"ステータスコードが返ってくる
