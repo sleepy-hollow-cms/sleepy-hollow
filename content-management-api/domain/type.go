@@ -12,6 +12,7 @@ const (
 	Bool
 	Reference
 	RichText
+	Markdown
 )
 
 func (t Type) Validate(value interface{}) (Value, error) {
@@ -28,6 +29,8 @@ func (t Type) Validate(value interface{}) (Value, error) {
 		return NewBoolValue(value)
 	case RichText:
 		// TODO
+		return nil, nil
+	case Markdown:
 		return nil, nil
 	default:
 		return nil, fmt.Errorf("type not supported arg: %T:%v", t.String(), t)
@@ -50,6 +53,8 @@ func Of(value string) Type {
 		return Reference
 	case RichText.String():
 		return RichText
+	case Markdown.String():
+		return Markdown
 	default:
 		return -1
 	}
@@ -71,6 +76,8 @@ func (t Type) String() string {
 		return "reference"
 	case RichText:
 		return "rich-text"
+	case Markdown:
+		return "markdown"
 	default:
 		return "Unknown"
 	}
