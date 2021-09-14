@@ -27,6 +27,7 @@ func (en *EntryResource) Routing(e *echo.Echo) {
 	g.POST("/spaces/:spaceId/entries", en.CreateEntry)
 	g.GET("/spaces/:spaceId/entries", en.FindEntries)
 	g.GET("/spaces/:spaceId/entries/:entryId", en.FindEntry)
+	g.DELETE("/spaces/:spaceId/entries/:entryId", en.DeleteEntry)
 }
 
 func (en *EntryResource) FindEntries(c echo.Context) error {
@@ -153,6 +154,23 @@ func (en *EntryResource) CreateEntry(c echo.Context) error {
 	c.JSON(http.StatusCreated, responseBody)
 
 	return nil
+}
+
+func (en *EntryResource) DeleteEntry(c echo.Context) error {
+	entryId := c.Param("entryId")
+
+	err := en.EntryUseCase.DeleteByID(domain.EntryId(entryId))
+
+	if err != nil {
+		switch err.(type) {
+		case usecase.EntryNotFoundError:
+			return c.String(http.StatusNotFound, err.Error())
+		default:
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }
 
 type EntryPostResponseBody struct {

@@ -108,4 +108,16 @@ func TestEntry(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, expected, actual)
 	})
+
+	t.Run("EntryをID指定で削除する", func(t *testing.T) {
+		mockEntryDriver := new(MockContentDriver)
+		mockEntryDriver.On("DeleteEntryByID", "id").Return(int64(1), nil)
+
+		target.Driver = mockEntryDriver
+
+		id := domain.EntryId("id")
+		err := target.DeleteById(context.TODO(), id)
+
+		assert.Nil(t, err)
+	})
 }

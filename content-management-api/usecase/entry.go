@@ -96,3 +96,19 @@ func (e *Entry) FindByID(id domain.EntryId) (domain.Entry, error) {
 
 	return result, nil
 }
+
+func (e *Entry) DeleteByID(id domain.EntryId) error {
+
+	err := e.EntryPort.DeleteById(context.TODO(), id)
+
+	if err != nil {
+		switch err.(type) {
+		case domain.EntryNotFound:
+			return NewEntryNotFoundError(err.Error())
+		default:
+			return err
+		}
+	}
+
+	return nil
+}
