@@ -23,6 +23,21 @@ class SetUpDataSources {
     fun setUpEntryDataset() {
         
     }
+
+    @Step("SETUP: Entry削除データ準備")
+    fun setUpEntryDelete() {
+        MongoClient.ENTRY.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("9993114bd386d8fadbd6b009"),
+                    "content_model_id" to ObjectId("9993114bd386d8fadbd6b004"),
+                    "items" to listOf(
+                        mapOf("value" to "for delete")
+                    )
+                )
+            )
+        )
+    }
     
     @Step("SETUP: ContentModel削除データ準備")
     fun setUpContentModelDelete() {

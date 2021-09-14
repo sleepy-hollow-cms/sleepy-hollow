@@ -251,6 +251,22 @@ func TestEntry(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.True(t, errors.As(err, &notFoundError))
 	})
+
+	t.Run("EntryをID指定で削除することができる", func(t *testing.T) {
+		id := domain.EntryId("id")
+
+		mockEntryPort := new(MockEntryPort)
+
+		mockEntryPort.On("DeleteById", id).Return(nil)
+
+		target.EntryPort = mockEntryPort
+
+		err := target.DeleteByID(id)
+
+		mockEntryPort.AssertExpectations(t)
+		assert.Nil(t, err)
+	})
+
 }
 
 type MockEntryPort struct {
@@ -275,4 +291,9 @@ func (_m *MockEntryPort) FindById(ctx context.Context, id domain.EntryId) (domai
 func (_m *MockEntryPort) Find(ctx context.Context) (domain.Entries, error) {
 	ret := _m.Called()
 	return ret.Get(0).(domain.Entries), ret.Error(1)
+}
+
+func (_m *MockEntryPort) DeleteById(ctx context.Context, id domain.EntryId) error {
+	ret := _m.Called(id)
+	return ret.Error(0)
 }

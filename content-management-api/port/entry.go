@@ -11,4 +11,5 @@ type Entry interface {
 	CreateItems(ctx context.Context, entryId domain.EntryId, entry []domain.EntryItem) ([]domain.EntryItem, error)
 	Find(ctx context.Context) (domain.Entries, error)
 	FindById(ctx context.Context, entryId domain.EntryId) (domain.Entry, error)
+	DeleteById(ctx context.Context, entryId domain.EntryId) error
 }

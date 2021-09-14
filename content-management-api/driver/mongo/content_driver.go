@@ -547,6 +547,31 @@ func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 	}, nil
 }
 
+func (c ContentDriver) DeleteEntryByID(id string) (int64, error) {
+	client, err := c.Client.Get()
+	if err != nil {
+		return 0, err
+	}
+
+	collections := client.Database("models").Collection("entry")
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return 0, err
+	}
+	deletedResult, err := collections.DeleteOne(context.Background(), bson.M{"_id": objectId})
+
+	if err != nil {
+		return 0, err
+	}
+
+	if deletedResult.DeletedCount == 0 {
+		return deletedResult.DeletedCount, driver.NewEntryNotFound(fmt.Sprintf("entry is not found: %s", id))
+	}
+
+	return deletedResult.DeletedCount, nil
+}
+
 func createEntryItems(entry Entry) []model.EntryItem {
 	items := make([]model.EntryItem, len(entry.Items))
 	for i, item := range entry.Items {

@@ -103,3 +103,17 @@ func (e *Entry) CreateItems(ctx context.Context, id domain.EntryId, items []doma
 
 	return items, nil
 }
+
+func (e *Entry) DeleteById(ctx context.Context, entryId domain.EntryId) error {
+	_, err := e.Driver.DeleteEntryByID(entryId.String())
+
+	if err != nil {
+		switch err.(type) {
+		case driver.EntryNotFoundError:
+			return err
+		default:
+			return err
+		}
+	}
+	return nil
+}
