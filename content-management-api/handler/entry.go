@@ -180,7 +180,14 @@ func (en *EntryResource) DeleteEntry(c echo.Context) error {
 }
 
 func (en *EntryResource) PublishedEntry(c echo.Context) error {
-	_ = c.Param("entryId")
+	entryId := c.Param("entryId")
+
+	err := en.EntryUseCase.Published(domain.EntryId(entryId))
+
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
 	return c.JSON(http.StatusInternalServerError, nil)
 }
 
