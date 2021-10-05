@@ -572,6 +572,10 @@ func (c ContentDriver) DeleteEntryByID(id string) (int64, error) {
 	return deletedResult.DeletedCount, nil
 }
 
+func (c ContentDriver) UpdateEntry(entry model.Entry) (*model.Entry, error) {
+	panic("not impl")
+}
+
 func createEntryItems(entry Entry) []model.EntryItem {
 	items := make([]model.EntryItem, len(entry.Items))
 	for i, item := range entry.Items {

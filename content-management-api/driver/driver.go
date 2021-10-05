@@ -23,4 +23,5 @@ type ContentDriver interface {
 	FindEntry() ([]model.Entry, error)
 	FindEntryByID(string) (*model.Entry, error)
 	DeleteEntryByID(string) (int64, error)
+	UpdateEntry(entry model.Entry) (*model.Entry, error)
 }

@@ -1,9 +1,10 @@
 package model
 
 type Entry struct {
-	ID      string
-	ModelID string
-	Items   []EntryItem
+	ID          string
+	ModelID     string
+	Items       []EntryItem
+	Publication Publication
 }
 
 type EntryID string
@@ -14,4 +15,8 @@ func (e EntryID) String() string {
 
 type EntryItem struct {
 	Value interface{}
+}
+
+type Publication struct {
+	Status bool
 }
