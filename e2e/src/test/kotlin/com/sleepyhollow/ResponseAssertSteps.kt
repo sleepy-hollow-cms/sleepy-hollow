@@ -45,4 +45,10 @@ class ResponseAssertSteps {
         val value2 = JsonPath.read<String>(body, jsonPath2)
         value1 shouldBeEqualTo value2
     }
+
+    @Step("レスポンスボディのJsonPath<jsonPath>がnullでないこと")
+    fun verifyBodyIsNotNull(jsonPath: String) {
+        val body = SpecDataStore.get("body") as String
+        JsonPath.read<String>(body, jsonPath) shouldNotBe null
+    }
 }
