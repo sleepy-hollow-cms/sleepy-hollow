@@ -22,10 +22,10 @@ func NewUserDriver(client *Client) driver.UserDriver {
 	}
 }
 
-func (u UserDriver) Register(user model.User) (*model.User, error) {
+func (u UserDriver) Register(user model.User) (model.User, error) {
 	client, err := u.Client.Get()
 	if err != nil {
-		return nil, err
+		return model.User{}, err
 	}
 
 	collections := client.Database("user").Collection("user")
@@ -36,10 +36,10 @@ func (u UserDriver) Register(user model.User) (*model.User, error) {
 
 	result, err := collections.InsertOne(context.Background(), insert)
 	if err != nil {
-		return nil, err
+		return model.User{}, err
 	}
 
-	return &model.User{
+	return model.User{
 		Id:   result.InsertedID.(primitive.ObjectID).Hex(),
 		Name: insert.Name,
 	}, nil
