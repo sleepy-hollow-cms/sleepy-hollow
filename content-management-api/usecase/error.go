@@ -12,9 +12,6 @@ type (
 	EntryNotFoundError struct {
 		NotFoundError
 	}
-	UserNotFoundError struct {
-		NotFoundError
-	}
 	SpaceCreateFailedError struct {
 		Reason string
 	}
@@ -79,10 +76,6 @@ func (c EntryNotFoundError) Error() string {
 	return fmt.Sprintf("Entry Not Found. %s", c.Reason)
 }
 
-func (c UserNotFoundError) Error() string {
-	return fmt.Sprintf("User Not Found. %s", c.Reason)
-}
-
 func (u UserCreateFailedError) Error() string {
 	return fmt.Sprintf("Register Failed. %s", u.Reason)
 }
@@ -121,14 +114,6 @@ func NewContentModelCreateFailedError(reason string) ContentModelCreateFailedErr
 
 func NewEntryNotFoundError(reason string) EntryNotFoundError {
 	return EntryNotFoundError{
-		NotFoundError{
-			Reason: reason,
-		},
-	}
-}
-
-func NewUserNotFoundError(reason string) UserNotFoundError {
-	return UserNotFoundError{
 		NotFoundError{
 			Reason: reason,
 		},

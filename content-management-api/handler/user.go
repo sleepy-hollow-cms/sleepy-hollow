@@ -1,11 +1,10 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/usecase"
+	"net/http"
 )
 
 type UserResource struct {
@@ -21,7 +20,6 @@ func NewUserResource(user *usecase.User) *UserResource {
 func (u *UserResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.POST("/user", u.Register)
-	g.DELETE("/user/:userId", u.Delete)
 }
 
 func (u *UserResource) Register(c echo.Context) error {
@@ -44,23 +42,6 @@ func (u *UserResource) Register(c echo.Context) error {
 		Id:   registeredUser.Id.String(),
 		Name: registeredUser.Name.String(),
 	})
-}
-
-func (u *UserResource) Delete(c echo.Context) error {
-	userId := c.Param("userId")
-
-	err := u.User.DeleteById(domain.UserId(userId))
-
-	if err != nil {
-		switch err.(type) {
-		case usecase.UserNotFoundError:
-			return c.String(http.StatusNotFound, err.Error())
-		default:
-			return c.String(http.StatusInternalServerError, err.Error())
-		}
-	}
-
-	return c.NoContent(http.StatusNoContent)
 }
 
 type User struct {

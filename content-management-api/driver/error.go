@@ -19,9 +19,6 @@ type (
 	EntryNotFoundError struct {
 		CannotFindByIdError
 	}
-	UserNotFoundError struct {
-		CannotFindByIdError
-	}
 )
 
 func (n EntryNotFoundError) Error() string {
@@ -42,14 +39,6 @@ func NewContentModelCannotFindById(id string) ContentModelCannotFindByIdError {
 
 func NewEntryNotFound(id string) EntryNotFoundError {
 	return EntryNotFoundError{
-		CannotFindByIdError{
-			ID: id,
-		},
-	}
-}
-
-func NewUserNotFound(id string) UserNotFoundError {
-	return UserNotFoundError{
 		CannotFindByIdError{
 			ID: id,
 		},
