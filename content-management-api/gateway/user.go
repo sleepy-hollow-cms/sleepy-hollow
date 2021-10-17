@@ -39,7 +39,7 @@ func (u *User) DeleteById(ctx context.Context, userId domain.UserId) error {
 
 	if err != nil {
 		switch err.(type) {
-		case driver.EntryNotFoundError:
+		case driver.UserNotFoundError:
 			return err
 		default:
 			return err

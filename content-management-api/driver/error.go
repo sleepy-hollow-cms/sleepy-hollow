@@ -28,6 +28,10 @@ func (n EntryNotFoundError) Error() string {
 	return fmt.Sprintf("Entry Not Found By Id: %s", n.ID)
 }
 
+func (n UserNotFoundError) Error() string {
+	return fmt.Sprintf("User Not Found By Id: %s", n.ID)
+}
+
 func (n CannotFindByIdError) Error() string {
 	return fmt.Sprintf("Contents Not Found By Id: %s", n.ID)
 }
