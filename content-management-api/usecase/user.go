@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/port"
 )
@@ -22,4 +23,20 @@ func (u *User) Register(user domain.User) (domain.User, error) {
 		return domain.User{}, NewUserCreateFailedError(err.Error())
 	}
 	return user, nil
+}
+
+func (u *User) DeleteById(id domain.UserId) error {
+
+	err := u.UserPort.DeleteById(context.TODO(), id)
+
+	if err != nil {
+		switch err.(type) {
+		case domain.UserNotFound:
+			return NewUserNotFoundError(err.Error())
+		default:
+			return err
+		}
+	}
+
+	return nil
 }

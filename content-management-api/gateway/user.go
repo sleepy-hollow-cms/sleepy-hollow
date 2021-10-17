@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"context"
+
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
@@ -31,4 +32,18 @@ func (u *User) Register(ctx context.Context, user domain.User) (domain.User, err
 		Id:   domain.UserId(registeredUser.Id),
 		Name: domain.UserName(registeredUser.Name),
 	}, nil
+}
+
+func (u *User) DeleteById(ctx context.Context, userId domain.UserId) error {
+	_, err := u.UserDriver.DeleteById(userId.String())
+
+	if err != nil {
+		switch err.(type) {
+		case driver.UserNotFoundError:
+			return err
+		default:
+			return err
+		}
+	}
+	return nil
 }

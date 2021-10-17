@@ -19,10 +19,17 @@ type (
 	EntryNotFoundError struct {
 		CannotFindByIdError
 	}
+	UserNotFoundError struct {
+		CannotFindByIdError
+	}
 )
 
 func (n EntryNotFoundError) Error() string {
 	return fmt.Sprintf("Entry Not Found By Id: %s", n.ID)
+}
+
+func (n UserNotFoundError) Error() string {
+	return fmt.Sprintf("User Not Found By Id: %s", n.ID)
 }
 
 func (n CannotFindByIdError) Error() string {
@@ -39,6 +46,14 @@ func NewContentModelCannotFindById(id string) ContentModelCannotFindByIdError {
 
 func NewEntryNotFound(id string) EntryNotFoundError {
 	return EntryNotFoundError{
+		CannotFindByIdError{
+			ID: id,
+		},
+	}
+}
+
+func NewUserNotFound(id string) UserNotFoundError {
+	return UserNotFoundError{
 		CannotFindByIdError{
 			ID: id,
 		},

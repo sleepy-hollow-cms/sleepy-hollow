@@ -13,7 +13,8 @@ func (n UserName) String() string {
 
 type UserId string
 
-
 func (i UserId) String() string {
 	return string(i)
 }
+
+type UserNotFound error
