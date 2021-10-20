@@ -10,7 +10,7 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.0
-	go.mongodb.org/mongo-driver v1.7.2
+	go.mongodb.org/mongo-driver v1.7.3
 	go.uber.org/zap v1.19.1
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0
@@ -24,7 +24,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/klauspost/compress v1.9.5 // indirect
+	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
