@@ -103,18 +103,23 @@ func routing(e *echo.Echo, container cache.Cache) *echo.Echo {
 	if err != nil {
 		return nil
 	}
-	mongoContentDriver := mongo.NewContentDriver(db.(*mongo.Client))
+	client := db.(*mongo.Client)
+	mongoContentDriver := mongo.NewContentDriver(client)
+	mongoUserDriver := mongo.NewUserDriver(client)
 
 	contentModelGateway := gateway.NewContentModel(mongoContentDriver)
 	entryGateway := gateway.NewEntry(mongoContentDriver)
+	userGateway := gateway.NewUser(mongoUserDriver)
 
 	contentModelResource := NewContentModelResource(usecase.NewContentModel(contentModelGateway, entryGateway))
 	entryResource := NewEntryResource(usecase.NewEntry(entryGateway, contentModelGateway))
 	spaceResource := NewSpaceResource(usecase.NewSpace(gateway.NewSpace(mongoContentDriver)))
+	userResource := NewUserResource(usecase.NewUser(userGateway))
 
 	contentModelResource.Routing(e)
 	entryResource.Routing(e)
 	spaceResource.Routing(e)
+	userResource.Routing(e)
 
 	return e
 }
