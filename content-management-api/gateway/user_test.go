@@ -160,3 +160,4 @@ func (_m *MockUserDriver) Update(user model.User) (*model.User, error) {
 	}
 	return nil, ret.Error(1)
 }
+
