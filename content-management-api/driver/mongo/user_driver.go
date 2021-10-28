@@ -4,18 +4,11 @@ import (
 	"context"
 	"fmt"
 
-<<<<<<< HEAD
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
-=======
-	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver"
-	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/driver/model"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
->>>>>>> main
 )
 
 type User struct {
@@ -56,11 +49,7 @@ func (u *UserDriver) Register(user model.User) (model.User, error) {
 	}, nil
 }
 
-<<<<<<< HEAD
 func (u *UserDriver) DeleteById(id string) (int64, error) {
-=======
-func (u UserDriver) DeleteById(id string) (int64, error) {
->>>>>>> main
 	client, err := u.Client.Get()
 	if err != nil {
 		return 0, err
@@ -84,7 +73,6 @@ func (u UserDriver) DeleteById(id string) (int64, error) {
 
 	return deletedResult.DeletedCount, nil
 }
-<<<<<<< HEAD
 
 func (u *UserDriver) FindById(userId string) (*model.User, error) {
 	client, err := u.Client.Get()
@@ -151,5 +139,4 @@ func (u *UserDriver) Update(updatedUser model.User) (*model.User, error) {
 		Name: update.Name,
 	}, err
 }
-=======
->>>>>>> main
+
