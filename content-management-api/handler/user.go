@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/usecase"
 )
@@ -22,10 +23,11 @@ func (u *UserResource) Routing(e *echo.Echo) {
 	g := e.Group("/v1")
 	g.POST("/user", u.Register)
 	g.DELETE("/user/:userId", u.Delete)
+	g.PUT("/user/:userId", u.Update)
 }
 
 func (u *UserResource) Register(c echo.Context) error {
-	input := UserRequest{}
+	input := UserCreateRequest{}
 	if err := c.Bind(&input); err != nil {
 		c.String(http.StatusBadRequest, "invalid request body")
 		return err
@@ -43,6 +45,32 @@ func (u *UserResource) Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, &User{
 		Id:   registeredUser.Id.String(),
 		Name: registeredUser.Name.String(),
+	})
+}
+
+func (u *UserResource) Update(c echo.Context) error {
+	userId := c.Param("userId")
+
+	input := UserUpdateRequest{}
+	if err := c.Bind(&input); err != nil {
+		c.String(http.StatusBadRequest, "invalid request body")
+		return err
+	}
+
+	updatedUser, err := u.User.Update(
+		domain.User{
+			Id:   domain.UserId(userId),
+			Name: domain.UserName(input.Name),
+		},
+	)
+
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, User{
+		Id:   updatedUser.Id.String(),
+		Name: updatedUser.Name.String(),
 	})
 }
 
@@ -68,6 +96,10 @@ type User struct {
 	Name string `json:"name"`
 }
 
-type UserRequest struct {
+type UserCreateRequest struct {
+	Name string `json:"name"`
+}
+
+type UserUpdateRequest struct {
 	Name string `json:"name"`
 }

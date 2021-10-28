@@ -9,4 +9,6 @@ import (
 type User interface {
 	Register(ctx context.Context, user domain.User) (domain.User, error)
 	DeleteById(ctx context.Context, id domain.UserId) error
+	FindById(ctx context.Context, id domain.UserId) (*domain.User, error)
+	Update(ctx context.Context, user domain.User) (*domain.User, error)
 }

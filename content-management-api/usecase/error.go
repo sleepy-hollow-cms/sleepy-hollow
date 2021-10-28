@@ -30,6 +30,9 @@ type (
 	UserCreateFailedError struct {
 		Reason string
 	}
+	UserUpdateFailedError struct {
+		Reason string
+	}
 	ReferenceByEntryError struct {
 		Reason string
 	}
@@ -83,6 +86,10 @@ func (c UserNotFoundError) Error() string {
 	return fmt.Sprintf("User Not Found. %s", c.Reason)
 }
 
+func (c UserUpdateFailedError) Error() string {
+	return fmt.Sprintf("Update Failed. %s", c.Reason)
+}
+
 func (u UserCreateFailedError) Error() string {
 	return fmt.Sprintf("Register Failed. %s", u.Reason)
 }
@@ -132,5 +139,11 @@ func NewUserNotFoundError(reason string) UserNotFoundError {
 		NotFoundError{
 			Reason: reason,
 		},
+	}
+}
+
+func NewUserUpdateFailedError(reason string) UserUpdateFailedError {
+	return UserUpdateFailedError{
+		Reason: reason,
 	}
 }

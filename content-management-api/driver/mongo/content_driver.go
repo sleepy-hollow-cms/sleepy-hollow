@@ -51,7 +51,7 @@ func NewContentDriver(client *Client) driver.ContentDriver {
 	}
 }
 
-func (c ContentDriver) FindSpace() ([]model.Space, error) {
+func (c *ContentDriver) FindSpace() ([]model.Space, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (c ContentDriver) FindSpace() ([]model.Space, error) {
 	return result, nil
 }
 
-func (c ContentDriver) FindSpaceByID(id string) (*model.Space, error) {
+func (c *ContentDriver) FindSpaceByID(id string) (*model.Space, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -122,7 +122,7 @@ func (c ContentDriver) FindSpaceByID(id string) (*model.Space, error) {
 
 }
 
-func (c ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
+func (c *ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -150,7 +150,7 @@ func (c ContentDriver) CreateSpace(space model.Space) (*model.Space, error) {
 	}, nil
 }
 
-func (c ContentDriver) UpdateSpace(space model.Space) (*model.Space, error) {
+func (c *ContentDriver) UpdateSpace(space model.Space) (*model.Space, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -187,7 +187,7 @@ func (c ContentDriver) UpdateSpace(space model.Space) (*model.Space, error) {
 	}, err
 }
 
-func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {
+func (c *ContentDriver) CreateModel(name string, createdAt time.Time, fields []model.Field) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -235,7 +235,7 @@ func (c ContentDriver) CreateModel(name string, createdAt time.Time, fields []mo
 	}, err
 }
 
-func (c ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.ContentModel, error) {
+func (c *ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.ContentModel, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -301,7 +301,7 @@ func (c ContentDriver) UpdateModel(updatedModel model.ContentModel) (*model.Cont
 	}, err
 }
 
-func (c ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
+func (c *ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return nil, err
@@ -322,7 +322,7 @@ func (c ContentDriver) CreateEntry(entry model.Entry) (*model.Entry, error) {
 	return &model.Entry{ID: result.InsertedID.(primitive.ObjectID).Hex()}, nil
 }
 
-func (c ContentDriver) CreateEntryItems(entryId model.EntryID, items []model.EntryItem) ([]model.EntryItem, error) {
+func (c *ContentDriver) CreateEntryItems(entryId model.EntryID, items []model.EntryItem) ([]model.EntryItem, error) {
 	client, err := c.Client.Get()
 
 	if err != nil {
@@ -357,7 +357,7 @@ func (c ContentDriver) CreateEntryItems(entryId model.EntryID, items []model.Ent
 	return items, nil
 }
 
-func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {
+func (c *ContentDriver) FindContentModelByID(id string) (*model.ContentModel, error) {
 
 	client, err := c.Client.Get()
 	if err != nil {
@@ -401,7 +401,7 @@ func (c ContentDriver) FindContentModelByID(id string) (*model.ContentModel, err
 	}, nil
 }
 
-func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentModel, error) {
+func (c *ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentModel, error) {
 
 	client, err := c.Client.Get()
 	if err != nil {
@@ -450,7 +450,7 @@ func (c ContentDriver) FindContentModelBySpaceID(id string) ([]model.ContentMode
 	return resultModels, nil
 }
 
-func (c ContentDriver) DeleteContentModelByID(id string) error {
+func (c *ContentDriver) DeleteContentModelByID(id string) error {
 
 	client, err := c.Client.Get()
 	if err != nil {
@@ -476,7 +476,7 @@ func (c ContentDriver) DeleteContentModelByID(id string) error {
 	return nil
 }
 
-func (c ContentDriver) FindEntry() ([]model.Entry, error) {
+func (c *ContentDriver) FindEntry() ([]model.Entry, error) {
 	client, err := c.Client.Get()
 
 	if err != nil {
@@ -514,7 +514,7 @@ func (c ContentDriver) FindEntry() ([]model.Entry, error) {
 	return result, nil
 }
 
-func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
+func (c *ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 
 	client, err := c.Client.Get()
 
@@ -547,7 +547,7 @@ func (c ContentDriver) FindEntryByID(id string) (*model.Entry, error) {
 	}, nil
 }
 
-func (c ContentDriver) DeleteEntryByID(id string) (int64, error) {
+func (c *ContentDriver) DeleteEntryByID(id string) (int64, error) {
 	client, err := c.Client.Get()
 	if err != nil {
 		return 0, err

@@ -22,6 +22,9 @@ type (
 	UserNotFoundError struct {
 		CannotFindByIdError
 	}
+	UserCannotUpdateError struct {
+		DonotMatchByFilterError
+	}
 )
 
 func (n EntryNotFoundError) Error() string {
@@ -66,6 +69,12 @@ func (n DonotMatchByFilterError) Error() string {
 
 func NewContentModelCannotUpdateError() ContentModelCannotUpdateError {
 	return ContentModelCannotUpdateError{
+		DonotMatchByFilterError{},
+	}
+}
+
+func NewUserCannotUpdateError() UserCannotUpdateError {
+	return UserCannotUpdateError{
 		DonotMatchByFilterError{},
 	}
 }

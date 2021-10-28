@@ -5,6 +5,7 @@ import (
 
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/domain"
 	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/port"
+	"github.com/sleepy-hollow-cms/sleepy-hollow/content-management-api/util/log"
 )
 
 type User struct {
@@ -39,4 +40,25 @@ func (u *User) DeleteById(id domain.UserId) error {
 	}
 
 	return nil
+}
+
+func (u *User) Update(user domain.User) (*domain.User, error) {
+	_, err := u.UserPort.FindById(context.TODO(), user.Id)
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return nil, err
+	}
+
+	updated := domain.User{
+		Id:   user.Id,
+		Name: user.Name,
+	}
+
+	result, err := u.UserPort.Update(context.TODO(), updated)
+	if err != nil {
+		log.Logger.Warn(err.Error())
+		return nil, err
+	}
+
+	return result, nil
 }
