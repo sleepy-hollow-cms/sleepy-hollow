@@ -41,6 +41,7 @@ func (u *User) DeleteById(id domain.UserId) error {
 
 	return nil
 }
+<<<<<<< HEAD
 
 func (u *User) Update(user domain.User) (*domain.User, error) {
 	_, err := u.UserPort.FindById(context.TODO(), user.Id)
@@ -62,3 +63,5 @@ func (u *User) Update(user domain.User) (*domain.User, error) {
 
 	return result, nil
 }
+=======
+>>>>>>> main
