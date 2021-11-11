@@ -38,6 +38,11 @@ type Entry struct {
 	ID             primitive.ObjectID `bson:"_id,omitempty"`
 	ContentModelID string             `bson:"content_model_id"`
 	Items          []interface{}      `bson:"items"`
+	Publication    Publication        `bson:"publication"`
+}
+
+type Publication struct {
+	Status bool `bson:"status"`
 }
 
 //ContentDriver ContentModel Collection on MongoDB
@@ -573,7 +578,39 @@ func (c ContentDriver) DeleteEntryByID(id string) (int64, error) {
 }
 
 func (c ContentDriver) UpdateEntry(entry model.Entry) (*model.Entry, error) {
-	panic("not impl")
+	client, err := c.Client.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	collection := client.Database("models").Collection("entry")
+
+	objectId, err := primitive.ObjectIDFromHex(entry.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updateResult, err := collection.UpdateOne(
+		context.Background(),
+		bson.M{
+			"$and": []bson.M{
+				{"_id": objectId},
+			},
+		},
+		bson.M{"$set": bson.M{"publication": entry.Publication.Status}},
+	)
+
+	if updateResult.MatchedCount == 0 {
+		return nil, driver.NewEntryCannotUpdateError()
+	}
+
+	return &model.Entry{
+		ID:          "",
+		ModelID:     "",
+		Items:       nil,
+		Publication: model.Publication{},
+	}, nil
 }
 
 func createEntryItems(entry Entry) []model.EntryItem {

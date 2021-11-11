@@ -188,7 +188,7 @@ func (en *EntryResource) PublishedEntry(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusInternalServerError, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 func (en *EntryResource) UnPublishedEntry(c echo.Context) error {
