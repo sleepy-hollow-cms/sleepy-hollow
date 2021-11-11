@@ -24,6 +24,30 @@ class SetUpDataSources {
         
     }
 
+    @Step("SETUP: User更新データ準備")
+    fun setUpUserUpdate() {
+        MongoClient.USER.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("8883114bd386d8fadbd6b002"),
+                    "name" to "name0",
+                )
+            )
+        )
+    }
+
+    @Step("SETUP: User削除データ準備")
+    fun setUpUserDelete() {
+        MongoClient.USER.getCollection().insertOne(
+            Document(
+                mapOf(
+                    "_id" to ObjectId("8883114bd386d8fadbd6b001"),
+                    "name" to "name0",
+                )
+            )
+        )
+    }
+
     @Step("SETUP: Entry削除データ準備")
     fun setUpEntryDelete() {
         MongoClient.ENTRY.getCollection().insertOne(
