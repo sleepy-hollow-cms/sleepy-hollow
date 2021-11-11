@@ -28,6 +28,12 @@ func (en *EntryResource) Routing(e *echo.Echo) {
 	g.GET("/spaces/:spaceId/entries", en.FindEntries)
 	g.GET("/spaces/:spaceId/entries/:entryId", en.FindEntry)
 	g.DELETE("/spaces/:spaceId/entries/:entryId", en.DeleteEntry)
+
+	g.PUT("/spaces/:spaceId/entries/:entryId/published", en.PublishedEntry)
+	g.DELETE("/spaces/:spaceId/entries/:entryId/published", en.UnPublishedEntry)
+
+	g.PUT("/spaces/:spaceId/entries/:entryId/archived", en.ArchivedEntry)
+	g.DELETE("/spaces/:spaceId/entries/:entryId/archived", en.UnArchivedEntry)
 }
 
 func (en *EntryResource) FindEntries(c echo.Context) error {
@@ -171,6 +177,33 @@ func (en *EntryResource) DeleteEntry(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusNoContent)
+}
+
+func (en *EntryResource) PublishedEntry(c echo.Context) error {
+	entryId := c.Param("entryId")
+
+	err := en.EntryUseCase.Published(domain.EntryId(entryId))
+
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
+func (en *EntryResource) UnPublishedEntry(c echo.Context) error {
+	_ = c.Param("entryId")
+	return c.JSON(http.StatusInternalServerError, nil)
+}
+
+func (en *EntryResource) ArchivedEntry(c echo.Context) error {
+	_ = c.Param("entryId")
+	return c.JSON(http.StatusInternalServerError, nil)
+}
+
+func (en *EntryResource) UnArchivedEntry(c echo.Context) error {
+	_ = c.Param("entryId")
+	return c.JSON(http.StatusInternalServerError, nil)
 }
 
 type EntryPostResponseBody struct {

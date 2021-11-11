@@ -267,6 +267,25 @@ func TestEntry(t *testing.T) {
 		assert.Nil(t, err)
 	})
 
+	t.Run("EntryをPublishすることができる", func(t *testing.T) {
+		id := domain.EntryId("id")
+
+		entryPublication := domain.EntryPublication{
+			EntryId:         id,
+			PublishedStatus: true,
+		}
+
+		mockEntryPublicationPort := new(MockEntryPublicationPort)
+		mockEntryPublicationPort.On("Store", entryPublication).Return(nil)
+
+		target.EntryPublicationPort = mockEntryPublicationPort
+
+		err := target.Published(id)
+
+		mockEntryPublicationPort.AssertExpectations(t)
+		assert.Nil(t, err)
+	})
+
 }
 
 type MockEntryPort struct {
@@ -295,5 +314,19 @@ func (_m *MockEntryPort) Find(ctx context.Context) (domain.Entries, error) {
 
 func (_m *MockEntryPort) DeleteById(ctx context.Context, id domain.EntryId) error {
 	ret := _m.Called(id)
+	return ret.Error(0)
+}
+
+type MockEntryPublicationPort struct {
+	mock.Mock
+}
+
+func (_m *MockEntryPublicationPort) Store(ctx context.Context, entryPublication domain.EntryPublication) error {
+	ret := _m.Called(entryPublication)
+	return ret.Error(0)
+}
+
+func (_m *MockEntryPublicationPort) Delete(ctx context.Context, entryPublication domain.EntryPublication) error {
+	ret := _m.Called(entryPublication)
 	return ret.Error(0)
 }

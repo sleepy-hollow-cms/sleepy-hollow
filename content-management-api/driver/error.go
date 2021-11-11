@@ -16,6 +16,9 @@ type (
 	ContentModelCannotUpdateError struct {
 		DonotMatchByFilterError
 	}
+	EntryCannotUpdateError struct {
+		DonotMatchByFilterError
+	}
 	EntryNotFoundError struct {
 		CannotFindByIdError
 	}
@@ -69,6 +72,12 @@ func (n DonotMatchByFilterError) Error() string {
 
 func NewContentModelCannotUpdateError() ContentModelCannotUpdateError {
 	return ContentModelCannotUpdateError{
+		DonotMatchByFilterError{},
+	}
+}
+
+func NewEntryCannotUpdateError() EntryCannotUpdateError {
+	return EntryCannotUpdateError{
 		DonotMatchByFilterError{},
 	}
 }

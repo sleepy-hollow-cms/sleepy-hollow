@@ -16,8 +16,19 @@ class ContentManagementApiTest : TestBase {
         SpecDataStore.put("body", body)
     }
 
+    @Step("<path>にPUTリクエストを送る")
+    fun requestPut(path: String) {
+        val (statusCode, body, _) = HttpClient.putRequest(
+            "${Configuration[content_management_api.endpoint]}$path",
+            null,
+            listOf(Pair(HttpClient.CONTENT_TYPE, HttpClient.APPLICATION_JSON))
+        )
+        SpecDataStore.put("statusCode", statusCode)
+        SpecDataStore.put("body", body)
+    }
+    
     @Step("<path>にボディ<filePath>でPUTリクエストを送る")
-    fun requestPut(path: String, filePath: String) {
+    fun requestPutWithBody(path: String, filePath: String) {
         val (statusCode, body, _) = HttpClient.putRequest(
             "${Configuration[content_management_api.endpoint]}$path",
             readFromFile(filePath),

@@ -109,10 +109,11 @@ func routing(e *echo.Echo, container cache.Cache) *echo.Echo {
 
 	contentModelGateway := gateway.NewContentModel(mongoContentDriver)
 	entryGateway := gateway.NewEntry(mongoContentDriver)
+	entryPublicationGateway := gateway.NewEntryPublication(mongoContentDriver)
 	userGateway := gateway.NewUser(mongoUserDriver)
 
 	contentModelResource := NewContentModelResource(usecase.NewContentModel(contentModelGateway, entryGateway))
-	entryResource := NewEntryResource(usecase.NewEntry(entryGateway, contentModelGateway))
+	entryResource := NewEntryResource(usecase.NewEntry(entryGateway, entryPublicationGateway, contentModelGateway))
 	spaceResource := NewSpaceResource(usecase.NewSpace(gateway.NewSpace(mongoContentDriver)))
 	userResource := NewUserResource(usecase.NewUser(userGateway))
 

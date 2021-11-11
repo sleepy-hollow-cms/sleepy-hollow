@@ -11,17 +11,20 @@ import (
 )
 
 type Entry struct {
-	EntryPort        port.Entry
-	ContentModelPort port.ContentModel
+	EntryPort            port.Entry
+	EntryPublicationPort port.EntryPublication
+	ContentModelPort     port.ContentModel
 }
 
 func NewEntry(
 	entryPort port.Entry,
+	publicationPort port.EntryPublication,
 	contentModelPort port.ContentModel,
 ) *Entry {
 	return &Entry{
-		EntryPort:        entryPort,
-		ContentModelPort: contentModelPort,
+		EntryPort:            entryPort,
+		EntryPublicationPort: publicationPort,
+		ContentModelPort:     contentModelPort,
 	}
 }
 
@@ -111,4 +114,15 @@ func (e *Entry) DeleteByID(id domain.EntryId) error {
 	}
 
 	return nil
+}
+
+func (e *Entry) Published(id domain.EntryId) error {
+	ctx := context.TODO()
+
+	entryPublication := domain.EntryPublication{
+		EntryId:         id,
+		PublishedStatus: true,
+	}
+
+	return e.EntryPublicationPort.Store(ctx, entryPublication)
 }
