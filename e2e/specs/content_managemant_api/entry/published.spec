@@ -7,13 +7,10 @@ tags: default
 * "200"ステータスコードが返ってくる
 
 ## EntryのUnPublishをすることができる
-tags: unimplemented
 * "/v1/spaces/spaceId/entries/1063114bd386d8fadbd6b004/published"にDELETEリクエストを送る
 * "200"ステータスコードが返ってくる
-* レスポンスボディのJsonPath"$.publication.isPublished"の真偽値が"false"である
 
 ## 存在しないEntryにはPublish/UnPublishをすることができない
-tags: unimplemented
 * "/v1/spaces/spaceId/entries/9/published"にPUTリクエストを送る
 * "404"ステータスコードが返ってくる
 * "/v1/spaces/spaceId/entries/9/published"にDELETEリクエストを送る

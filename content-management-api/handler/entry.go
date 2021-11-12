@@ -185,15 +185,32 @@ func (en *EntryResource) PublishedEntry(c echo.Context) error {
 	err := en.EntryUseCase.Published(domain.EntryId(entryId))
 
 	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
+		switch err.(type) {
+		case usecase.EntryNotFoundError:
+			return c.String(http.StatusNotFound, err.Error())
+		default:
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
 	}
 
 	return c.JSON(http.StatusOK, nil)
 }
 
 func (en *EntryResource) UnPublishedEntry(c echo.Context) error {
-	_ = c.Param("entryId")
-	return c.JSON(http.StatusInternalServerError, nil)
+	entryId := c.Param("entryId")
+
+	err := en.EntryUseCase.UnPublished(domain.EntryId(entryId))
+
+	if err != nil {
+		switch err.(type) {
+		case usecase.EntryNotFoundError:
+			return c.String(http.StatusNotFound, err.Error())
+		default:
+			return c.String(http.StatusInternalServerError, err.Error())
+		}
+	}
+
+	return c.JSON(http.StatusOK, nil)
 }
 
 func (en *EntryResource) ArchivedEntry(c echo.Context) error {
