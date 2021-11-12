@@ -124,5 +124,38 @@ func (e *Entry) Published(id domain.EntryId) error {
 		PublishedStatus: true,
 	}
 
-	return e.EntryPublicationPort.Store(ctx, entryPublication)
+	err := e.EntryPublicationPort.Store(ctx, entryPublication)
+
+	if err != nil {
+		switch err.(type) {
+		case domain.EntryNotFound:
+			return NewEntryNotFoundError(err.Error())
+		default:
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (e *Entry) UnPublished(id domain.EntryId) error {
+	ctx := context.TODO()
+
+	entryPublication := domain.EntryPublication{
+		EntryId:         id,
+		PublishedStatus: false,
+	}
+
+	err := e.EntryPublicationPort.Store(ctx, entryPublication)
+
+	if err != nil {
+		switch err.(type) {
+		case domain.EntryNotFound:
+			return NewEntryNotFoundError(err.Error())
+		default:
+			return err
+		}
+	}
+
+	return nil
 }
