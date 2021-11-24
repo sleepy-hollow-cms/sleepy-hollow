@@ -15,7 +15,7 @@
         <konfig.version>1.6.10.0</konfig.version>
         <http4k.version>4.16.3.0</http4k.version>
         <kluent.version>1.68</kluent.version>
-        <kmongo.version>4.3.0</kmongo.version>
+        <kmongo.version>4.4.0</kmongo.version>
         <jsonpath.version>2.6.0</jsonpath.version>
     </properties>
 
