@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Post actions trigerd message
       id: slack
-      uses: slackapi/slack-github-action@v1.15.0
+      uses: slackapi/slack-github-action@v1.16.0
       with:
         channel-id: 'C0254UUPR0E'
         slack-message: 'The actions are executed by ${{ github.actor }}’s PR!!!'
