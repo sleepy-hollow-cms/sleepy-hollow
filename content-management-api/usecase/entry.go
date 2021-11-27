@@ -13,17 +13,20 @@ import (
 type Entry struct {
 	EntryPort            port.Entry
 	EntryPublicationPort port.EntryPublication
+	EntryArchivePort     port.EntryArchive
 	ContentModelPort     port.ContentModel
 }
 
 func NewEntry(
 	entryPort port.Entry,
 	publicationPort port.EntryPublication,
+	archivePort port.EntryArchive,
 	contentModelPort port.ContentModel,
 ) *Entry {
 	return &Entry{
 		EntryPort:            entryPort,
 		EntryPublicationPort: publicationPort,
+		EntryArchivePort:     archivePort,
 		ContentModelPort:     contentModelPort,
 	}
 }
@@ -156,6 +159,19 @@ func (e *Entry) UnPublished(id domain.EntryId) error {
 			return err
 		}
 	}
+
+	return nil
+}
+
+func (e *Entry) Archive(id domain.EntryId) error {
+	ctx := context.TODO()
+
+	entryArchive := domain.EntryArchive{
+		EntryId:        id,
+		ArchivedStatus: true,
+	}
+
+	e.EntryArchivePort.Store(ctx, entryArchive)
 
 	return nil
 }

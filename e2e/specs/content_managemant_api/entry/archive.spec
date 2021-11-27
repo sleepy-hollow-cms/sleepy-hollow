@@ -1,20 +1,6 @@
-# Entry published / unpublished
+# Entry archived / unarchived
 
 tags: default
-
-## EntryのPublishをすることができる
-* "/v1/spaces/spaceId/entries/1063114bd386d8fadbd6b004/published"にPUTリクエストを送る
-* "200"ステータスコードが返ってくる
-
-## EntryのUnPublishをすることができる
-* "/v1/spaces/spaceId/entries/1063114bd386d8fadbd6b004/published"にDELETEリクエストを送る
-* "200"ステータスコードが返ってくる
-
-## 存在しないEntryにはPublish/UnPublishをすることができない
-* "/v1/spaces/spaceId/entries/9/published"にPUTリクエストを送る
-* "404"ステータスコードが返ってくる
-* "/v1/spaces/spaceId/entries/9/published"にDELETEリクエストを送る
-* "404"ステータスコードが返ってくる
 
 ## EntryのArchiveをすることができる
 tags: unimplemented
