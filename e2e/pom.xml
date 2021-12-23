@@ -13,7 +13,7 @@
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
         <ktor.version>1.4.1</ktor.version>
         <konfig.version>1.6.10.0</konfig.version>
-        <http4k.version>4.17.2.0</http4k.version>
+        <http4k.version>4.17.5.0</http4k.version>
         <kluent.version>1.68</kluent.version>
         <kmongo.version>4.4.0</kmongo.version>
         <jsonpath.version>2.6.0</jsonpath.version>
