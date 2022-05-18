@@ -9,7 +9,7 @@ require (
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/spf13/viper v1.10.1
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1
 	go.mongodb.org/mongo-driver v1.9.1
 	go.uber.org/zap v1.20.0
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
