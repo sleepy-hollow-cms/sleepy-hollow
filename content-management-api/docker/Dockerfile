@@ -1,4 +1,4 @@
-FROM golang:1.17 as buildImage
+FROM golang:1.18 as buildImage
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
