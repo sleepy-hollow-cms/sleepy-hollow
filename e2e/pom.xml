@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.thoughtworks.gauge</groupId>
             <artifactId>gauge-java</artifactId>
-            <version>0.7.15</version>
+            <version>0.9.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
