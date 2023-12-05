@@ -14,7 +14,7 @@
         <ktor.version>1.4.1</ktor.version>
         <konfig.version>1.6.10.0</konfig.version>
         <http4k.version>4.19.0.0</http4k.version>
-        <kluent.version>1.68</kluent.version>
+        <kluent.version>1.73</kluent.version>
         <kmongo.version>4.4.0</kmongo.version>
         <jsonpath.version>2.7.0</jsonpath.version>
     </properties>
