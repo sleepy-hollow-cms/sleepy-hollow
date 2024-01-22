@@ -16,7 +16,7 @@
         <http4k.version>4.19.0.0</http4k.version>
         <kluent.version>1.68</kluent.version>
         <kmongo.version>4.4.0</kmongo.version>
-        <jsonpath.version>2.7.0</jsonpath.version>
+        <jsonpath.version>2.9.0</jsonpath.version>
     </properties>
 
     <dependencies>
